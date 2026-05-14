@@ -285,7 +285,7 @@ def scrape():
     print("Finished extracting all reports")
 
     df = pd.DataFrame(reports_dict)
-    df.to_csv("Reports.csv")
+    df.to_csv("Reports.csv", index=False)
 
     return 
 

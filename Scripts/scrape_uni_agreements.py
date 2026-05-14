@@ -306,8 +306,8 @@ def scrape(save_data = True):
     agreement_data_df.columns = ['Agreement_ID', 'Institution', 'Agreement_text']
 
     if save_data:
-        studies_df.to_csv('Study_fields_data.csv')
-        agreement_data_df.to_csv('Agreement_data.csv')
+        studies_df.to_csv('Study_fields_data.csv', index_label="Index")
+        agreement_data_df.to_csv('Agreement_data.csv', index=False)
 
     return (studies_df, agreement_data_df)
 
