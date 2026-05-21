@@ -36,8 +36,7 @@ def create_app(test_config = None):
         return 'Hello, World!'
     
 
-
-    @app.route('/')
+    # DELETE WHEN MAKING HOME PAGE
     def index():
         conn = get_db_connection()
         cur = conn.cursor()
