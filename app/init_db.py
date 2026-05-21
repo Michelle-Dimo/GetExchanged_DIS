@@ -27,6 +27,41 @@ with open("../data/Agreement_data.csv", "r") as f:
         WITH (FORMAT csv, HEADER true)
     """, f)
 
+cur.execute('DROP TABLE IF EXISTS reports;')
+cur.execute('CREATE TABLE reports (academic_year INT NOT NULL,'
+                                 'rating INT NOT NULL,'
+                                 'report_id INT PRIMARY KEY,'
+                                 'costs INTEGER NOT NULL,'
+                                 'report_text TEXT NOT NULL,'
+                                 'institution VARCHAR (80) NOT NULL,'
+                                 'student_id VARCHAR (20) NOT NULL,'
+                                 'FOREIGN KEY (student_id, institution) REFERENCES user (student_id), university (institution)'
+                                 )
+
+with open("../data/Reports.csv", "r") as f:
+    cur.copy_expert("""
+        COPY reports(academic_year, rating, report_id, costs, report_text)
+        FROM STDIN
+        WITH (FORMAT csv, HEADER true)
+    """, f)
+
+cur.execute('DROP TABLE IF EXISTS study_fields;')
+cur.execute('CREATE TABLE study_fields (index INT UNIQUE,'
+                                 'field VARCHAR (80) NOT NULL,'
+                                 'institution VARCHAR (80) NOT NULL,'
+                                 'continent VARCHAR (20) NOT NULL,'
+                                 'country VARCHAR (20) NOT NULL,'
+                                 'city VARCHAR (20) NOT NULL,'
+                                 'n_agreements INT NOT NULL,'
+                                 'agreement_id INT NOT NULL)'
+                                 )
+
+with open("../data/Study_Fields.csv", "r") as f:
+    cur.copy_expert("""
+        COPY study_fields(field, institution, n_agreements, agreement_id)
+        FROM STDIN
+        WITH (FORMAT csv, HEADER true)
+    """, f)
 
 conn.commit()
 
