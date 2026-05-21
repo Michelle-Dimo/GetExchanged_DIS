@@ -1,9 +1,18 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
+import psycopg2
 
 def create_app(test_config = None):
     # Create app
     app = Flask(__name__, instance_relative_config=True)
+
+
+    def get_db_connection():
+        conn = psycopg2.connect(host='localhost',
+                                database='flask_db',
+                                user=os.environ['DB_USERNAME'],
+                                password=os.environ['DB_PASSWORD'])
+        return conn
 
     # Configure app
     app.config.from_mapping(
@@ -26,6 +35,17 @@ def create_app(test_config = None):
     def hello():
         return 'Hello, World!'
     
+
+
+    @app.route('/')
+    def index():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM agreements;')
+        agreements = cur.fetchall()
+        cur.close()
+        conn.close()
+        return render_template('index.html', agreements=agreements)
 
     return app
 
