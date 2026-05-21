@@ -34,13 +34,12 @@ cur.execute('CREATE TABLE reports (academic_year INT NOT NULL,'
                                  'costs INTEGER NOT NULL,'
                                  'report_text TEXT NOT NULL,'
                                  'institution VARCHAR (80) NOT NULL,'
-                                 'student_id VARCHAR (20) NOT NULL,'
-                                 'FOREIGN KEY (student_id, institution) REFERENCES user (student_id), university (institution)'
+                                 'choices VARCHAR (80) NOT NULL)'
                                  )
 
 with open("../data/Reports.csv", "r") as f:
     cur.copy_expert("""
-        COPY reports(academic_year, rating, report_id, costs, report_text)
+        COPY reports(academic_year, rating, report_id, costs, report_text, institution, choices)
         FROM STDIN
         WITH (FORMAT csv, HEADER true)
     """, f)
@@ -58,10 +57,13 @@ cur.execute('CREATE TABLE study_fields (index INT UNIQUE,'
 
 with open("../data/Study_Fields.csv", "r") as f:
     cur.copy_expert("""
-        COPY study_fields(field, institution, n_agreements, agreement_id)
+        COPY study_fields(field, institution, n_agreements, agreement_id, continent, country, city)
         FROM STDIN
         WITH (FORMAT csv, HEADER true)
     """, f)
+
+
+
 
 conn.commit()
 
