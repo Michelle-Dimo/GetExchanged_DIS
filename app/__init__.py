@@ -9,7 +9,7 @@ def create_app(test_config = None):
 
     def get_db_connection():
         conn = psycopg2.connect(host='localhost',
-                                database='flask_db',
+                                database='ku_exchange',
                                 user=os.environ['DB_USERNAME'],
                                 password=os.environ['DB_PASSWORD'])
         return conn
