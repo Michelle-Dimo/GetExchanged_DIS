@@ -41,10 +41,6 @@ def create_app(test_config = None):
     def about():
         return render_template('about.html')
     
-    @app.route('/agreements')
-    def agreements():
-        return render_template('agreements.html')
-    
     @app.route('/index')
     def index():
         conn = get_db_connection()

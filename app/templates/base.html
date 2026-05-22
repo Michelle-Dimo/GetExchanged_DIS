@@ -1,48 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <base href="https://www.getexchanged.com/" target="_blank">
-</head>
-<body>
-    <h1>Welcome to Get Exchanged!</h1>
-    <nav>
-        <a href="/">Home</a> | <a href="/about">About</a>
-    </nav>
-    {% block content %}{% endblock %}
-</body>
-</html>
-<head>
-    <meta charset="UTF-8">
-    <title> Get Exchanged</title>
-    <style>
-        nav a {
-            color: #d64161;
-            font-size: 3em;
-            margin-left: 50px;
-            text-decoration: none;
-        }
-
-        .book {
-            padding: 20px;
-            margin: 10px;
-            background-color: #f7f4f4;
-        }
-
-        .review {
-                margin-left: 50px;
-                font-size: 20px;
-        }
-
-    </style>
-</head>
-<body>
-    <nav>
-        <a href="{{ url_for('index') }}">FlaskApp</a>
-        <a href="#">About</a>
-    </nav>
-    <hr>
-    <div class="content">
-        {% block content %} {% endblock %}
-    </div>
-</body>
-</html>
+<!doctype html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<nav>
+  <h1>GetExchanged</h1>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>

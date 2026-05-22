@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 
+{% block header %}
+  <h1>{% block title %}
+        <h2>Agreements</h2>
+    {% endblock %}</h1>
+{% endblock %}
+
 {% block content %}
-    <h1>{% block title %} Agreements {% endblock %}</h1>
+<pre>{{ agreements }}</pre>
     {% for agreement in agreements %}
-        <div class='book'>
-            <h3>#{{ agreement[0] }} - {{ agreement[1] }} BY {{ agreement[2] }}</h3>
-            <i><p>({{ agreement[3] }} pages)</p></i>
-            <p class='review'>{{ agreement[4] }}</p>
-            <i><p>Added {{ agreement[5] }}</p></i>
+        <div class='agreement'>
+            <h3>{{ agreement['institution'] }} - {{ agreement['id'] }}</h3>
+            <p class='agreement_text'>{{ agreement['text'] }}</p>
         </div>
     {% endfor %}
 {% endblock %}
