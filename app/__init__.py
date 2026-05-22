@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, app, render_template
 import psycopg2
 
 def create_app(test_config = None):
@@ -29,17 +29,23 @@ def create_app(test_config = None):
 
     # ensure the instance folder exists
     os.makedirs(app.instance_path, exist_ok=True)
-
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
     
     from . import init_db
     init_db.init_app(app)
 
-    # DELETE WHEN MAKING HOME PAGE
     @app.route('/')
+    def home():
+        return render_template('homepage.html')
+
+    @app.route('/about')
+    def about():
+        return render_template('about.html')
+    
+    @app.route('/agreements')
+    def agreements():
+        return render_template('agreements.html')
+    
+    @app.route('/index')
     def index():
         conn = get_db_connection()
         cur = conn.cursor()
@@ -48,6 +54,24 @@ def create_app(test_config = None):
         cur.close()
         conn.close()
         return render_template('index.html', agreements=agreements)
+    
+    @app.route('/reports')
+    def reports():
+        return render_template('reports.html')
+    
+    @app.route('/login')
+    def login():
+        return render_template('login.html')
+    
+    @app.route('/register')
+    def register():
+        return render_template('register.html')
+
+    @app.route('/profile')
+    def profile():
+        return render_template('profile.html')
+    
+    if __name__ == '__main__':
+        app.run(debug=True)
 
     return app
-

@@ -4,3 +4,13 @@
     <h2>Home Page</h2>
     <p>Welcome to the homepage of our Flask app!</p>
 {% endblock %}
+
+{% block content %}
+    <h1>{% block title %} Homepage {% endblock %}</h1>
+    <div class='button'>
+        <a href="/agreements">Agreements</a>
+        <a href="/reports">Reports</a>
+        <a href="/profile">Profile</a>
+    </div>
+    {% endfor %}
+{% endblock %}
