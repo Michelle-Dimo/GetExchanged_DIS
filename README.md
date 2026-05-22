@@ -18,8 +18,9 @@ To-create:
 
 Sub-pages: 
 - Homepage:  
--- Search function (regex matching) 
--Reports page:  
+-- Search function (regex matching)
+-- Agreements, reports and profile (login)
+- Reports page:  
 -- Sorting function 
 -- SQL statements 
 -- World map 
@@ -27,7 +28,7 @@ Sub-pages:
 -- Sorting function 
 -- SQL statements 
 -- World map
-Login page:
+- Login page:
 -- Regex matching for recognizing existing username 
 - Register page:
 -- Regex matching to check for KU-ID 
