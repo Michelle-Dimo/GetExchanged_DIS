@@ -35,8 +35,11 @@ def create_app(test_config = None):
     def hello():
         return 'Hello, World!'
     
+    from . import init_db
+    init_db.init_app(app)
 
     # DELETE WHEN MAKING HOME PAGE
+    @app.route('/')
     def index():
         conn = get_db_connection()
         cur = conn.cursor()
