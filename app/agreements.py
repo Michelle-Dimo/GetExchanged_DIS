@@ -11,7 +11,7 @@ bp = Blueprint('agreements', __name__)
 def table():
     db = get_db().cursor()
     db.execute('''
-                SELECT *
+                SELECT id, institution, text
                 FROM agreements 
                             ''')
     agreements = db.fetchall()

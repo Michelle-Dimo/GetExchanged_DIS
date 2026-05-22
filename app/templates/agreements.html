@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block content %}
-<pre>{{ agreements }}</pre>
     {% for agreement in agreements %}
         <div class='agreement'>
             <h3>{{ agreement['institution'] }} - {{ agreement['id'] }}</h3>
