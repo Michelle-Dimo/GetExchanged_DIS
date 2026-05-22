@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Agreements {% endblock %}</h1>
+    {% for agreement in agreements %}
+        <div class='book'>
+            <h3>#{{ agreement[0] }} - {{ agreement[1] }} BY {{ agreement[2] }}</h3>
+            <i><p>({{ agreement[3] }} pages)</p></i>
+            <p class='review'>{{ agreement[4] }}</p>
+            <i><p>Added {{ agreement[5] }}</p></i>
+        </div>
+    {% endfor %}
+{% endblock %}

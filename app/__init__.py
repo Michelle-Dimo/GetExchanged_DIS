@@ -66,6 +66,10 @@ def create_app(test_config = None):
     @app.route('/register')
     def register():
         return render_template('register.html')
+    
+    from . import agreements
+    app.register_blueprint(agreements.bp)
+    
 
     @app.route('/profile')
     def profile():
