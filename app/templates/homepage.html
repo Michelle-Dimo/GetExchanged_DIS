@@ -3,25 +3,45 @@
 {% block content %}
 <div class="home-container">
     <div class="hero-section">
-        <h1>Welcome to GetExchanged!</h1>
+        <h1>Welcome to the Flask App</h1>
         <p>
-            Looking to study abroad?
-            Here you can find and view exchange agreements between the University of Copenhagen and partner universities all over the world.
-            View agreements, generate and download reports.
+            Search agreements, reports, or users using regex matching.
         </p>
     </div>
+    <div class="search-container">
+        <form method="POST">
+            <input
+                type="text"
+                name="search"
+                placeholder="Search with regex..."
+                required
+            >
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    {% if results %}
+    <div class="results-container">
+        <h2>Search Results</h2>
+        {% for result in results %}
+            <div class="result-card">
+                <strong>{{ result.file }}</strong>
+                <p>{{ result.match }}</p>
+            </div>
+    {% endfor %}
+</div>
+{% endif %}
     <div class="card-container">
         <a href="{{ url_for('agreements') }}" class="card">
-            <h2> Agreements</h2>
-            <p>View and manage all agreements.</p>
+            <h2>Agreements</h2>
+            <p>View and manage agreements.</p>
         </a>
         <a href="{{ url_for('reports') }}" class="card">
-            <h2> Reports</h2>
-            <p>Access analytics and generated reports.</p>
+            <h2>Reports</h2>
+            <p>Access generated reports.</p>
         </a>
         <a href="{{ url_for('profile') }}" class="card">
-            <h2> Profile</h2>
-            <p>Update your personal information and settings.</p>
+            <h2>Profile</h2>
+            <p>Manage your account settings.</p>
         </a>
     </div>
 </div>

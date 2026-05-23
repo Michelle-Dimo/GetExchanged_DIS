@@ -1,6 +1,8 @@
 import os
-from flask import Flask, app, render_template
+import re
+from flask import Flask, app, render_template, request
 import psycopg2
+import csv
 
 def create_app(test_config = None):
     # Create app
@@ -70,6 +72,30 @@ def create_app(test_config = None):
     @app.route('/profile')
     def profile():
         return render_template('profile.html')
+
+    # Regex matching for homepage (maybe?? idk, gav det et skud)
+    DATA_FOLDER = "data"
+    @app.route("/", methods=["GET", "POST"])
+    def home():
+        results = []
+        if request.method == "POST":
+            search = request.form.get("search")
+            try:
+                pattern = re.compile(search, re.IGNORECASE)
+                for filename in os.listdir(DATA_FOLDER):
+                    if filename.endswith(".csv"):
+                        filepath = os.path.join(DATA_FOLDER, filename)
+                        with open(filepath, newline="", encoding="utf-8") as file:
+                            reader = csv.reader(file)
+                            for row in reader:
+                                row_text = " | ".join(row)
+                                if pattern.search(row_text):
+                                    results.append({"file": filename, "match": row_text})
+
+            except re.error:
+                results.append({"file": "Error", "match": "Invalid regex pattern"})
+
+        return render_template("home.html", results=results)
     
     if __name__ == '__main__':
         app.run(debug=True)
