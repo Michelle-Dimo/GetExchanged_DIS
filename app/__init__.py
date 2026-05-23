@@ -2,12 +2,10 @@ import os
 import re
 from flask import Flask, app, render_template, request
 import psycopg2
-import csv
 
 def create_app(test_config = None):
     # Create app
     app = Flask(__name__, instance_relative_config=True)
-
 
     def get_db_connection():
         conn = psycopg2.connect(host='localhost',
@@ -71,6 +69,19 @@ def create_app(test_config = None):
     
     from . import agreements
     app.register_blueprint(agreements.bp)
+
+    # Map (plz virk)
+    from flask import jsonify
+    import csv
+
+    @app.route("/api/map-data")
+    def map_data():
+        rows = []
+        with open("data/Study_fields_with_latlon.csv", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for r in reader:
+                rows.append(r)
+        return jsonify({"universities": rows})
 
     # Regex matching for homepage (maybe?? idk, har givet det et skud)
     DATA_FOLDER = "data"

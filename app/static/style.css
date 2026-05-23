@@ -164,3 +164,14 @@ body {
 .form-card button:hover {
     background-color: #1d4ed8;
 }
+
+#map {
+    height: 650px;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 12px;
+}
+
+.map-section {
+    margin-top: 40px;
+}

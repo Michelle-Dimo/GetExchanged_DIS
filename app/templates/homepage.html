@@ -21,6 +21,10 @@
             <button type="submit">Search</button>
         </form>
     </div>
+    <div class="map-section">
+        <h2>🌍 Global University Map</h2>
+        <div id="map"></div>
+    </div>
     {% if results %}
     <div class="results-container">
         <h2>Search Results</h2>
@@ -47,4 +51,52 @@
         </a>
     </div>
 </div>
+
+<div class="map-section">
+    <h2>🌍 Exchange Universe Map</h2>
+    <div id="map"></div>
+</div>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"/>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<script>
+const map = L.map('map').setView([20, 0], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+const markers = L.markerClusterGroup({
+    chunkedLoading: true
+});
+fetch("/api/map-data")
+.then(res => res.json())
+.then(data => {
+    data.universities.forEach(u => {
+        if (!u.Latitude || !u.Longitude) return;
+        const count = parseInt(u["N agreements"] || 1);
+        const marker = L.circleMarker(
+            [u.Latitude, u.Longitude],
+            {
+                radius: Math.min(20, 4 + count / 5),
+                color: "#2c6bed",
+                fillColor: "#2c6bed",
+                fillOpacity: 0.6,
+                weight: 1
+            }
+        );
+        marker.bindPopup(`
+            <b>${u.Institution}</b><br>
+            ${u.City}, ${u.Country}<br>
+            Agreements: ${count}<br><br>
+            <a href="/agreements?institution=${encodeURIComponent(u.Institution)}">
+                View agreements
+            </a>
+        `);
+        markers.addLayer(marker);
+    });
+    map.addLayer(markers);
+});
+</script>
 {% endblock %}
