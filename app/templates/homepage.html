@@ -1,16 +1,28 @@
 {% extends "base.html" %}
-
-{% block header %}
-  <h1>{% block title %}
-        <h2>Home Page</h2>
-    {% endblock %}</h1>
-    <p>Welcome to the homepage of our Flask app!</p>
-{% endblock %}
-
+{% block title %}Home{% endblock %}
 {% block content %}
-    <div class='button'>
-        <a href="/agreements">Agreements</a>
-        <a href="/reports">Reports</a>
-        <a href="/profile">Profile</a>
+<div class="home-container">
+    <div class="hero-section">
+        <h1>Welcome to GetExchanged!</h1>
+        <p>
+            Looking to study abroad?
+            Here you can find and view exchange agreements between the University of Copenhagen and partner universities all over the world.
+            View agreements, generate and download reports.
+        </p>
     </div>
+    <div class="card-container">
+        <a href="{{ url_for('agreements') }}" class="card">
+            <h2> Agreements</h2>
+            <p>View and manage all agreements.</p>
+        </a>
+        <a href="{{ url_for('reports') }}" class="card">
+            <h2> Reports</h2>
+            <p>Access analytics and generated reports.</p>
+        </a>
+        <a href="{{ url_for('profile') }}" class="card">
+            <h2> Profile</h2>
+            <p>Update your personal information and settings.</p>
+        </a>
+    </div>
+</div>
 {% endblock %}

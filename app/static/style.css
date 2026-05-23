@@ -1,0 +1,166 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+.home-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px 20px;
+}
+
+.hero-section {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.hero-section h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: #1f2937;
+}
+
+.hero-section p {
+    font-size: 18px;
+    color: #6b7280;
+}
+
+.card-container {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: white;
+    width: 280px;
+    padding: 30px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2563eb;
+}
+
+.card p {
+    color: #555;
+    line-height: 1.5;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+}
+
+.profile-card {
+    background-color: white;
+    padding: 50px;
+    border-radius: 18px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 400px;
+}
+
+.profile-card h1 {
+    margin-bottom: 15px;
+    color: #1f2937;
+}
+
+.profile-card p {
+    color: #6b7280;
+    margin-bottom: 35px;
+}
+
+.profile-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.login-btn {
+    background-color: #2563eb;
+    color: white;
+}
+
+.login-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.register-btn {
+    background-color: #10b981;
+    color: white;
+}
+
+.register-btn:hover {
+    background-color: #059669;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+}
+
+.form-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    width: 350px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-card h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.form-card input {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.form-card button {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background-color: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.form-card button:hover {
+    background-color: #1d4ed8;
+}
