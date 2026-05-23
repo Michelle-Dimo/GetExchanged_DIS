@@ -65,18 +65,17 @@ def create_app(test_config = None):
     def register():
         return render_template('register.html')
     
-    from . import agreements
-    app.register_blueprint(agreements.bp)
-    
-
     @app.route('/profile')
     def profile():
         return render_template('profile.html')
+    
+    from . import agreements
+    app.register_blueprint(agreements.bp)
 
-    # Regex matching for homepage (maybe?? idk, gav det et skud)
+    # Regex matching for homepage (maybe?? idk, har givet det et skud)
     DATA_FOLDER = "data"
-    @app.route("/", methods=["GET", "POST"])
-    def home():
+    @app.route("/search", methods=["POST"])
+    def search():
         results = []
         if request.method == "POST":
             search = request.form.get("search")
@@ -91,13 +90,7 @@ def create_app(test_config = None):
                                 row_text = " | ".join(row)
                                 if pattern.search(row_text):
                                     results.append({"file": filename, "match": row_text})
-
             except re.error:
                 results.append({"file": "Error", "match": "Invalid regex pattern"})
-
-        return render_template("home.html", results=results)
-    
-    if __name__ == '__main__':
-        app.run(debug=True)
-
+        return render_template("homepage.html", results=results)
     return app
