@@ -3,10 +3,6 @@ import re
 from flask import Flask, app, render_template, request
 import psycopg2
 
-#To be able to authenticate users
-from app import auth
-app.register_blueprint(auth.bp)
-
 
 def create_app(test_config = None):
     # Create app
@@ -57,6 +53,11 @@ def create_app(test_config = None):
         conn.close()
         return render_template('index.html', agreements=agreements)
     
+    #To be able to authenticate users
+    from . import auth
+    app.register_blueprint(auth.bp)
+
+
     @app.route('/reports')
     def reports():
         return render_template('reports.html')
