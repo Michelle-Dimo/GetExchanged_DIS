@@ -43,16 +43,6 @@ def create_app(test_config = None):
     def about():
         return render_template('about.html')
     
-    @app.route('/index')
-    def index():
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('SELECT * FROM agreements;')
-        agreements = cur.fetchall()
-        cur.close()
-        conn.close()
-        return render_template('index.html', agreements=agreements)
-    
     #To be able to authenticate users
     from . import auth
     app.register_blueprint(auth.bp)
