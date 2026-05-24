@@ -29,7 +29,7 @@ body {
 }
 
 .site-title {
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
 
     font-size: 24px;
@@ -48,6 +48,12 @@ body {
     opacity: 0.7;
 }
 
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .foot-bar {
     display: flex;
     text-align: center;
@@ -60,6 +66,12 @@ body {
 .foot-center {
     flex: 1;
     text-align: center;
+}
+
+.about-card {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    font-weight: bold;
 }
 
 .home-container {
@@ -222,13 +234,31 @@ body {
     background-color: #1d4ed8;
 }
 
-#map {
-    height: 650px;
+.map-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.filter-panel {
+    width: 250px;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.filter-panel select {
     width: 100%;
-    margin-top: 20px;
-    border-radius: 12px;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 
 .map-section {
-    margin-top: 40px;
+    flex: 1;
+}
+
+#map {
+    height: 600px;
+    width: 100%;
+    border-radius: 10px;
 }

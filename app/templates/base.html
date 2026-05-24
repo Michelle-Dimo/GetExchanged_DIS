@@ -4,10 +4,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Min App{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for message in messages %}
+        <div class="flash-message">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+{% block scripts %}{% endblock %}
 <body>
     <header class="topbar">
-        <div class="nav-left">
+        <nav class="nav-left">
             <div class="search-container">
               <form method="POST" action="/search">
                 <input
@@ -19,21 +30,21 @@
               <button type="submit">Search</button>
               </form>
             </div>
-        </div>
+          </nav>
         <div class="nav-center">
-            <a href="{{ url_for('home') }}" class="site-title">
+            <a href="{{ url_for('home') }}" class="site-title" aria-label="GetExchanged Home">
                 GetExchanged
             </a>
         </div>
-        <div class="nav-right">
-            <a href="{{ url_for('profile') }}" class="icon-btn">👤</a>
-        </div>
+        <nav class="nav-right">
+            <a href="{{ url_for('profile') }}" class="icon-btn" aria-label="Profile">👤</a>
+        </nav>
     </header>
     <main>{% block content %}{% endblock %}</main>
     <footer class="foot-bar">
       <div class="foot-center">
         <div class="footer-content">
-            <a href="{{ url_for('about') }}" class="about-card">
+            <a href="{{ url_for('about') }}" class="about-card" aria-label="About GetExchanged">
                 <h2>About</h2>
                 <p>Learn more about GetExchanged and how to use the platform.</p>
             </a>
