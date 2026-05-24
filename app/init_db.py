@@ -55,6 +55,21 @@ def init_db():
             WITH (FORMAT csv, HEADER true)
         """, f)
 
+    ##Create users table
+
+    #cur.execute('DROP TABLE IF EXISTS users CASCADE;')
+    #cur.execute('''
+        #CREATE TABLE users (
+            #id SERIAL PRIMARY KEY,
+            #ku_id VARCHAR(20) UNIQUE NOT NULL,
+            #full_name VARCHAR(100) NOT NULL,
+            #email VARCHAR(100) UNIQUE NOT NULL,
+            #study_field VARCHAR(100),
+            #academic_year VARCHAR(20),
+            #password TEXT NOT NULL
+        #)
+    #''')
+
     #cur.execute('DROP TABLE IF EXISTS reports;')
     #cur.execute('CREATE TABLE reports (academic_year INT NOT NULL,'
     #                                 'rating INT NOT NULL,'
@@ -110,3 +125,4 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+

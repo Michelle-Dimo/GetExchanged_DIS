@@ -3,6 +3,11 @@ import re
 from flask import Flask, app, render_template, request
 import psycopg2
 
+#To be able to authenticate users
+from app import auth
+app.register_blueprint(auth.bp)
+
+
 def create_app(test_config = None):
     # Create app
     app = Flask(__name__, instance_relative_config=True)

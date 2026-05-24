@@ -1,7 +1,6 @@
 #link to tutorial: https://flask.palletsprojects.com/en/stable/tutorial/database/
 
 
-
 from flask import (
     Blueprint, flash, g, redirect,
     render_template, request, session, url_for
@@ -13,7 +12,7 @@ from app.init_db import get_db
 
 bp = Blueprint('auth', __name__)
 
-
+#register
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
 
@@ -66,6 +65,7 @@ def register():
 
     return render_template('register.html')
 
+#login
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
 
@@ -105,6 +105,7 @@ def login():
 
     return render_template('login.html')
 
+#logout
 @bp.route('/logout')
 def logout():
 
@@ -114,3 +115,22 @@ def logout():
 
     return redirect(url_for('home'))
 
+#automatic login of users
+@bp.before_app_request
+def load_logged_in_user():
+
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        g.user = None
+
+    else:
+        db = get_db()
+        cur = db.cursor()
+
+        cur.execute(
+            'SELECT * FROM users WHERE id = %s',
+            (user_id,)
+        )
+
+        g.user = cur.fetchone()
