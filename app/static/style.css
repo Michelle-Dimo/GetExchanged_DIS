@@ -5,6 +5,63 @@ body {
     color: #333;
 }
 
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 20px;
+
+    background-color: #d4d4d4;
+    color: rgb(0, 0, 0);
+}
+.nav-left,
+.nav-right {
+    width: 60px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.nav-center {
+    flex: 1;
+    text-align: center;
+}
+
+.site-title {
+    color: white;
+    text-decoration: none;
+
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.icon-btn {
+    color: white;
+    text-decoration: none;
+
+    font-size: 24px;
+}
+
+.icon-btn:hover,
+.site-title:hover {
+    opacity: 0.7;
+}
+
+.foot-bar {
+    display: flex;
+    text-align: center;
+    padding: 20px;
+    background-color: #d4d4d4;
+    color: rgb(0, 0, 0);
+    margin-top: 20px;
+}
+
+.foot-center {
+    flex: 1;
+    text-align: center;
+}
+
 .home-container {
     max-width: 1100px;
     margin: 0 auto;

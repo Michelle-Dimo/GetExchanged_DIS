@@ -10,21 +10,6 @@
             Search through and find the exchange agreement for your desired destination, read reports from previous exchange students, or write your own report to share yor experience!
         </p>
     </div>
-    <div class="search-container">
-        <form method="POST" action="/search">
-            <input
-                type="text"
-                name="search"
-                placeholder="Search ..."
-                required
-            >
-            <button type="submit">Search</button>
-        </form>
-    </div>
-    <div class="map-section">
-        <h2>🌍 Global University Map</h2>
-        <div id="map"></div>
-    </div>
     {% if results %}
     <div class="results-container">
         <h2>Search Results</h2>
@@ -45,17 +30,8 @@
             <h2>Reports</h2>
             <p>Read and generate reports.</p>
         </a>
-        <a href="{{ url_for('profile') }}" class="card">
-            <h2>Profile</h2>
-            <p>Login, create acount and manage your account settings.</p>
-        </a>
-        <a href="{{ url_for('about') }}" class="card">
-            <h2>About</h2>
-            <p>Learn more about GetExchanged and how to use the platform.</p>
-        </a>
     </div>
 </div>
-
 <div class="map-section">
     <h2>🌍 Exchange Universe Map</h2>
     <div id="map"></div>

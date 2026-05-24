@@ -1,15 +1,44 @@
-<!doctype html>
-<title>{% block title %}{% endblock %} - Flaskr</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<nav>
-  <h1>GetExchanged</h1>
-</nav>
-<section class="content">
-  <header>
-    {% block header %}{% endblock %}
-  </header>
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}{% endblock %}
-</section>
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Min App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="nav-left">
+            <div class="search-container">
+              <form method="POST" action="/search">
+                <input
+                  type="text"
+                  name="search"
+                  placeholder="Search ..."
+                  required
+                >
+              <button type="submit">Search</button>
+              </form>
+            </div>
+        </div>
+        <div class="nav-center">
+            <a href="{{ url_for('home') }}" class="site-title">
+                GetExchanged
+            </a>
+        </div>
+        <div class="nav-right">
+            <a href="{{ url_for('profile') }}" class="icon-btn">👤</a>
+        </div>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+    <footer class="foot-bar">
+      <div class="foot-center">
+        <div class="footer-content">
+            <a href="{{ url_for('about') }}" class="about-card">
+                <h2>About</h2>
+                <p>Learn more about GetExchanged and how to use the platform.</p>
+            </a>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>
