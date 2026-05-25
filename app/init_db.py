@@ -9,8 +9,8 @@ import click
 def get_db():
     if 'db' not in g:
         g.db = psycopg2.connect(
-        host="localhost",
-        database="ku_exchange",
+        host=os.environ['DB_HOST'],
+        database=os.environ['DB_NAME'],
         user=os.environ['DB_USERNAME'],
         password=os.environ['DB_PASSWORD'],
         cursor_factory=DictCursor)
