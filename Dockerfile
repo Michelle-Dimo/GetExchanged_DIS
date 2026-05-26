@@ -8,9 +8,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN sed -i 's/\r$//' /app/entrypoint.sh && \
-    chmod +x /app/entrypoint.sh
+RUN chmod +x entrypoint.py
 
 EXPOSE 5000
 
-ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
+ENTRYPOINT ["python", "entrypoint.py"]
