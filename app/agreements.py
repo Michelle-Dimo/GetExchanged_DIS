@@ -11,11 +11,21 @@ bp = Blueprint('agreements', __name__)
 def table():
     db = get_db().cursor()
     db.execute('''
-                SELECT id, institution, text
+                SELECT id, institution
                 FROM agreements 
                             ''')
     agreements = db.fetchall()
 
     return render_template('agreements.html', agreements=agreements)
     
+@bp.route('/agreements/<int:id>')
+def agreement(id):
+    db = get_db().cursor()
+    db.execute('''
+                SELECT text
+                FROM agreements
+                WHERE id = %s
+               ''', (id,))
+    text = db.fetchone()
     
+    return render_template('agreements_text.html')

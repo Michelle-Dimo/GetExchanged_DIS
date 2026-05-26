@@ -7,10 +7,17 @@
 {% endblock %}
 
 {% block content %}
+        <header>
+            <h1>Agreements</h1>
+        </header>
     {% for agreement in agreements %}
-        <div class='agreement'>
-            <h3>{{ agreement['institution'] }} - {{ agreement['id'] }}</h3>
-            <p class='agreement_text'>{{ agreement['text'] }}</p>
-        </div>
+        <article class="agreement">
+            <div class="card-container">
+                    <a href="{{ url_for('agreements.agreement', id=agreement['id']) }}" class="agreement-card card">
+                    <h3>{{agreement['institution']}}</h3>
+                    <p>ID: {{agreement['id']}}</p>
+                </a>
+            </div>
+        </article>
     {% endfor %}
 {% endblock %}
