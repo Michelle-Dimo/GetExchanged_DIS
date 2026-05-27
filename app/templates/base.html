@@ -32,19 +32,19 @@
             </div>
           </nav>
         <div class="nav-center">
-            <a href="{{ url_for('home') }}" class="site-title" aria-label="GetExchanged Home">
+            <a href="{{ url_for('main.home') }}" class="site-title" aria-label="GetExchanged Home">
                 GetExchanged
             </a>
         </div>
         <nav class="nav-right">
-            <a href="{{ url_for('profile') }}" class="icon-btn" aria-label="Profile">👤</a>
+            <a href="{{ url_for('main.profile') }}" class="icon-btn" aria-label="Profile">👤</a>
         </nav>
     </header>
     <main>{% block content %}{% endblock %}</main>
     <footer class="foot-bar">
       <div class="foot-center">
         <div class="footer-content">
-            <a href="{{ url_for('about') }}" class="about-card" aria-label="About GetExchanged">
+            <a href="{{ url_for('main.about') }}" class="about-card" aria-label="About GetExchanged">
                 <h2>About</h2>
                 <p>Learn more about GetExchanged and how to use the platform.</p>
             </a>

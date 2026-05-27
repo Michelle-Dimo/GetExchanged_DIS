@@ -1,6 +1,5 @@
 #link to tutorial: https://flask.palletsprojects.com/en/stable/tutorial/database/
 
-
 from flask import (
     Blueprint, flash, g, redirect,
     render_template, request, session, url_for
@@ -15,6 +14,8 @@ bp = Blueprint('auth', __name__)
 #register
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    if g.user:
+        return redirect(url_for('main.home'))
 
     if request.method == 'POST':
 
@@ -56,6 +57,11 @@ def register():
                 )
             )
 
+            existing_user = cur.fetchone()
+
+            if existing_user is not None:
+                error = 'User already exists.'
+
             db.commit()
 
             flash('Account created successfully.')
@@ -68,6 +74,8 @@ def register():
 #login
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    if g.user:
+        return redirect(url_for('main.home'))
 
     if request.method == 'POST':
 
@@ -99,7 +107,7 @@ def login():
 
             flash('Logged in successfully.')
 
-            return redirect(url_for('home'))
+            return redirect(url_for('main.home'))
 
         flash(error)
 
@@ -113,7 +121,7 @@ def logout():
 
     flash('You have been logged out.')
 
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))
 
 #automatic login of users
 @bp.before_app_request

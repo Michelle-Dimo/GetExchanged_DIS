@@ -1,8 +1,7 @@
 import os
 import re
-from flask import Flask, app, render_template, request
+from flask import Flask, app, redirect, render_template, request, g, url_for
 import psycopg2
-
 
 def create_app(test_config = None):
     # Create app
@@ -27,42 +26,27 @@ def create_app(test_config = None):
     from . import init_db
     init_db.init_app(app)
 
-    # Creating routes
-    @app.route('/')
-    def home():
-        return render_template('homepage.html')
-
-    @app.route('/about')
-    def about():
-        return render_template('about.html')
-    
     #To be able to authenticate users
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import main
+    app.register_blueprint(main.bp)
 
-    @app.route('/reports')
-    def reports():
-        return render_template('reports.html')
-    
-    @app.route('/login')
-    def login():
-        return render_template('login.html')
-    
-    @app.route('/register')
-    def register():
-        return render_template('register.html')
-    
-    @app.route('/profile')
-    def profile():
-        return render_template('profile.html')
-    
     from . import agreements
     app.register_blueprint(agreements.bp)
 
     # Map (plz virk)
     from flask import jsonify
     import csv
+
+    @app.route('/')
+    def index():
+
+        if g.user:
+            return redirect(url_for('main.home'))
+
+        return redirect(url_for('auth.login'))
 
     @app.route("/api/map-data")
     def map_data():

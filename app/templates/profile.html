@@ -1,20 +1,62 @@
 {% extends "base.html" %}
+
 {% block title %}Profile{% endblock %}
+
 {% block content %}
+
 <div class="profile-container">
+
     <div class="profile-card">
-        <h1> Profile</h1>
-        <p>
-            Log into your account or create a new profile to continue.
+
+        <h1>Your Profile</h1>
+
+        <p class="profile-subtitle">
+            Manage your account information below.
         </p>
-        <div class="profile-buttons">
-            <a href="{{ url_for('login') }}" class="btn login-btn">
-                Log In
-            </a>
-            <a href="{{ url_for('register') }}" class="btn register-btn">
-                Create Account
-            </a>
+
+        <div class="profile-info">
+
+            <div class="profile-field">
+                <strong>Full name:</strong>
+                <span>{{ g.user['full_name'] }}</span>
+            </div>
+
+            <div class="profile-field">
+                <strong>KU ID:</strong>
+                <span>{{ g.user['ku_id'] }}</span>
+            </div>
+
+            <div class="profile-field">
+                <strong>Email:</strong>
+                <span>{{ g.user['email'] }}</span>
+            </div>
+
+            <div class="profile-field">
+                <strong>Study field:</strong>
+                <span>{{ g.user['study_field'] }}</span>
+            </div>
+
+            <div class="profile-field">
+                <strong>Academic year:</strong>
+                <span>{{ g.user['academic_year'] }}</span>
+            </div>
+
         </div>
+
+        <div class="profile-actions">
+
+            <a href="{{ url_for('main.home') }}" class="btn primary-btn">
+                Go to Dashboard
+            </a>
+
+            <a href="{{ url_for('auth.logout') }}" class="btn logout-btn">
+                Logout
+            </a>
+
+        </div>
+
     </div>
+
 </div>
+
 {% endblock %}
