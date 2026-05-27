@@ -47,6 +47,9 @@ def create_app(test_config = None):
             return redirect(url_for('main.home'))
 
         return redirect(url_for('auth.login'))
+    
+    from flask import g, redirect, url_for
+
 
     @app.route("/api/map-data")
     def map_data():

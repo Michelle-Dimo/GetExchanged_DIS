@@ -23,7 +23,6 @@ def home():
 def profile():
     return render_template('profile.html')
 
-
 @bp.route('/reports')
 @login_required
 def reports():

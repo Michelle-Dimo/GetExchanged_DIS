@@ -6,14 +6,13 @@ from flask import (
 )
 
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from app.init_db import get_db
 
 bp = Blueprint('auth', __name__)
 
-#register
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+
     if g.user:
         return redirect(url_for('main.home'))
 
@@ -33,10 +32,22 @@ def register():
 
         if not ku_id:
             error = 'KU ID is required.'
-
         elif not password:
             error = 'Password is required.'
 
+        if error is None:
+
+            cur.execute(
+                'SELECT id FROM users WHERE ku_id = %s',
+                (ku_id,)
+            )
+
+            existing_user = cur.fetchone()
+
+            if existing_user is not None:
+                error = 'User already exists.'
+
+        # Insert user if no errors
         if error is None:
 
             hashed_password = generate_password_hash(password)
@@ -57,11 +68,6 @@ def register():
                 )
             )
 
-            existing_user = cur.fetchone()
-
-            if existing_user is not None:
-                error = 'User already exists.'
-
             db.commit()
 
             flash('Account created successfully.')
@@ -71,9 +77,9 @@ def register():
 
     return render_template('register.html')
 
-#login
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+
     if g.user:
         return redirect(url_for('main.home'))
 
@@ -96,7 +102,6 @@ def login():
 
         if user is None:
             error = 'Incorrect KU ID.'
-
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
@@ -106,24 +111,20 @@ def login():
             session['user_id'] = user['id']
 
             flash('Logged in successfully.')
-
             return redirect(url_for('main.home'))
 
         flash(error)
 
     return render_template('login.html')
 
-#logout
 @bp.route('/logout')
 def logout():
 
     session.clear()
-
     flash('You have been logged out.')
 
-    return redirect(url_for('main.home'))
+    return redirect(url_for('auth.login'))
 
-#automatic login of users
 @bp.before_app_request
 def load_logged_in_user():
 
@@ -131,7 +132,6 @@ def load_logged_in_user():
 
     if user_id is None:
         g.user = None
-
     else:
         db = get_db()
         cur = db.cursor()
