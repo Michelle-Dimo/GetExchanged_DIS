@@ -102,18 +102,35 @@ def init_db():
     #        WITH (FORMAT csv, HEADER true)
     #    """, f)
 #
-    #cur.execute('DROP TABLE IF EXISTS study_fields;')
-    #cur.execute('CREATE TABLE study_fields (index INT UNIQUE,'
-    #                                 'field VARCHAR (80) NOT NULL,'
-    #                                 'institution VARCHAR (80) NOT NULL,'
-    #                                 'continent VARCHAR (20) NOT NULL,'
-    #                                 'country VARCHAR (20) NOT NULL,'
-    #                                 'city VARCHAR (20) NOT NULL,'
-    #                                 'n_agreements INT NOT NULL,'
-    #                                 'agreement_id INT NOT NULL)'
-    #                                 )
-#
+    cur.execute('DROP TABLE IF EXISTS study_fields;')
+    cur.execute(
+        '''
+        CREATE TABLE study_fields (index INT UNIQUE,
+                            study_field VARCHAR (80) NOT NULL,
+                            institution VARCHAR (80) NOT NULL,
+                            continent VARCHAR (20) NOT NULL,
+                            country VARCHAR (40) NOT NULL,
+                            city VARCHAR (80) NOT NULL,
+                            n_agreements INT NOT NULL,
+                            agreement_id INT NOT NULL)
+        ''')
 
+    study_fields_path = os.path.normpath(os.path.join(base_dir, "../data/Study_fields_data.csv"))
+
+    # Insert data into the table
+    with open(study_fields_path, "r") as f:
+        cur.copy_expert("""
+            COPY study_fields (index,
+                            study_field,
+                            institution,
+                            continent,
+                            country,
+                            city,
+                            n_agreements,
+                            agreement_id)
+            FROM STDIN
+            WITH (FORMAT csv, HEADER true)
+        """, f)
     #cur.execute('DROP TABLE IF EXISTS applications CASCADE;')
     #cur.execute('''
     #    CREATE TABLE applications (
