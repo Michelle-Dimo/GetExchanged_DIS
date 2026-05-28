@@ -8,6 +8,11 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from .init_db import get_db
 
+#regex patterns to verify KU-ID and email:
+import re
+KU_ID_PATTERN = re.compile(r'^[a-zA-Z]{3}\d{3}$')
+EMAIL_PATTERN = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+
 bp = Blueprint('auth', __name__)
 
 @bp.route('/register', methods=('GET', 'POST'))
@@ -32,6 +37,15 @@ def register():
             error = 'KU ID is required.'
         elif not password:
             error = 'Password is required.'
+
+        if not ku_id:
+            error = 'KU ID is required.'
+        elif not KU_ID_PATTERN.match(ku_id):
+            error = 'KU ID must be 3 letters followed by 3 digits (e.g. abc123).'
+        elif not password:
+            error = 'Password is required.'
+        elif not EMAIL_PATTERN.match(email):
+            error = 'Invalid email format.'
 
         db = get_db()
         cur = db.cursor()
@@ -107,6 +121,13 @@ def login():
             error = 'Incorrect KU ID.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
+        
+        if not ku_id:
+            error = 'KU ID is required.'
+        elif not KU_ID_PATTERN.match(ku_id):
+            error = 'KU ID must be 3 letters followed by 3 digits (e.g. abc123).'
+        elif not password:
+            error = 'Password is required.'
 
         if error is None:
             session.clear()
