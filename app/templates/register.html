@@ -9,6 +9,12 @@
 
         <h1>Create Account</h1>
 
+        <select name="status" required>
+            <option value="" disabled selected>Select status</option>
+            <option value="Alumni">Alumni</option>
+            <option value="Applicant">Applicant</option>
+        </select>
+
         <input type="text" name="ku_id" placeholder="KU ID" required>
 
         <input type="text" name="full_name" placeholder="Full Name" required>
@@ -16,8 +22,6 @@
         <input type="email" name="email" placeholder="Email" required>
 
         <input type="text" name="study_field" placeholder="Study Field" required>
-
-        <input type="text" name="academic_year" placeholder="Academic Year" required>
 
         <input type="password" name="password" placeholder="Password" required>
 

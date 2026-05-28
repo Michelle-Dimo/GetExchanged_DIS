@@ -6,7 +6,7 @@ from flask import (
 )
 
 from werkzeug.security import check_password_hash, generate_password_hash
-from app.init_db import get_db
+from .init_db import get_db
 
 bp = Blueprint('auth', __name__)
 
@@ -18,62 +18,64 @@ def register():
 
     if request.method == 'POST':
 
-        ku_id = request.form['ku_id']
-        full_name = request.form['full_name']
-        email = request.form['email']
-        study_field = request.form['study_field']
-        academic_year = request.form['academic_year']
-        password = request.form['password']
-
-        db = get_db()
-        cur = db.cursor()
+        ku_id = request.form.get('ku_id')
+        full_name = request.form.get('full_name')
+        email = request.form.get('email')
+        study_field = request.form.get('study_field')
+        password = request.form.get('password')
+        status = request.form.get('status')
 
         error = None
 
+        # Basic validation
         if not ku_id:
             error = 'KU ID is required.'
         elif not password:
             error = 'Password is required.'
 
-        if error is None:
+        db = get_db()
+        cur = db.cursor()
 
+        # Check if user exists
+        if error is None:
             cur.execute(
                 'SELECT id FROM users WHERE ku_id = %s',
                 (ku_id,)
             )
-
             existing_user = cur.fetchone()
 
             if existing_user is not None:
                 error = 'User already exists.'
 
-        # Insert user if no errors
+        # Insert user
         if error is None:
 
             hashed_password = generate_password_hash(password)
 
             cur.execute(
-                '''
+                """
                 INSERT INTO users
-                (ku_id, full_name, email, study_field, academic_year, password)
+                (ku_id, full_name, email, study_field, password, status)
                 VALUES (%s, %s, %s, %s, %s, %s)
-                ''',
+                """,
                 (
                     ku_id,
                     full_name,
                     email,
                     study_field,
-                    academic_year,
-                    hashed_password
+                    hashed_password,
+                    status
                 )
             )
 
             db.commit()
+            cur.close()
 
-            flash('Account created successfully.')
+            flash('Account created successfully.', 'success')
             return redirect(url_for('auth.login'))
 
-        flash(error)
+        cur.close()
+        flash(error, 'error')
 
     return render_template('register.html')
 
@@ -85,8 +87,8 @@ def login():
 
     if request.method == 'POST':
 
-        ku_id = request.form['ku_id']
-        password = request.form['password']
+        ku_id = request.form.get('ku_id')
+        password = request.form.get('password')
 
         db = get_db()
         cur = db.cursor()
@@ -97,6 +99,7 @@ def login():
         )
 
         user = cur.fetchone()
+        cur.close()
 
         error = None
 
@@ -106,14 +109,13 @@ def login():
             error = 'Incorrect password.'
 
         if error is None:
-
             session.clear()
             session['user_id'] = user['id']
 
-            flash('Logged in successfully.')
+            flash('Logged in successfully.', 'success')
             return redirect(url_for('main.home'))
 
-        flash(error)
+        flash(error, 'error')
 
     return render_template('login.html')
 
@@ -121,7 +123,7 @@ def login():
 def logout():
 
     session.clear()
-    flash('You have been logged out.')
+    flash('You have been logged out.', 'info')
 
     return redirect(url_for('auth.login'))
 
@@ -142,3 +144,4 @@ def load_logged_in_user():
         )
 
         g.user = cur.fetchone()
+        cur.close()

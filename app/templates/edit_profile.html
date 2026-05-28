@@ -42,12 +42,19 @@
             </div>
 
             <div class="profile-field">
-                <label>Academic Year</label>
-                <input
-                    type="text"
-                    name="academic_year"
-                    value="{{ g.user['academic_year'] }}"
-                >
+                <label for="status">My status</label>
+
+                <select name="status" id="status">
+                    <option value="Alumni"
+                        {% if g.user['status'] == 'Alumni' %}selected{% endif %}>
+                        Alumni
+                    </option>
+
+                    <option value="Applicant"
+                        {% if g.user['status'] == 'Applicant' %}selected{% endif %}>
+                        Applicant
+                    </option>
+                </select>
             </div>
 
             <button type="submit" class="btn primary-btn">

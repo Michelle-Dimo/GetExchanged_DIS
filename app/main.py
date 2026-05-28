@@ -54,7 +54,7 @@ def edit_profile():
         email = request.form.get('email')
         study_field = request.form.get('study_field')
         academic_year = request.form.get('academic_year')
-
+        status = request.form.get('status')
         db = get_db()
 
         try:
@@ -66,7 +66,8 @@ def edit_profile():
                 SET full_name = %s,
                     email = %s,
                     study_field = %s,
-                    academic_year = %s
+                    academic_year = %s,
+                    status = %s
                 WHERE id = %s
                 """,
                 (
@@ -74,6 +75,7 @@ def edit_profile():
                     email,
                     study_field,
                     academic_year,
+                    status,
                     g.user['id']
                 )
             )

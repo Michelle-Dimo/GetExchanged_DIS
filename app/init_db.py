@@ -1,4 +1,5 @@
 import os
+from venv import create
 import psycopg2
 from psycopg2.extras import DictCursor
 from datetime import datetime
@@ -56,19 +57,30 @@ def init_db():
         """, f)
 
     ##Create users table
-
+    
     cur.execute('DROP TABLE IF EXISTS users CASCADE;')
-    cur.execute('''
+    cur.execute("""
+        DO $$
+        BEGIN
+            IF NOT EXISTS (
+                SELECT 1 FROM pg_type WHERE typname = 'user_status'
+            ) THEN
+                CREATE TYPE user_status AS ENUM ('Alumni', 'Applicant');
+            END IF;
+        END
+        $$;
+    """)
+    cur.execute("""
         CREATE TABLE users (
             id SERIAL PRIMARY KEY,
             ku_id VARCHAR(20) UNIQUE NOT NULL,
             full_name VARCHAR(100) NOT NULL,
             email VARCHAR(100) UNIQUE NOT NULL,
             study_field VARCHAR(100),
-            academic_year VARCHAR(20),
-            password TEXT NOT NULL
-        )
-    ''')
+            password TEXT NOT NULL,
+            status user_status NOT NULL
+        );
+    """)
 
     #cur.execute('DROP TABLE IF EXISTS reports;')
     #cur.execute('CREATE TABLE reports ('report_id INT PRIMARY KEY,'
