@@ -6,12 +6,13 @@
 
 <div class="profile-container">
 
+    <!-- PROFILE CARD -->
     <div class="profile-card">
 
         <h1>Your Profile</h1>
 
         <p class="profile-subtitle">
-            Manage your account information below.
+            View your profile information.
         </p>
 
         <div class="profile-info">
@@ -42,31 +43,49 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="action-card">
+
+        <h1>Manage Account</h1>
+
+        <p class="action-subtitle">
+            Manage your account information below.
+        </p>
 
         <div class="profile-actions">
 
-            <a href="{{ url_for('main.edit_profile') }}" class="btn primary-btn">
-            Edit Profile
-            </a>
+            <div class="action-field">
+                <a href="{{ url_for('main.home') }}" class="btn primary-btn">
+                    Go to the Homepage
+                </a>
+            </div>
 
-            <a href="{{ url_for('main.home') }}" class="btn primary-btn">
-            Go to Homepage
-            </a>
+            <div class="action-field">
+                <a href="{{ url_for('main.my_applications') }}" class="btn primary-btn">
+                    My Applications
+                </a>
+            </div>
 
-            <a href="{{ url_for('auth.logout') }}" class="btn logout-btn">
-            Logout
-            </a>
+            <div class="action-field">
+                <a href="{{ url_for('main.my_reports') }}" class="btn primary-btn">
+                    Saved Reports
+                </a>
+            </div>
 
-            <a href="{{ url_for('main.my_reports') }}" class="btn primary-btn">
-            My Reports
-            </a>
+            <div class="action-field">
+                <a href="{{ url_for('main.edit_profile') }}" class="btn primary-btn">
+                    Edit Profile
+                </a>
+            </div>
 
-            <a href="{{ url_for('main.my_applications') }}" class="btn primary-btn">
-            My Applications
-            </a>
+            <div class="action-field">
+                <a href="{{ url_for('auth.logout') }}" class="btn logout-btn">
+                    Logout
+                </a>
+            </div>
 
         </div>
-
     </div>
 
 </div>
