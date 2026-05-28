@@ -26,24 +26,6 @@ def home():
 def profile():
     return render_template('profile.html')
 
-@bp.route('/reports')
-def table():
-    db = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-    db.execute('''
-        SELECT
-            report_id,
-            institution,
-            study_field,
-            academic_year
-        FROM reports
-        ORDER BY institution
-    ''')
-
-    reports = db.fetchall()
-
-    return render_template('reports.html', reports=reports)
-
 @bp.route('/my_reports')
 @login_required
 def my_reports():
