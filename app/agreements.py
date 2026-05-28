@@ -28,4 +28,4 @@ def agreement(id):
                ''', (id,))
     text = db.fetchone()
     
-    return render_template('agreements_text.html')
+    return render_template('agreements_text.html', text=text)

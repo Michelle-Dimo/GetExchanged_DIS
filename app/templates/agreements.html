@@ -1,23 +1,19 @@
 {% extends 'base.html' %}
 
-{% block header %}
-  <h1>{% block title %}
-        <h2>Agreements</h2>
-    {% endblock %}</h1>
+{% block title %}
+    Agreements
 {% endblock %}
 
 {% block content %}
-        <header>
+        <div class="hero-section">
             <h1>Agreements</h1>
-        </header>
+        </div>
     {% for agreement in agreements %}
-        <article class="agreement">
-            <div class="card-container">
-                    <a href="{{ url_for('agreements.agreement', id=agreement['id']) }}" class="agreement-card card">
-                    <h3>{{agreement['institution']}}</h3>
-                    <p>ID: {{agreement['id']}}</p>
-                </a>
-            </div>
-        </article>
+        <div class="card-container">
+                <a href="{{ url_for('agreements.agreement', id=agreement['id']) }}" class="agreement-card card">
+                <h3>{{agreement['institution']}}</h3>
+                <p>ID: {{agreement['id']}}</p>
+            </a>
+        </div>
     {% endfor %}
 {% endblock %}
