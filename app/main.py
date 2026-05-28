@@ -28,6 +28,16 @@ def reports():
 
     return render_template('reports.html')
 
+@bp.route('/my_reports')
+@login_required
+def my_reports():
+    db = get_db().cursor()
+    db.execute(
+        'SELECT * FROM reports WHERE user_id = %s',
+        (g.user['id'],)
+    )
+    reports = db.fetchall()
+    return render_template('my_reports.html', reports=reports)
 
 @bp.route('/about')
 def about():
