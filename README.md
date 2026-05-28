@@ -40,7 +40,7 @@ The app is devided into multiple folder, as follows:
 - init_db.py → Database 
 - main.py → Blueprint and routes
 - auth.py → User authentication and routes
-- 
+
 ---
 
 ## Routes
@@ -81,7 +81,7 @@ The app is devided into multiple folder, as follows:
 
 ---
 
-## Project structure 🗂
+## Project structure
 
 GetExchanged/
 ├── app/
