@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}My Reports{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <h1>My Reports</h1>
+        <p class="profile-subtitle">Reports you have submitted.</p>
+
+        {% if reports %}
+            {% for report in reports %}
+                <div class="result-card">
+                    <strong>{{ report['institution'] }}</strong>
+                    <p>{{ report['report_text'] }}</p>
+                    <p>Rating: {{ report['rating'] }} | Costs: {{ report['costs'] }} | Year: {{ report['academic_year'] }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You haven't written any reports yet.</p>
+            <a href="{{ url_for('main.reports') }}" class="btn primary-btn">Write a Report</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

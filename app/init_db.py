@@ -71,9 +71,10 @@ def init_db():
     ''')
 
     #cur.execute('DROP TABLE IF EXISTS reports;')
-    #cur.execute('CREATE TABLE reports (academic_year INT NOT NULL,'
+    #cur.execute('CREATE TABLE reports ('report_id INT PRIMARY KEY,'
+    #                                 'user_id INT REFERENCES users(id)'
+    #                                 'academic_year INT NOT NULL,'
     #                                 'rating INT NOT NULL,'
-    #                                 'report_id INT PRIMARY KEY,'
     #                                 'costs INTEGER NOT NULL,'
     #                                 'report_text TEXT NOT NULL,'
     #                                 'institution VARCHAR (80) NOT NULL,'
