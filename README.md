@@ -56,16 +56,15 @@ The app is devided into multiple folder, as follows:
 /logout → Logout user  
 
 ### Profile page
-/my_repotrs → View created reports
-/edit-profile → Edit profile information 
-/create-exchange → Create listing  
-/my-exchanges → Manage listings  
+/my_repotrs → View created reports  
+/edit-profile → Edit profile information  
+/my_agreements → View saved agreements  
 
 ### Details
-/api/map-data → Maps the universities worldwide
-/search → search bar to navigate the website
-/reports → View and create reports
-/agreements → View agreements
+/api/map-data → Maps the universities worldwide  
+/search → search bar to navigate the website  
+/reports → View and create reports  
+/agreements → View agreements  
 
 ---
 
