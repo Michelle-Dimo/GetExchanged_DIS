@@ -262,3 +262,15 @@ body {
     width: 100%;
     border-radius: 10px;
 }
+
+.agreement-card {
+    background-color: white;
+    padding: 50px;
+    border-radius: 18px;
+    text-align: center;
+    width: 70%;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
