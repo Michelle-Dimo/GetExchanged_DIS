@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{text}}
+{% for report in reports %}
+    <div class='report'>
+        <h3>{{ report['institution'] }} - {{ report['id'] }}</h3>
+        <p class='report_text'>{{ report['text'] }}</p>
+        {% if g.user %}
+            <form method="POST" action="{{ url_for('main.apply', report_id=report['id']) }}">
+                <button type="submit">Apply</button>
+            </form>
+        {% endif %}
+    </div>
+{% endfor %}
+{% endblock %}
