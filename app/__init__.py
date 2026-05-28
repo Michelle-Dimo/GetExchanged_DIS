@@ -42,11 +42,7 @@ def create_app(test_config = None):
 
     @app.route('/')
     def index():
-
-        if g.user:
-            return redirect(url_for('main.home'))
-
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('main.home'))
     
     @app.route("/api/map-data")
     def map_data():

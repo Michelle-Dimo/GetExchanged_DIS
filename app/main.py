@@ -13,7 +13,6 @@ def login_required(view):
 
 
 @bp.route('/home')
-@login_required
 def home():
     return render_template('homepage.html')
 
@@ -24,7 +23,6 @@ def profile():
     return render_template('profile.html')
 
 @bp.route('/reports')
-@login_required
 def reports():
 
     return render_template('reports.html')
