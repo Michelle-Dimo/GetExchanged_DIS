@@ -5,7 +5,6 @@ from flask import (
 from app.init_db import get_db
 import psycopg2
 from psycopg2.extras import RealDictCursor
-
 bp = Blueprint('reports', __name__)
 
 @bp.route('/reports')
