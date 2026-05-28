@@ -1,41 +1,109 @@
-Todo liste DIS projekt 
+# GetExchanged
+## Setup instructions
 
-Generelle krav til web.appen: 
-- Interagere med database via SQL 
-- Regular expression matching / cfg 
+Run the application by using Docker:
 
-Bonus points: 
-- Views: optional, could be a list/table of all agreements for a country or the act of filtering/sorting (✓) 
-- Triggers: as a user, it could be uploading a report to the database (✓) 
-- Stored procedures 
+```shell
+docker compose up --build
+```
 
-To-create: 
-- Create sql database: store scraped data (database.sql) 
-- Base_html: create base html file: webapp skeleton, how to interact with database 
-- Sub_files: create html files for each sub-page 
-- Style.css file(s) (again, for each sub-page) 
-- Example report (optional) 
+Or install dependencies manually, preferably inside a virtual environment:
 
-Sub-pages: 
-- Homepage:  
--- Search function (regex matching)
--- Agreements, reports and profile (login)
-- Reports page:  
--- Sorting function 
--- SQL statements 
--- World map 
-- Agreements page:  
--- Sorting function 
--- SQL statements 
--- World map
-- Login page:
--- Regex matching for recognizing existing username 
-- Register page:
--- Regex matching to check for KU-ID 
-- Profile_page (requires being logged in)? 
--- My_status (alumni/applicant) 
--- My_ratings (links to txt files, idk) 
--- My_agreements (links to PDF/txt files) 
--- My_applications (links to PDF/txt files) 
--- NB: 1 or 2 example profiles should be sufficient 
+```shell
+pip install -r requirements.txt
+```
 
+## Environment configuration
+
+Create a `.env` file in the root directory and add:
+
+....
+
+Make sure PostgreSQL is running and the database exists.
+
+## Folder setup
+The app is devided into multiple folder, as follows:
+
+- app/ --> Main Flask application  
+  - static/ --> CSS style file and favicon 
+  - templates/ → all HTML templates  
+  - __pycache__/ → Python cache  
+- data/ → Scraped datasets  
+- instance/ → ....  
+- scripts/ → Contains scripts for scraping, etc.
+
+---
+
+## Application architecture
+
+- __init__.py → Initializes Flask app and DB connection  
+- init_db.py → Database 
+- main.py → Blueprint and routes
+- auth.py → User authentication and routes
+- 
+---
+
+## Routes
+### Core
+/ → index page  
+/home → Home page  
+/about → About page  
+/profile → Enter profile page
+
+### Authentication
+/login → Login page  
+/signup → Signup page  
+/logout → Logout user  
+
+### Profile page
+/my_repotrs → View created reports
+/edit-profile → Edit profile information 
+/create-exchange → Create listing  
+/my-exchanges → Manage listings  
+
+### Details
+/api/map-data → Maps the universities worldwide
+/search → search bar to navigate the website
+/reports → View and create reports
+/agreements → View agreements
+
+---
+
+## Known backend issues
+
+- Database constraints could be improved
+- Authentication security may need strengthening
+
+---
+
+## Known frontend issues
+
+- Navigation flow can feel inconsistent
+
+---
+
+## Project structure 🗂
+
+GetExchanged/
+├── app/
+│   ├── __init__.py
+│   ├── agreements.py
+│   ├── auth.py
+│   ├── int_db.py
+│   ├── main.py
+│   ├── static/
+│   ├── templates/
+│   └── __pycache__/
+├── data/
+├── instance/
+├── scripts/
+├── requirements.txt
+├── .env
+├── .gitattributes
+├── .gitignore
+├── Doskerfile
+├── entrypoint.py
+├── docker-compose.yml
+└── README.md
+
+---
