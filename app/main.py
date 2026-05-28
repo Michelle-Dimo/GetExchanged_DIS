@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template, g, redirect, url_for, flash, request
 from functools import wraps
 from .init_db import get_db
+import psycopg2.extras
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 bp = Blueprint('main', __name__)
 
@@ -24,9 +27,22 @@ def profile():
     return render_template('profile.html')
 
 @bp.route('/reports')
-def reports():
+def table():
+    db = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-    return render_template('reports.html')
+    db.execute('''
+        SELECT
+            report_id,
+            institution,
+            study_field,
+            academic_year
+        FROM reports
+        ORDER BY institution
+    ''')
+
+    reports = db.fetchall()
+
+    return render_template('reports.html', reports=reports)
 
 @bp.route('/my_reports')
 @login_required

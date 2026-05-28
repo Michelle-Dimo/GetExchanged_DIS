@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Reports
+{% endblock %}
+
+{% block content %}
+    <div class="hero-section">
+        <h1>Reports</h1>
+    </div>
+
+    <div id="wrapper">
+
+        <div class="filter-panel">
+            <h2>Filters</h2>
+
+            <label>Study Field</label>
+            <select id="filter-field">
+                <option value="">All</option>
+            </select>
+
+            <label>Institution</label>
+            <select id="filter-institution">
+                <option value="">All</option>
+            </select>
+
+            <label>Academic Year</label>
+            <select id="filter-year">
+                <option value="">All</option>
+            </select>
+
+            <button id="reset-filters">Reset</button>
+        </div>
+
+        <div id="reports-container"></div>
+
+    </div>
+
+    <script>
+        const REPORTS_DATA = {{ reports | tojson }};
+    </script>
+
+    <script src="{{ url_for('static', filename='js/report_filters.js') }}"></script>
+
+{% endblock %}

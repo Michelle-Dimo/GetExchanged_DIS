@@ -82,17 +82,19 @@ def init_db():
         );
     """)
 
-    #cur.execute('DROP TABLE IF EXISTS reports;')
-    #cur.execute('CREATE TABLE reports ('report_id INT PRIMARY KEY,'
-    #                                 'user_id INT REFERENCES users(id)'
-    #                                 'academic_year INT NOT NULL,'
-    #                                 'rating INT NOT NULL,'
-    #                                 'costs INTEGER NOT NULL,'
-    #                                 'report_text TEXT NOT NULL,'
-    #                                 'institution VARCHAR (80) NOT NULL,'
-    #                                 'choices VARCHAR (80) NOT NULL)'
-    #                                 )
-#
+    cur.execute('DROP TABLE IF EXISTS reports;')
+    cur.execute('''
+        CREATE TABLE reports (
+            report_id INT PRIMARY KEY,
+            institution VARCHAR(80) NOT NULL,
+            study_field VARCHAR(80) NOT NULL,
+            academic_year INT NOT NULL,
+            costs INTEGER NOT NULL,
+            report_text TEXT NOT NULL,
+            choices VARCHAR(80) NOT NULL
+            )
+        ''')
+
     ## Construct the absolute path to the reports data like how we did with the agreements data.
     #reports_path = os.path.normpath(os.path.join(base_dir, "../data/Reports.csv"))
     #with open(reports_path, "r") as f:
