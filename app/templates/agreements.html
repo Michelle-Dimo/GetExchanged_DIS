@@ -8,26 +8,28 @@
     <div class="hero-section">
         <h1>Agreements</h1>
     </div>
+    <div id="wrapper">
+        <div class="filter-panel">
+            <h2>Filters</h2>
 
-    <div class="filter-panel">
-        <h2>Filters</h2>
+            <label>Study Field</label>
+            <select id="filter-field"><option value="">All</option></select>
 
-        <label>Study Field</label>
-        <select id="filter-field"><option value="">All</option></select>
+            <label>Country</label>
+            <select id="filter-country"><option value="">All</option></select>
 
-        <label>Country</label>
-        <select id="filter-country"><option value="">All</option></select>
+            <label>City</label>
+            <select id="filter-city"><option value="">All</option></select>
 
-        <label>City</label>
-        <select id="filter-city"><option value="">All</option></select>
+            <label>Institution</label>
+            <select id="filter-institution"><option value="">All</option></select>
 
-        <label>Institution</label>
-        <select id="filter-institution"><option value="">All</option></select>
-
-        <button id="reset-filters">Reset</button>
+            <button id="reset-filters">Reset</button>
+        </div>
+        <div id="agreements-container"></div>
     </div>
 
-    <div id="agreements-container"></div>
+    
 
     <script>
         const AGREEMENTS_DATA = {{ agreements | tojson }};
