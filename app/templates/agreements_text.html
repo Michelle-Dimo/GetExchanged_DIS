@@ -2,4 +2,15 @@
 
 {% block content %}
 {{text}}
+{% for agreement in agreements %}
+    <div class='agreement'>
+        <h3>{{ agreement['institution'] }} - {{ agreement['id'] }}</h3>
+        <p class='agreement_text'>{{ agreement['text'] }}</p>
+        {% if g.user %}
+            <form method="POST" action="{{ url_for('main.apply', agreement_id=agreement['id']) }}">
+                <button type="submit">Apply</button>
+            </form>
+        {% endif %}
+    </div>
+{% endfor %}
 {% endblock %}

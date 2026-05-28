@@ -113,6 +113,18 @@ def init_db():
     #                                 'agreement_id INT NOT NULL)'
     #                                 )
 #
+
+    #cur.execute('DROP TABLE IF EXISTS applications CASCADE;')
+    #cur.execute('''
+    #    CREATE TABLE applications (
+    #        id SERIAL PRIMARY KEY,
+    #        user_id INT REFERENCES users(id),
+    #        agreement_id INT REFERENCES agreements(id),
+    #        status VARCHAR(20) DEFAULT 'pending',
+    #        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    #    )
+    #''')
+
     ## Construct the absolute path to the reports data like how we did with the agreements data.
     #study_fields_path = os.path.normpath(os.path.join(base_dir, "../data/Study_Fields.csv"))
     #with open(study_fields_path, "r") as f:

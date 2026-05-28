@@ -96,3 +96,48 @@ def edit_profile():
         return redirect(url_for('main.profile'))
 
     return render_template('edit_profile.html')
+
+
+from app.init_db import get_db
+
+@bp.route('/my_applications')
+@login_required
+def my_applications():
+    db = get_db().cursor()
+    db.execute(
+        '''
+        SELECT a.id, a.status, a.created_at, ag.institution, ag.text
+        FROM applications a
+        JOIN agreements ag ON a.agreement_id = ag.id
+        WHERE a.user_id = %s
+        ORDER BY a.created_at DESC
+        ''',
+        (g.user['id'],)
+    )
+    applications = db.fetchall()
+    return render_template('my_applications.html', applications=applications)
+
+@bp.route('/apply/<int:agreement_id>', methods=['POST'])
+@login_required
+def apply(agreement_id):
+    db = get_db()
+    cur = db.cursor()
+
+    # Check if already applied
+    cur.execute(
+        'SELECT id FROM applications WHERE user_id = %s AND agreement_id = %s',
+        (g.user['id'], agreement_id)
+    )
+    existing = cur.fetchone()
+
+    if existing:
+        flash('You have already applied to this agreement.')
+    else:
+        cur.execute(
+            'INSERT INTO applications (user_id, agreement_id) VALUES (%s, %s)',
+            (g.user['id'], agreement_id)
+        )
+        db.commit()
+        flash('Application submitted successfully.')
+
+    return redirect(url_for('main.my_applications'))
