@@ -4,14 +4,15 @@ from flask import (
 
 from werkzeug.exceptions import abort
 from app.init_db import get_db
+import psycopg2
 
 bp = Blueprint('agreements', __name__)
 
 @bp.route('/agreements')
 def table():
-    db = get_db().cursor()
+    db = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     db.execute('''
-                SELECT id, institution
+                SELECT *
                 FROM agreements 
                             ''')
     agreements = db.fetchall()
