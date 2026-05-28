@@ -62,22 +62,18 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"/>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+
 <script>
 const map = L.map('map').setView([20, 0], 2);
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: '&copy; OpenStreetMap'
 }).addTo(map);
-let allData = [];
-let markersLayer = L.layerGroup().addTo(map);
-fetch("/api/map-data")
-.then(res => res.json())
-.then(data => {
-    allData = data.universities;
 
-    populateFilters(allData);
-    renderMarkers(allData);
-});
+let markersLayer = L.layerGroup().addTo(map);
+
 function renderMarkers(data) {
     markersLayer.clearLayers();
 
@@ -102,58 +98,20 @@ function renderMarkers(data) {
                 View agreements
             </a>
         `);
+
         markersLayer.addLayer(marker);
     });
 }
-function populateFilters(data) {
-    const fields = new Set();
-    const countries = new Set();
-    const cities = new Set();
-    const institutions = new Set();
 
-    data.forEach(u => {
-        if (u["Study field"]) fields.add(u["Study field"]);
-        if (u.Country) countries.add(u.Country);
-        if (u.City) cities.add(u.City);
-        if (u.Institution) institutions.add(u.Institution);
-    });
+fetch("/api/map-data")
+.then(res => res.json())
+.then(data => {
 
-    fillSelect("filter-field", fields);
-    fillSelect("filter-country", countries);
-    fillSelect("filter-city", cities);
-    fillSelect("filter-institution", institutions);
-}
-function fillSelect(id, values) {
-    const select = document.getElementById(id);
+    allData = data.universities;
 
-    Array.from(values).sort().forEach(v => {
-        const option = document.createElement("option");
-        option.value = v;
-        option.textContent = v;
-        select.appendChild(option);
-    });
-}
-function applyFilters() {
-    const field = document.getElementById("filter-field").value;
-    const country = document.getElementById("filter-country").value;
-    const city = document.getElementById("filter-city").value;
-    const institution = document.getElementById("filter-institution").value;
-
-    let filtered = allData;
-
-    if (field) filtered = filtered.filter(u => u["Study field"] === field);
-    if (country) filtered = filtered.filter(u => u.Country === country);
-    if (city) filtered = filtered.filter(u => u.City === city);
-    if (institution) filtered = filtered.filter(u => u.Institution === institution);
-
-    renderMarkers(filtered);
-}
-document.querySelectorAll(".filter-panel select").forEach(el => {
-    el.addEventListener("change", applyFilters);
-});
-document.getElementById("reset-filters").addEventListener("click", () => {
-    document.querySelectorAll(".filter-panel select").forEach(el => el.value = "");
     renderMarkers(allData);
+
+    setupFilters(allData, renderMarkers);
 });
 </script>
 {% endblock %}
