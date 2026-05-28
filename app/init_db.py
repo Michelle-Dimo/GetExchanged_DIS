@@ -6,9 +6,6 @@ from datetime import datetime
 from flask import current_app, g
 import click
 import pandas as pd
-from sqlalchemy import create_engine
-from dotenv import load_dotenv
-
 
 DB_USER = os.environ['DB_USERNAME']
 DB_PASSWORD = os.environ['DB_PASSWORD']
