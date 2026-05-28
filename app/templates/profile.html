@@ -45,12 +45,16 @@
 
         <div class="profile-actions">
 
+            <a href="{{ url_for('main.edit_profile') }}" class="btn primary-btn">
+            Edit Profile
+            </a>
+
             <a href="{{ url_for('main.home') }}" class="btn primary-btn">
-                Go to Homepage
+            Go to Homepage
             </a>
 
             <a href="{{ url_for('auth.logout') }}" class="btn logout-btn">
-                Logout
+            Logout
             </a>
 
         </div>

@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, g, redirect, url_for
+from flask import Blueprint, render_template, g, redirect, url_for, flash, request
 from functools import wraps
+from .init_db import get_db
 
 bp = Blueprint('main', __name__)
 
@@ -32,3 +33,54 @@ def reports():
 def about():
 
     return render_template('about.html')
+
+@bp.route('/edit-profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+
+    if request.method == 'POST':
+
+        full_name = request.form.get('full_name')
+        email = request.form.get('email')
+        study_field = request.form.get('study_field')
+        academic_year = request.form.get('academic_year')
+
+        db = get_db()
+
+        try:
+            cur = db.cursor()
+
+            cur.execute(
+                """
+                UPDATE users
+                SET full_name = %s,
+                    email = %s,
+                    study_field = %s,
+                    academic_year = %s
+                WHERE id = %s
+                """,
+                (
+                    full_name,
+                    email,
+                    study_field,
+                    academic_year,
+                    g.user['id']
+                )
+            )
+
+            db.commit()
+            cur.close()
+
+            flash("Profile updated successfully!", "success")
+
+        except Exception as e:
+            db.rollback()
+            flash(f"Something went wrong: {e}", "error")
+        
+        if not full_name or not email:
+            flash("Name and email are required", "error")
+            return redirect(url_for('main.edit_profile'))
+
+        return redirect(url_for('main.profile'))
+
+    return render_template('edit_profile.html')
