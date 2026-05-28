@@ -12,8 +12,10 @@ bp = Blueprint('agreements', __name__)
 def table():
     db = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     db.execute('''
-                SELECT *
-                FROM agreements 
+                SELECT DISTINCT a.id, a.institution, s.study_field, s.city, s.country
+                FROM agreements AS a
+                JOIN study_fields AS s ON s.agreement_id = a.id
+                ORDER BY a.id
                             ''')
     agreements = db.fetchall()
 
