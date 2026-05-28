@@ -5,15 +5,25 @@ from psycopg2.extras import DictCursor
 from datetime import datetime
 from flask import current_app, g
 import click
+import pandas as pd
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
+
+
+DB_USER = os.environ['DB_USERNAME']
+DB_PASSWORD = os.environ['DB_PASSWORD']
+DB_HOST = os.environ['DB_HOST']
+DB_PORT = os.environ['DB_PORT']
+DB_NAME = os.environ['DB_NAME']
 
 
 def get_db():
     if 'db' not in g:
         g.db = psycopg2.connect(
-        host=os.environ['DB_HOST'],
-        database=os.environ['DB_NAME'],
-        user=os.environ['DB_USERNAME'],
-        password=os.environ['DB_PASSWORD'],
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD,
         cursor_factory=DictCursor)
         
     return g.db
