@@ -5,15 +5,32 @@
 {% endblock %}
 
 {% block content %}
-        <div class="hero-section">
-            <h1>Agreements</h1>
-        </div>
-    {% for agreement in agreements %}
-        <div class="card-container">
-                <a href="{{ url_for('agreements.agreement', id=agreement['id']) }}" class="agreement-card card">
-                <h3>{{agreement['institution']}}</h3>
-                <p>ID: {{agreement['id']}}</p>
-            </a>
-        </div>
-    {% endfor %}
+    <div class="hero-section">
+        <h1>Agreements</h1>
+    </div>
+
+    <div class="filter-panel">
+        <h2>Filters</h2>
+
+        <label>Study Field</label>
+        <select id="filter-field"><option value="">All</option></select>
+
+        <label>Country</label>
+        <select id="filter-country"><option value="">All</option></select>
+
+        <label>City</label>
+        <select id="filter-city"><option value="">All</option></select>
+
+        <label>Institution</label>
+        <select id="filter-institution"><option value="">All</option></select>
+
+        <button id="reset-filters">Reset</button>
+    </div>
+
+    <div id="agreements-container"></div>
+
+    <script>
+        const AGREEMENTS_DATA = {{ agreements | tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
 {% endblock %}
