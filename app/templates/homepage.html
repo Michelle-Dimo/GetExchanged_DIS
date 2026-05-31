@@ -91,16 +91,31 @@ function renderMarkers(data) {
         });
 
         marker.bindPopup(`
-            <b>${u.Institution}</b><br>
-            ${u.City}, ${u.Country}<br>
-            Agreements: ${count}<br><br>
-            <a href="/agreements?institution=${encodeURIComponent(u.Institution)}">
-                View agreements
-            </a>
-        `);
+                <b>${u.Institution}</b><br>
+                ${u.City}, ${u.Country}<br>
+                Agreements: ${count}<br><br>
+                <a href="#" onclick="goToAgreements('${u.Institution.replace(/'/g, "\\'")}'); return false;">
+                    View agreements
+                </a>
+`               );
 
         markersLayer.addLayer(marker);
     });
+}
+
+function goToAgreements(institution) {
+    const params = new URLSearchParams();
+    params.set("institution", institution);
+
+    const field   = document.getElementById("filter-field").value;
+    const country = document.getElementById("filter-country").value;
+    const city    = document.getElementById("filter-city").value;
+
+    if (field)   params.set("field", field);
+    if (country) params.set("country", country);
+    if (city)    params.set("city", city);
+
+    window.location.href = `/agreements?${params.toString()}`;
 }
 
 fetch("/api/map-data")

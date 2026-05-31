@@ -95,6 +95,14 @@ function setupFilters(data, renderCallback) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+
     setupFilters(AGREEMENTS_DATA, renderAgreements);
-    renderAgreements(allData);
+
+    if (params.get("institution")) document.getElementById("filter-institution").value = params.get("institution");
+    if (params.get("field"))       document.getElementById("filter-field").value       = params.get("field");
+    if (params.get("country"))     document.getElementById("filter-country").value     = params.get("country");
+    if (params.get("city"))        document.getElementById("filter-city").value        = params.get("city");
+
+    applyFilters(renderAgreements);
 });
