@@ -1,18 +1,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for column, value in agreement_data.items() %}
-    {% if value is not none and column not in ["Index", "Agreement_ID", "partner_description", "Agreement_text"] %}
-  <div class="agreement-section">
-    <h4>{{ column | replace('_', ' ') | title | replace('Gpa', 'GPA') }}</h4>
-    <p>{{ value }}</p>
-  </div>
-  {% endif %}
-{% endfor %}
+<div class="agreement-detail-container">
+    <div class="agreement-detail-card">
+        {% for column, value in agreement_data.items() %}
+        {% if value is not none and column is not in ["Index", "Agreement_ID", "Agreement_text", "partner_description"] %}
+        <div class="agreement-detail-section">
+            <span class="agreement-detail-label">{{ column | replace('_', ' ') | title }}</span>
+            <div class="agreement-detail-value">
+                {% if value is mapping %}
+                    {% for k, v in value.items() %}
+                        <p><strong>{{ k | replace('_', ' ') | title }}:</strong> {{ v }}</p>
+                    {% endfor %}
+                {% elif value is iterable and value is not string %}
+                    <p>{{ value | join(', ') }}</p>
+                {% else %}
+                    <p>{{ value }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
 
-{% if g.user %}
-<form method="POST" action="{{ url_for('main.apply', agreement_id=agreement_data['Agreement_ID']) }}">
-    <button type="submit">Apply</button>
-</form>
-{% endif %}
+        {% if g.user %}
+        <div class="agreement-apply">
+            <form method="POST" action="{{ url_for('main.apply', agreement_id=agreement_data['Agreement_ID']) }}">
+                <button type="submit" class="btn login-btn">Apply</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
