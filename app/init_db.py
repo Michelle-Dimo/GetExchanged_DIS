@@ -6,11 +6,13 @@ from datetime import datetime
 from flask import current_app, g
 import click
 import pandas as pd
+from sqlalchemy import create_engine, text
+from dotenv import load_dotenv
+
 
 DB_USER = os.environ['DB_USERNAME']
 DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_HOST = os.environ['DB_HOST']
-DB_PORT = os.environ['DB_PORT']
 DB_NAME = os.environ['DB_NAME']
 
 
@@ -62,6 +64,23 @@ def init_db():
             FROM STDIN
             WITH (FORMAT csv, HEADER true)
         """, f)
+
+    # Load agreement csv file
+    agreement_parsed = pd.read_csv(os.path.join(base_dir, "../data/New_Parsed_Agreement_Data.csv"))
+    
+    # Create the connection string securely
+    connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+    engine = create_engine(connection_string)
+    
+    # Import the data (creates the table automatically)
+
+    with engine.begin() as conn:
+        conn.execute(text(
+            "DROP TABLE IF EXISTS parsed_agreement_text CASCADE"
+        ))
+    agreement_parsed.to_sql('parsed_agreement_text', engine, index=False, if_exists='fail')
+
+    print("Parsed agreement text imported successfully!")
 
     ##Create users table
     

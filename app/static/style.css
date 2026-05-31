@@ -12,13 +12,14 @@ body {
     justify-content: space-between;
     background-color: #d4d4d4;
     color: rgb(0, 0, 0);
+    padding: 10px;
 }
 
 .nav-left {
     display: flex;
     justify-content: center;
     width: 150px;
-    padding-left: 20px;
+    padding-left: 30px;
 }
 
 .nav-right {

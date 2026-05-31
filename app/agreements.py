@@ -23,12 +23,13 @@ def table():
     
 @bp.route('/agreements/<int:id>')
 def agreement(id):
-    db = get_db().cursor()
+    db = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     db.execute('''
-                SELECT text
-                FROM agreements
-                WHERE id = %s
+                SELECT *
+                FROM parsed_agreement_text
+                WHERE parsed_agreement_text."Agreement_ID" = %s
                ''', (id,))
-    text = db.fetchone()
-    
-    return render_template('agreements_text.html', text=text)
+    query_result = db.fetchone()
+    agreement_data = dict(query_result)
+
+    return render_template('agreements_text.html', agreement_data=agreement_data)

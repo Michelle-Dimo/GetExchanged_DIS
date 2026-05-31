@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{{text}}
-{% for agreement in agreements %}
-    <div class='agreement'>
-        <h3>{{ agreement['institution'] }} - {{ agreement['id'] }}</h3>
-        <p class='agreement_text'>{{ agreement['text'] }}</p>
-        {% if g.user %}
-            <form method="POST" action="{{ url_for('main.apply', agreement_id=agreement['id']) }}">
-                <button type="submit">Apply</button>
-            </form>
-        {% endif %}
-    </div>
+{% for column, value in agreement_data.items() %}
+    {% if value is not none and column not in ["Index", "Agreement_ID", "partner_description", "Agreement_text"] %}
+  <div class="agreement-section">
+    <h4>{{ column | replace('_', ' ') | title | replace('Gpa', 'GPA') }}</h4>
+    <p>{{ value }}</p>
+  </div>
+  {% endif %}
 {% endfor %}
+
+{% if g.user %}
+<form method="POST" action="{{ url_for('main.apply', agreement_id=agreement_data['Agreement_ID']) }}">
+    <button type="submit">Apply</button>
+</form>
+{% endif %}
 {% endblock %}
