@@ -28,7 +28,7 @@ def register():
         email = request.form.get('email')
         study_field = request.form.get('study_field')
         password = request.form.get('password')
-        status = request.form.get('status')
+        status = request.form['status']
 
         error = None
 
@@ -37,6 +37,8 @@ def register():
             error = 'KU ID is required.'
         elif not password:
             error = 'Password is required.'
+        elif status not in ('applicant', 'alumni'):
+            error = 'Invalid status.'
 
         if not ku_id:
             error = 'KU ID is required.'

@@ -15,6 +15,16 @@ def login_required(view):
         return view(*args, **kwargs)
     return wrapped
 
+def alumni_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        if g.user['status'] != 'alumni':
+            flash('Only alumni can upload reports.')
+            return redirect(url_for('main.reports'))
+        return view(*args, **kwargs)
+    return wrapped
 
 @bp.route('/home')
 def home():
@@ -136,3 +146,8 @@ def apply(agreement_id):
         flash('Application submitted successfully.')
 
     return redirect(url_for('main.my_applications'))
+
+#@bp.route('/reports/write')
+#@alumni_required
+#def write_report():
+#    return render_template('write_report.html')

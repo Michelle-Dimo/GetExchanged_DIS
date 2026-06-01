@@ -42,4 +42,10 @@
 
     <script src="{{ url_for('static', filename='js/report_filters.js') }}"></script>
 
+{% if g.user and g.user['status'] == 'alumni' %}
+    <a href="{{ url_for('main.write_report') }}" class="btn primary-btn">Write a Report</a>
+{% else %}
+    <p class="muted">Only alumni can write reports.</p>
+{% endif %}
+
 {% endblock %}
