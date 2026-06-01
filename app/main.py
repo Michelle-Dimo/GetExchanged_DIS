@@ -20,7 +20,7 @@ def alumni_required(view):
     def wrapped(*args, **kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))
-        if g.user['status'] != 'alumni':
+        if g.user['status'] != 'Alumni':
             flash('Only alumni can upload reports.')
             return redirect(url_for('main.reports'))
         return view(*args, **kwargs)

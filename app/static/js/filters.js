@@ -35,7 +35,7 @@ function groupByAgreement(data) {
 function refillSelect(id, values, selectedValue) {
     const select = document.getElementById(id);
     select.innerHTML = '<option value="">All</option>';
-    Array.from(values).sort().forEach(v => {
+    Array.from(values).sort((a, b) => a.localeCompare(b)).forEach(v => {
         const option = document.createElement("option");
         option.value = v;
         option.textContent = v;
