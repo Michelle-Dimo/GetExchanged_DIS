@@ -62,8 +62,8 @@ def init_db():
     connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
     engine = create_engine(connection_string)
 
-    with engine.begin() as con:
-        con.execute(text("DROP TABLE IF EXISTS parsed_agreement_text CASCADE"))
+    with engine.begin() as sa_con:
+        sa_con.execute(text("DROP TABLE IF EXISTS parsed_agreement_text CASCADE"))
 
     agreement_parsed = pd.read_csv(
         os.path.join(base_dir, "../data/New_Parsed_Agreement_Data.csv")
@@ -195,12 +195,14 @@ def init_db():
             country VARCHAR(40) NOT NULL,
             city VARCHAR(80) NOT NULL,
             n_agreements INT NOT NULL,
-            agreement_id INT NOT NULL
+            agreement_id INT NOT NULL,
+            latitude FLOAT,
+            longitude FLOAT
         )
     """)
 
     study_fields_path = os.path.normpath(
-        os.path.join(base_dir, "../data/Study_fields_data.csv")
+        os.path.join(base_dir, "../data/Study_fields_with_latlon.csv")
     )
 
     with open(study_fields_path, "r") as f:
@@ -213,7 +215,9 @@ def init_db():
                 country,
                 city,
                 n_agreements,
-                agreement_id
+                agreement_id,
+                latitude,
+                longitude        
             )
             FROM STDIN WITH (FORMAT csv, HEADER true)
         """, f)
