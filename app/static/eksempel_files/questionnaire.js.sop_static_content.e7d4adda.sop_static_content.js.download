@@ -1,0 +1,134 @@
+/**
+ * JavaScript-File für das Questionnaire in JSP-View
+ * @author maac
+ */
+
+
+$(document).on("click", ".btn-group > button", function() {
+	if ($(this).hasClass("active")) {
+		$(this).removeClass("active");
+		$(this).find("input").attr("checked", false);
+		return false;
+	}
+
+	$(this).closest(".btn-group").find("button").removeClass("active");
+	$(this).closest(".btn-group").find("input").attr("checked", false);
+	$(this).addClass("active");
+	$(this).find("input").attr("checked", true);
+});
+
+
+Dropzone.autoDiscover = false;
+$(document).ready(function() {
+
+	$("form").sopConditionalBootstrapForm({}, { afterFunction: handleConditionalFormAfter });
+	$("form").sopValidateBootstrapForm({
+		skipHiddenInputs: true,
+		useMultipleSubmitButtons: true
+	},
+	{
+		afterValidationFailedFunction: afterValidationFailed
+	});
+
+	// Event Listener für die Submit Button
+	$("#submitButton").on("click", function() {
+		
+		var $input = $("input[name='allowSaveProgress']");
+		var allowSaveProgress = $input.length ? $input.val() : null;
+
+		if (allowSaveProgress === "1") {
+			skipRequiredValidation = true; // => Pflichtfelder werden übersprungen
+		}
+	});
+
+	$('[data-bs-toggle="popover"]').popover({ html: true });
+
+	//$("body").find("div.my-dropzone").dropzone({url: "./BearbQuestionServlet", maxFiles: 1, autoProcessQueue: false});
+	initFancy();
+
+	initPageSelectorEvent();
+
+	deactivateGlobalLoadingFrame();
+});
+
+function initPageSelectorEvent() {
+	$("#page-selector").on("change", function() {
+		var hiddenInput = $('<input>')
+			.attr('type', 'hidden')
+			.attr('name', 'is-page-selector-used')
+			.val('1');
+
+		$("form").append(hiddenInput);
+
+		// Simulate click via button to trigger form validation
+		var value = $(this).val();
+		var btnName = 'go_direct_to_page_' + value;
+
+		var submitButton = $('#' + btnName);
+		if (submitButton.length == 0) {
+			submitButton = $('<input>')
+				.attr('type', 'submit')
+				.attr('class', 'd-none')
+				.attr('id', btnName)
+				.attr('name', btnName)
+				.val(value);
+			$("form").append(submitButton);
+		}
+
+		$('#' + btnName).click();
+	});
+}
+
+function handleConditionalFormAfter(data) {
+	setTimeout(() => { 	// setTimeout (100 ns), um sicherzustellen, dass die Funktion erst ausgeführt wird, nachdem @data den korrekten Zustand erreicht hat
+	$.each(data, function(key, value) {
+		if (value) {
+			$("[name=" + key + "]").closest(".bt-collapsible-card-wrapper").removeClass("d-none");
+		}
+		else {
+			var visibleInputs = $("[name=" + key + "]").closest(".bt-collapsible-card-wrapper").find(".bt-input:visible").length;
+
+			if (visibleInputs == 0)
+				$("[name=" + key + "]").closest(".bt-collapsible-card-wrapper").addClass("d-none");
+			else
+				$("[name=" + key + "]").closest(".bt-collapsible-card-wrapper").removeClass("d-none");
+		}
+		// Nur bei anghängigen Berechnungsfeldern triggern (derzeit nur Integer/Dezimal), sonst gibts eine Endlosschleife
+		var inputName = key.replace("_input_value", "");
+		if ($('input[name=' + inputName + ']').hasClass("calculate-further-field") && key.includes('_input_value'))
+			$('input[name=' + inputName + ']').trigger('input');
+	});
+	}, 100);
+}
+
+function initFancy() {
+	$('a.fancy').fancybox(
+		{
+			'overlayOpacity': 0.6,
+			'enableEscapeButton': false,
+			'showCloseButton': true,
+			'hideOnOverlayClick': false,
+			'hideOnContentClick': false,
+			'type': 'iframe',
+			'width': '90%',
+			'height': '90%',
+			'onStart': function() {
+				fancyOnStart($(this));
+			},
+			'onClosed': function(event) {
+				$(".fancybox-overlay", top ? top.document : window.top.document).hide();
+				$('html, body').css('overflow', 'auto');
+				fancyOnClose($(this));
+			},
+			'onComplete': function() { fancyOnComplete($(this)) }
+		});
+}
+
+function afterValidationFailed() {
+	// reset page selector combobox
+	let isUsePageSelector = $('input[name="is-page-selector-used"]').val() == '1';
+	if (isUsePageSelector) {
+		let pageNumber = $('input[name="page_number"]').val()
+		$('select#page-selector').selectpicker('val', pageNumber);
+	}
+}

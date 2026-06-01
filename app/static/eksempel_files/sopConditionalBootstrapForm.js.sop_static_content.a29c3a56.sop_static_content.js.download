@@ -1,0 +1,358 @@
+/*
+ * Autor       : Magomed Achtaew
+ * Datum       : 14.06.2022
+ * Beschreibung: Modul für neue Bootstrap-Inputs sopInput, sopRadio, sopCheckbox, etc.
+ * 							 Wird verwendet um dependency-Values mittels Ajax je nach Eingabe ein
+ * 							 und auszuschalten.
+ * 
+ * 14.06.2022 Notiz von maac:
+ * Benötigt zurzeit pro Servlet eine eigenständige Logik (siehe BearbQuestionServlet.service),
+ * soll in Zukunft jedoch auf SOPTableServlet ausgelagert werden, damit es allgemein funktioniert
+*/
+
+$.fn.sopConditionalBootstrapForm = function (options, callback) {
+	var form = $(this);
+	
+	/*
+	$(form).find(".reload-on-change").on("change", function () {
+		
+		
+		sendAjaxRequestForConditions();
+	});
+	*/
+
+	$(form).find(".reload-on-change:not(.dropdown)").each(function ()
+	{
+		var delayedOnChangeInputTypes = ["text", "number", "date", "mail", "password"];
+		var type = "radio";
+		
+		if ($(this).attr("type"))
+			type = $(this).attr("type");
+		
+		if ($(this).is("textarea"))
+			type = "text";
+		
+		if ($(this).is("select"))
+			type = "select";
+		
+		var inputName = $(this).attr("name");
+		
+		if(delayedOnChangeInputTypes.indexOf(type) > -1)
+		{
+			//console.log("Delayed Input for " + $(this).attr("name"));
+			
+			var timer;
+			var delay = 1200;
+			if (options && options["delay"])
+				delay = options["delay"];
+			
+			$(this).on("input", function ()
+			{
+				window.clearTimeout(timer);
+				timer = window.setTimeout(function () 
+						{
+							if($("input[name="+inputName+"]").closest(".bt-input-wrapper").hasClass("date-input"))
+							{
+								var value = $("input[name="+inputName+"]").val();
+								if(value.length == 0 || value.length === 10)
+								{
+									sendAjaxRequestForConditions(inputName);
+								}
+							}
+							else
+							{
+								sendAjaxRequestForConditions(inputName);
+							}
+						}, delay);
+			});
+		}
+		else
+		{
+			//console.log("Instant Input for " + $(this).attr("name"));
+			
+			$(this).on("change", function()
+			{
+				if($("input[name="+inputName+"]").closest(".bt-input-wrapper").hasClass("date-input"))
+				{
+					var value = $("input[name="+inputName+"]").val();
+					if(value.length == 0 || value.length === 10)
+					{
+						sendAjaxRequestForConditions(inputName);
+					}
+				}
+				else
+				{	
+					sendAjaxRequestForConditions(inputName);
+				}
+			});
+		}
+		
+		
+	});
+	
+	function sendAjaxRequestForConditions(inputName)
+	{
+		var beforeRequestSuccessful = true;
+		
+		if (callback && callback["beforeRequestFunction"])
+		{
+			beforeRequestSuccessful = callback["beforeRequestFunction"](inputName);
+			
+			// Falls kein true/false bei callback angegeben, fahre normal fort
+			if (beforeRequestSuccessful === undefined)
+				beforeRequestSuccessful = true;			
+		}
+		
+		if (beforeRequestSuccessful)
+		{
+			$.ajax(
+				$(form).attr("action"), 
+				{
+					data : $(form).serialize() + "&readNew=1&viaAjaxCondition=1&ajaxConditionInputName=" + inputName,
+					method: "POST",
+					dataType: "json",
+					success: function (data,textStatus) 
+					{
+						if (data)
+						{
+							// übergebe die zu ändernden Inputs vorher an die beforeFunction
+							if (callback && callback["beforeFunction"])
+								callback["beforeFunction"](data);
+								
+							
+							// Standardmäßig wird bt-input-wrapper ausgeblendet
+							var inputContainer = ".bt-input-wrapper";
+							
+							if (options && options["inputContainer"])
+								inputContainer = options["inputContainer"];
+							
+							var isRedirect = false;
+							
+							if (data.hasOwnProperty("redirect"))
+							{
+								// JSON enthält ein Redirect
+								isRedirect = true;
+								
+								window.location.href = data["redirect"];
+								
+								return;
+							}
+							
+							if (data.hasOwnProperty("redirect_with_para"))
+							{
+								isRedirect = true;
+							
+								var url = window.location.href;
+								var urlParameterString = data["redirect_with_para"];
+								
+								
+								if (url.includes(urlParameterString.split("=")[0]))
+								{
+									url = replaceUrlParam(url, urlParameterString.split("=")[0], urlParameterString.split("=")[1]);
+									window.location.href = url;
+								}
+								else
+								{
+									window.location.href += "&" + urlParameterString;
+								}
+								
+								//window.location.href += "&" + JSON.parse(data)["redirect_with_para"];
+								return;
+								
+							}
+
+							if (!isRedirect)
+							{
+								$.each(data, function(key, value)
+									{
+										// Mit dem Parameterkey "<feldname>" wird das Feld angezeigt, bzw verborgen.
+										// Mit dem Parameterkey "<feldname>_input_value" wird der Wert in das Feld geschrieben.
+										// Mit dem Parameterkey "<feldname>_optionsList" wird die Liste der möglichen Werte eines Selecttags überschrieben.
+										// Mit dem Parameterkey "<feldname>_optionSelected" wird der gewählte Wert eines Selecttags geändert.
+										if(key.endsWith("_input_value"))
+										{
+											var inputName = key.replace("_input_value", "");
+											if(value || value == "")
+											{
+												$('input[name=' + inputName + ']').val(value);
+											}
+										}
+										// Wenn Key mit "optionsList" endet, wissen wir, dass es 
+										// eine List mit Key-Value Werten für die Select-Options ist
+										else if (!key.endsWith("_optionsList"))
+										{
+											if(value)
+											{
+												// Value ist auf true -> zeige Input an
+												if($("[name=" + key + "]").closest(inputContainer).length > 0) {
+													$("[name=" + key + "]").closest(inputContainer).slideDown(150);
+													$("[name=" + key + "]").attr("disabled", false);
+												}
+												// Falls checkbox, input name anpassen
+												else
+												{
+													$("[name^=" + key + "_CHECKBOX_]").each(function () {
+														$(this).closest(inputContainer).slideDown(150);
+														$(this).attr("disabled", false);
+													});
+												}
+												
+												// Falls es sich um einen Selectpicker-Select handelt, muessen wir noch zusaetzlich einige Klassen entfernen
+												if ($("[name=" + key + "]").closest(".bt-input.bootstrap-select").length > 0)
+												{
+													$("[name=" + key + "]").closest(".bt-input.bootstrap-select").removeClass("disabled")
+																		   .find(".dropdown-toggle").removeClass("disabled");
+													var $ele = $("[name=" + key + "][type='hidden']").remove();
+													if($ele.length > 0)
+													{
+														$("[name=" + key + "]").data("hkey", $ele.attr("name")).data("hval", $ele.val());
+													}
+												}
+
+												// Falls es sich um eine textarea handelt, auch noch readonly entfernen
+												if ($("[name=" + key + "]").is("textarea"))
+													$("[name=" + key + "]").removeAttr("readonly");
+											}
+											else
+											{
+												// Value ist auf false -> blende Input aus
+												if($("[name=" + key + "]").closest(inputContainer).length > 0) {
+													$("[name=" + key + "]").closest(inputContainer).slideUp(150);
+													$("[name=" + key + "]").attr("disabled", true);
+												}
+												// Falls checkbox, input name anpassen
+												else
+												{
+													$("[name^=" + key + "_CHECKBOX_]").each(function () {
+														$(this).closest(inputContainer).slideUp(150);
+														$(this).attr("disabled", true);
+													});
+												}
+												
+												// Falls es sich um einen Selectpicker-Select handelt, muessen wir noch zusaetzlich einige Klassen hinzufuegen
+												if ($("[name=" + key + "]").closest(".bt-input.bootstrap-select"))
+												{
+													$("[name=" + key + "]").closest(".bt-input.bootstrap-select").addClass("disabled")
+																		   .find(".dropdown-toggle").addClass("disabled");
+													if($("[name=" + key + "]").data("hkey"))
+													{
+														$("[name=" + key + "]").closest(".bt-input-wrapper").after(
+															$("<input>").attr({
+														                name: $("[name=" + key + "]").data("hkey"),
+														                type: "hidden",
+														                value: $("[name=" + key + "]").data("hval")
+														    }));
+													}
+												}
+
+												// Falls es sich um eine textarea handelt, auch noch readonly hinzufuegen
+												if ($("[name=" + key + "]").is("textarea"))
+													$("[name=" + key + "]").attr("readonly", "readonly");
+											}
+										}
+										else if (key.endsWith("_optionSelected"))
+										{
+											// Wird im else abgefragt, nach dem hinzufügen der Optionen
+										}
+										else
+										{
+											var inputName = key.replace("_optionsList", "");
+											var $input = $('select[name=' + inputName + ']');
+											var $allOption = $('select[name=' + inputName + '] option[value=""]').detach();
+											var skipNullValue = $allOption.length > 0;
+											
+											// Leere die derzeitige Liste
+											$input.empty().append($allOption);
+											
+											if ($.isArray(data[key]))
+											{
+												// Neue Logik mit JSONArray um die Reihenfolge einzuhalten
+												
+												$.each(data[key], function (innerKey, innerValue) {
+													var key = Object.keys(innerValue)[0];
+													
+													if (!(skipNullValue && !innerKey))
+													{
+														var isSelected = data[inputName + "_optionSelected"] && data[inputName + "_optionSelected"] == key;
+														$input.append($("<option>", 
+															{
+																value: key, 
+																selected : isSelected,
+																text : innerValue[key]
+															}
+														));
+													}
+												});
+												
+											}
+											else
+											{
+												// Fülle mit der Liste aus ajaxRequest
+												$.each(data[key], function (innerKey, innerValue) {
+													
+													if (!(skipNullValue && !innerKey))
+													{
+														var isSelected = data[inputName + "_optionSelected"] && data[inputName + "_optionSelected"] == innerKey;
+														$input.append($("<option>", 
+															{
+																value: innerKey, 
+																selected : isSelected,
+																text : innerValue
+															}
+														));
+													}
+												});
+											}
+
+											var isSelectPicker = $('select[name=' + inputName + ']').parent().hasClass("bootstrap-select");
+											if(isSelectPicker) 
+											{
+												var maxCountAttr = $('select[name=' + inputName + ']').closest(".bt-input-wrapper").data("maxcount") || false;
+												var parentContainer = $('select[name=' + inputName + ']').closest(".bt-input-wrapper").data("parent-container") || "body";
+												var orderBy = $('select[name=' + inputName + ']').closest(".bt-input-wrapper").data("order-by") || "";
+												
+												// 25.10.2023, maac - die Option maxCount nimmt nur integer/false an
+												// falls maxCountAttr "nicht false" ist, dann zu integer umwandeln
+												if (maxCountAttr)
+													maxCountAttr = parseInt(maxCountAttr);
+												
+												var options = {
+													container : parentContainer,
+													style : "",
+													styleBase : "form-control",
+													maxOptions: maxCountAttr,
+												}
+												
+												// Weil 'refresh' nicht funktioniert, muss zuerst der Selectpicker destroyed werden,
+												// und dann neu-erstellt werden
+												$('select[name=' + inputName + ']').selectpicker('destroy');
+												
+												// Vorher aber nochmal die Options sortieren, falls eingestellt
+												if (orderBy == "key")
+													orderComboboxOptionsByKey('select[name=' + inputName + ']');
+												else if (orderBy == "value")
+													orderComboboxOptionsByValue('select[name=' + inputName + ']');
+												
+												
+												$('select[name=' + inputName + ']').selectpicker(options);
+											}
+										}
+									}
+								);
+							}
+							
+							// übergebe die geänderten Inputs noch der afterFunction
+							if (callback && callback["afterFunction"])
+								callback["afterFunction"](data);
+						}
+					},
+					error: function (jqXHR, exception)
+					{
+						console.log("sopConditionalBootstrapForm() Error: " + jqXHR.status + "\n");
+					}
+				}
+			);
+		}
+	}
+
+}

@@ -1,0 +1,521 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports – {{ institution }}{% endblock %}
+
+{% block content %}
+
+<style>
+    .uni-hero {
+        padding: 2.5rem 2rem 1.5rem;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .uni-hero .back-link {
+        font-size: 0.85rem;
+        color: #4a90d9;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .uni-hero .back-link:hover { text-decoration: underline; }
+
+    .uni-hero h1 {
+        font-size: 2rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .uni-hero .meta {
+        font-size: 0.85rem;
+        color: #777;
+    }
+
+    /* Filter strip */
+    .filter-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e8e8e8;
+        font-size: 0.85rem;
+    }
+
+    .filter-strip label { font-weight: 600; color: #555; }
+
+    .filter-strip select {
+        padding: 0.35rem 0.65rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        background: white;
+    }
+
+    .filter-strip select:focus {
+        outline: none;
+        border-color: #4a90d9;
+    }
+
+    /* Report list */
+    .reports-list {
+        padding: 1.5rem 2rem 3rem;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .results-info {
+        font-size: 0.82rem;
+        color: #888;
+        margin-bottom: 1rem;
+    }
+
+    /* Individual report card — styled like the original collapsible form */
+    .report-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        background: white;
+    }
+
+    .report-card .report-header {
+        background: #4a90d9;
+        color: white;
+        padding: 0.9rem 1.25rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        user-select: none;
+    }
+
+    .report-card .report-header h2 {
+        font-size: 1rem;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .report-card .report-header .report-meta {
+        font-size: 0.78rem;
+        opacity: 0.85;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .report-card .chevron {
+        transition: transform 0.25s;
+        font-size: 0.75rem;
+    }
+
+    .report-card.open .chevron {
+        transform: rotate(180deg);
+    }
+
+    .report-card .report-body {
+        display: none;
+        padding: 0;
+    }
+
+    .report-card.open .report-body {
+        display: block;
+    }
+
+    /* Section blocks inside the report */
+    .section-block {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .section-block:last-child {
+        border-bottom: none;
+    }
+
+    .section-title {
+        background: #f4f7fb;
+        padding: 0.6rem 1.25rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #4a90d9;
+        border-bottom: 1px solid #e8eef5;
+    }
+
+    .qa-list {
+        padding: 0.75rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+    }
+
+    .qa-item {}
+
+    .qa-item .question {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 0.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .qa-item .answer {
+        font-size: 0.92rem;
+        color: #222;
+        line-height: 1.55;
+    }
+
+    .qa-item .answer.rating {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .rating-stars {
+        display: inline-flex;
+        gap: 2px;
+    }
+
+    .rating-stars .star {
+        width: 14px;
+        height: 14px;
+        background: #ddd;
+        border-radius: 2px;
+    }
+
+    .rating-stars .star.filled {
+        background: #4a90d9;
+    }
+
+    .cost-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 0.75rem;
+        padding: 0.75rem 1.25rem 1rem;
+    }
+
+    .cost-item {
+        background: #f8f9fa;
+        border-radius: 6px;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .cost-item .cost-label {
+        font-size: 0.72rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.2rem;
+    }
+
+    .cost-item .cost-value {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #222;
+    }
+
+    .cost-item .cost-value .currency {
+        font-size: 0.72rem;
+        font-weight: 400;
+        color: #888;
+        margin-left: 2px;
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        background: #eef4fb;
+        color: #4a90d9;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: #888;
+    }
+</style>
+
+<div class="uni-hero">
+    <a class="back-link" href="{{ url_for('main.reports') }}">← Back to all universities</a>
+    <h1>{{ institution }}</h1>
+    <div class="meta" id="uni-meta"></div>
+</div>
+
+<div class="filter-strip">
+    <label for="filter-field">Field:</label>
+    <select id="filter-field">
+        <option value="">All fields</option>
+    </select>
+    <label for="filter-year">Year:</label>
+    <select id="filter-year">
+        <option value="">All years</option>
+    </select>
+</div>
+
+<div class="reports-list">
+    <div class="results-info" id="results-count"></div>
+    <div id="reports-container"></div>
+</div>
+
+<script>
+const ALL_REPORTS = {{ reports | tojson }};
+const INSTITUTION = {{ institution | tojson }};
+
+// Pre-filter to this institution
+let reports = ALL_REPORTS.filter(r => r.institution === INSTITUTION);
+
+// Read URL params for pre-selected filters
+const urlParams = new URLSearchParams(window.location.search);
+const preField = urlParams.get('field') || '';
+const preYear  = urlParams.get('year')  || '';
+
+// Populate filters
+const fieldSel = document.getElementById('filter-field');
+const yearSel  = document.getElementById('filter-year');
+
+const fields = [...new Set(reports.map(r => r.study_field).filter(Boolean))].sort();
+const years  = [...new Set(reports.map(r => r.academic_year).filter(Boolean))].sort().reverse();
+
+fields.forEach(f => {
+    const o = document.createElement('option');
+    o.value = f; o.textContent = f;
+    if (f === preField) o.selected = true;
+    fieldSel.appendChild(o);
+});
+years.forEach(y => {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y;
+    if (y === preYear) o.selected = true;
+    yearSel.appendChild(o);
+});
+
+// Sections definition
+const SECTIONS = [
+    {
+        title: 'General Evaluation',
+        items: [
+            { q: 'Motivation for exchange', key: 'motivation', type: 'tag' },
+            { q: 'Why this destination?', key: 'crucial_aspects' },
+            { q: 'Overall rating', key: 'overall_rating', type: 'rating10' },
+            { q: 'Comments', key: 'overall_comments' },
+        ]
+    },
+    {
+        title: 'Orientation & Arrival',
+        items: [
+            { q: 'Finding information upon arrival', key: 'info_ease' },
+            { q: 'Assistance received', key: 'arrival_assistance' },
+            { q: 'Arrival satisfaction', key: 'arrival_satisfaction', type: 'rating5' },
+            { q: 'Comments', key: 'arrival_comments' },
+        ]
+    },
+    {
+        title: 'Housing',
+        items: [
+            { q: 'How housing was found', key: 'housing_how', type: 'tag' },
+            { q: 'On/off campus', key: 'campus_type', type: 'tag' },
+            { q: 'Housing satisfaction', key: 'housing_satisfaction', type: 'rating5' },
+        ]
+    },
+    {
+        title: 'Course Registration',
+        items: [
+            { q: 'Ease of registration', key: 'registration_ease', type: 'rating5' },
+            { q: 'Registration process', key: 'registration_process' },
+            { q: 'Help available', key: 'registration_help' },
+            { q: 'Success in getting courses', key: 'registration_success' },
+            { q: 'Advice for future students', key: 'registration_advice' },
+        ]
+    },
+    {
+        title: 'Academics',
+        items: [
+            { q: 'Academic satisfaction', key: 'academics_satisfaction', type: 'rating5' },
+            { q: 'Student level', key: 'student_level', type: 'tag' },
+            { q: 'Course level', key: 'course_level' },
+            { q: 'Teaching style vs UCPH', key: 'teaching_comparison' },
+            { q: 'Duration', key: 'exchange_duration', type: 'tag' },
+            { q: 'Courses enrolled', key: 'courses_enrolled' },
+            { q: 'Recommended courses', key: 'recommended_courses' },
+        ]
+    },
+    {
+        title: 'Non-Academic Life',
+        items: [
+            { q: 'Non-academic satisfaction', key: 'nonacademic_satisfaction', type: 'rating5' },
+            { q: 'Activities available', key: 'activities_available' },
+            { q: 'Recommended activities', key: 'activities_recommended' },
+            { q: 'Weekend/holiday recommendations', key: 'weekend_recommendations' },
+        ]
+    },
+    {
+        title: 'Personal & Cultural',
+        items: [
+            { q: 'Adjusting to local culture', key: 'culture_adjustment' },
+            { q: 'Socializing tips', key: 'socializing_tips' },
+            { q: 'Cultural challenges', key: 'cultural_challenges' },
+            { q: 'What I appreciated most', key: 'culture_appreciated' },
+        ]
+    },
+    {
+        title: 'Review & Advice',
+        items: [
+            { q: 'Top 3 tips for future students', key: 'top3_advice' },
+            { q: 'Most rewarding part', key: 'most_rewarding' },
+            { q: 'Greatest challenge', key: 'greatest_challenge' },
+            { q: 'Other comments', key: 'other_comments' },
+        ]
+    },
+];
+
+function ratingBar(value, max) {
+    value = parseInt(value) || 0;
+    let html = '<span class="rating-stars">';
+    for (let i = 1; i <= max; i++) {
+        html += `<span class="star${i <= value ? ' filled' : ''}"></span>`;
+    }
+    html += `</span> <strong>${value}</strong>/${max}`;
+    return html;
+}
+
+function buildReportCard(r, index) {
+    const label = r.study_field
+        ? `${r.study_field} · ${r.academic_year || ''}`
+        : (r.academic_year || '');
+
+    let html = `
+        <div class="report-card" id="report-${index}">
+            <div class="report-header" onclick="toggleReport(${index})">
+                <div>
+                    <h2>Report #${r.report_id}</h2>
+                    <div class="report-meta">
+                        <span>${r.study_field || ''}</span>
+                        <span>${r.academic_year || ''}</span>
+                    </div>
+                </div>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="report-body">
+    `;
+
+    // Costs section (special grid layout)
+    const costKeys = [
+        ['cost_insurance', 'Insurance'],
+        ['cost_housing_pm', 'Housing/mo'],
+        ['cost_books', 'Books/mo'],
+        ['cost_transport', 'Transport/mo'],
+        ['cost_food', 'Food/mo'],
+        ['cost_personal', 'Personal/mo'],
+        ['cost_communication', 'Comms/mo'],
+        ['cost_other', 'Other/mo'],
+    ];
+    const hasCosts = costKeys.some(([k]) => r[k] != null && r[k] !== '');
+    let costsHtml = '';
+    if (hasCosts) {
+        costsHtml = `
+            <div class="section-block">
+                <div class="section-title">Costs (DKK)</div>
+                <div class="cost-grid">
+        `;
+        for (const [key, label] of costKeys) {
+            const val = r[key];
+            if (val != null && val !== '') {
+                costsHtml += `
+                    <div class="cost-item">
+                        <div class="cost-label">${label}</div>
+                        <div class="cost-value">${parseFloat(val).toLocaleString('da-DK')}<span class="currency">DKK</span></div>
+                    </div>
+                `;
+            }
+        }
+        costsHtml += `</div>`;
+
+        const extras = [
+            ['unexpected_costs', 'Unexpected costs'],
+            ['cost_comparison', 'More/less expensive than expected'],
+        ];
+        const extraItems = extras.filter(([k]) => r[k]);
+        if (extraItems.length) {
+            costsHtml += '<div class="qa-list">';
+            for (const [k, q] of extraItems) {
+                costsHtml += `<div class="qa-item"><div class="question">${q}</div><div class="answer">${r[k]}</div></div>`;
+            }
+            costsHtml += '</div>';
+        }
+        costsHtml += '</div>';
+    }
+
+    // Regular sections
+    for (const section of SECTIONS) {
+        const items = section.items.filter(item => r[item.key] != null && r[item.key] !== '');
+        if (items.length === 0) continue;
+
+        html += `<div class="section-block"><div class="section-title">${section.title}</div><div class="qa-list">`;
+
+        for (const item of items) {
+            const val = r[item.key];
+            let answerHtml = '';
+
+            if (item.type === 'rating10') {
+                answerHtml = `<div class="answer rating">${ratingBar(val, 10)}</div>`;
+            } else if (item.type === 'rating5') {
+                answerHtml = `<div class="answer rating">${ratingBar(val, 5)}</div>`;
+            } else if (item.type === 'tag') {
+                answerHtml = `<div class="answer"><span class="tag">${val}</span></div>`;
+            } else {
+                answerHtml = `<div class="answer">${val}</div>`;
+            }
+
+            html += `<div class="qa-item"><div class="question">${item.q}</div>${answerHtml}</div>`;
+        }
+
+        html += `</div></div>`;
+    }
+
+    html += costsHtml;
+    html += `</div></div>`;
+    return html;
+}
+
+function toggleReport(index) {
+    const card = document.getElementById(`report-${index}`);
+    card.classList.toggle('open');
+}
+
+function render() {
+    const field = fieldSel.value;
+    const year  = yearSel.value;
+
+    const filtered = reports.filter(r => {
+        if (field && r.study_field !== field) return false;
+        if (year  && r.academic_year !== year)  return false;
+        return true;
+    });
+
+    document.getElementById('results-count').textContent =
+        `${filtered.length} report${filtered.length !== 1 ? 's' : ''}`;
+
+    document.getElementById('uni-meta').textContent =
+        `${reports.length} total reports · ${fields.length} field${fields.length !== 1 ? 's' : ''}`;
+
+    const container = document.getElementById('reports-container');
+    if (filtered.length === 0) {
+        container.innerHTML = '<div class="no-results">No reports match the selected filters.</div>';
+        return;
+    }
+
+    container.innerHTML = filtered.map((r, i) => buildReportCard(r, i)).join('');
+}
+
+fieldSel.addEventListener('change', render);
+yearSel.addEventListener('change', render);
+
+render();
+</script>
+
+{% endblock %}

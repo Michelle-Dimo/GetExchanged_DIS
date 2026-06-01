@@ -1,0 +1,244 @@
+@font-face {
+	font-family: 'Source Sans Pro';
+	font-style: normal;
+	font-weight: 600;
+	font-stretch: normal;
+	src: url('../fonts/SourceSansProBold.woff');
+}
+
+@font-face {
+	font-family: 'Source Sans Pro';
+	font-weight: 300;
+	src: url('../fonts/SourceSansPro.woff');
+}
+
+@font-face {
+	font-family: 'FS Albert';
+	font-style: normal;
+	src: url('../fonts/FSAlbert.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'FS Albert';
+	font-weight: bold;
+	font-style: normal;
+	src: url('../fonts/FSAlbert-Bold.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'FS Albert';
+	font-style: italic;
+	src: url('../fonts/FSAlbert-Italic.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Work Sans';
+	font-style: normal;
+	src: url('../fonts/WorkSans-Regular.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Work Sans';
+	font-weight: bold;
+	font-style: normal;
+	src: url('../fonts/WorkSans-Bold.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Work Sans';
+	font-style: italic;
+	src: url('../fonts/WorkSans-Italic.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Titillium';
+	font-style: normal;
+	src: url('../fonts/Titillium-Regular.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Titillium';
+	font-style: italic;
+	src: url('../fonts/Titillium-RegularItalic.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Titillium';
+	font-weight: bold;
+	font-style: normal;
+	src: url('../fonts/Titillium-Bold.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Titillium';
+	font-weight: bold;
+	font-style: italic;
+	src: url('../fonts/Titillium-BoldItalic.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Circular';
+	font-style: normal;
+	src: url('../fonts/CircularStd-Medium.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Circular';
+	font-style: italic;
+	src: url('../fonts/CircularStd-MediumItalic.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Circular';
+	font-weight: bold;
+	font-style: normal;
+	src: url('../fonts/CircularStd-Bold.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'Circular';
+	font-weight: bold;
+	font-style: italic;
+	src: url('../fonts/CircularStd-BoldItalic.otf') format("opentype");
+}
+
+@font-face {
+	font-family: 'ABKStuttgartWeb';
+	font-style: normal;
+	src: url('../fonts/ABKStuttgartWeb-Regular.woff2') format("woff2");
+}
+
+@font-face {
+	font-family: 'ABKStuttgartWeb';
+	font-style: italic;
+	src: url('../fonts/ABKStuttgartWeb-Italic.woff2') format("woff2");
+}
+
+@font-face {
+	font-family: 'ABKStuttgartWeb';
+	font-weight: bold;
+	font-style: normal;
+	src: url('../fonts/ABKStuttgartWeb-Bold.woff2') format("woff2");
+}
+
+@font-face {
+	font-family: 'ABKStuttgartWeb';
+	font-weight: bold;
+	font-style: italic;
+	src: url('../fonts/ABKStuttgartWeb-BoldItalic.woff2') format("woff2");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	src: url('../fonts/SourceSansPro-Regular.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-style: italic;
+	src: url('../fonts/SourceSansPro-Italic.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 200;
+	src: url('../fonts/SourceSansPro-ExtraLight.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 200;
+	font-style: italic;
+	src: url('../fonts/SourceSansPro-ExtraLightItalic.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 300;
+	src: url('../fonts/SourceSansPro-Light.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 300;
+	font-style: italic;
+	src: url('../fonts/SourceSansPro-LightItalic.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 400;
+	src: url('../fonts/SourceSansPro-Regular.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 400;
+	font-style: italic;
+	src: url('../fonts/SourceSansPro-Italic.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 600;
+	src: url('../fonts/SourceSansPro-SemiBold.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 600;
+	font-style: italic;
+	src: url('../fonts/SourceSansPro-SemiBoldItalic.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 700;
+	src: url('../fonts/SourceSansPro-Bold.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 700;
+	font-style: italic;
+	src: url('../fonts/SourceSansPro-BoldItalic.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 900;
+	src: url('../fonts/SourceSansPro-Black.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Source Sans Pro Custom';
+	font-weight: 900;
+	font-style: italic;
+	src: url('../fonts/SourceSansPro-BlackItalic.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Linz Sans Book';
+	font-style: normal;
+	src: url('../fonts/LinzSans-Book.woff2') format("woff2");
+}
+
+@font-face {
+	font-family: 'Linz Sans Book';
+	font-style: italic;
+	src: url('../fonts/LinzSans-Italic.woff2') format("woff2");
+}
+
+@font-face {
+	font-family: 'Linz Sans Book';
+	font-weight: bold;
+	font-style: normal;
+	src: url('../fonts/LinzSans-Bold.woff2') format("woff2");
+}
+
+@font-face {
+	font-family: 'Linz Sans Book';
+	font-weight: bold;
+	font-style: italic;
+	src: url('../fonts/LinzSans-BoldItalic.woff2') format("woff2");
+}

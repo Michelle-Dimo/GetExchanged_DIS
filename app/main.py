@@ -30,7 +30,6 @@ def alumni_required(view):
 def home():
     return render_template('homepage.html')
 
-
 @bp.route('/profile')
 @login_required
 def profile():
@@ -146,6 +145,26 @@ def apply(agreement_id):
         flash('Application submitted successfully.')
 
     return redirect(url_for('main.my_applications'))
+
+@bp.route('/reports')
+def reports():
+    db = get_db()
+    cur = db.cursor(cursor_factory=RealDictCursor)
+    cur.execute('SELECT * FROM reports')
+    reports = cur.fetchall()
+    cur.close()
+    return render_template('reports.html', reports=reports)
+
+
+@bp.route('/reports/university')
+def university_reports():
+    institution = request.args.get('institution', '')
+    db = get_db()
+    cur = db.cursor(cursor_factory=RealDictCursor)
+    cur.execute('SELECT * FROM reports')
+    reports = cur.fetchall()
+    cur.close()
+    return render_template('university_reports.html', reports=reports, institution=institution)
 
 #@bp.route('/reports/write')
 #@alumni_required

@@ -1,0 +1,1324 @@
+/*
+ * Autor       : Magomed Achtaew
+ * Datum       : 10.05.2022
+ * Beschreibung: Eigenes Modul zum Validieren der Bootstrap-Inputs
+ *				 sopRadioButton, sopCheckbox, sopButton, etc.
+*/
+
+// Beispiel fuer Verwendung:
+// $("form").sopValidateBootstrapForm(submitButton);
+// ... wobei submitButton der Selector für den submitButton ist, bei dem
+// die Validierung getriggert werden soll (onsubmit)
+
+var isDebug = false;
+var checkInputsWithoutValidation = false;
+var allInvalidFeedbackClasses = "bt-input-invalid " +
+  			"invalid-required invalid-mincount " +
+  			"invalid-mincount invalid-betweencount " +
+  			"invalid-comparison invalid-dec-separator " + 
+  			"invalid-dec-points invalid-file-maxcount invalid-file-extension " +
+			"invalid-file-maxsize";
+// Sollen die Validierung für Inputs übersprungen werden?
+// Notwendig wenn man z.B. beim ausfüllen von Inputs zwischenspeichern will
+var skipRequiredValidation  = false;
+
+$.fn.sopValidateBootstrapForm = function (options, callback) {
+	var form = $(this);
+	
+	// Um Browser Validierung zu deaktivieren (zb input type=email würde im firefox einen tooltip bringen dass e-mail nicht stimmt)
+	$(form).attr("novalidate", "");
+
+  $(form).submit(function (event) {
+  	// Wenn actionMode==display, dann keine Validierung
+
+  	if ($(form).find("input[name='actionMode']").val() == "display")
+  		return true;
+  	
+  	// ist der Button, der geklicket wurde, wirklich der Submit-Button?
+  	var btnClicked = null;
+
+		if (event && event.originalEvent && event.originalEvent.submitter)
+		    btnClicked = event.originalEvent.submitter;
+		
+		if (!btnClicked)
+		{
+		    console.error('Not submitted via button.');
+		    return true;
+		}
+		
+  	var submitBtn = "input[name='submitButton']";
+  	
+  	if (options && options["submitButton"])
+			submitBtn = options["submitButton"];
+		// Falls nichts gefunden, und es nur 1 submitButton gibt, dann den direkt verwenden
+		else if(!$(form).has(submitBtn).length && $(form).find("input[type='submit']").length > 0)
+			submitBtn = "input[type='submit']";
+  	
+  	if (!$(form).has(submitBtn).length)
+  	{
+  		console.error("No submit button for form-validation found.");
+  		return false;
+  	}
+  	
+  	// Sollen bei der Validierung mehrere submit Buttons verwendet werden?
+  	// Notwendig wenn man z.B. mehrere submit Buttons in einem Tab hat (questionnaire: 'Speichern', 'Nächste Seite', 'Tabwechsel')
+  	var useMultipleSubmitButtons = false;
+  	
+  	if (options && options["useMultipleSubmitButtons"])
+  		useMultipleSubmitButtons = options["useMultipleSubmitButtons"];
+	
+  	// Button ist nicht der submitButton, deswegen keine Validierung und submit fortfahren	
+  	if ($(btnClicked).attr("name") != $(form).find(submitBtn).attr("name"))
+  	{
+		if(useMultipleSubmitButtons)
+		{
+			if(btnClicked.type != "submit")
+				return true;
+		}
+		else
+	  		return true;
+  	}
+  	
+  	
+  	// Sollen bei der Validierung nicht-sichtbare Inputs übersprungen werden?
+  	// Notwendig wenn man z.B. Inputs in mehreren Tabs hat
+  	var skipHiddenInputs = false;
+  	
+  	if (options && options["skipHiddenInputs"])
+  		skipHiddenInputs = options["skipHiddenInputs"];
+  	
+  	// Sollen bei der Custom-Validierung nicht-sichtbare Inputs übersprungen werden?
+  	var skipHiddenInputsCustom = false;
+  	
+  	if (options && options["skipHiddenInputsCustom"])
+  		skipHiddenInputsCustom = options["skipHiddenInputsCustom"];
+  	
+  	// Falls Debug = true, werden für die Validierung wichtige Informationen
+  	// in der Console geloggt mit dem Suffix "sopValidateForm() ->"
+  	if (options && options["debug"])
+  		isDebug = options["debug"];
+
+  	if (options && options["skipRequiredValidation"])
+  		skipRequiredValidation  = options["skipRequiredValidation"];
+  	
+	var beforeValidationSuccess = true;
+  	
+  	// Vor der Validierung
+  	if (callback && callback["beforeValidationFunction"])
+  	{
+  		beforeValidationSuccess = callback["beforeValidationFunction"]();
+  	}
+  	
+  	// Validieren
+  	var errorCount = getErrorCountFromContainer(form, skipHiddenInputs, true);
+	if(isDebug) { console.error("ErrorCount after getErrorCountFromContainer " + errorCount); }
+  	
+  	// Durchlaufe jedes Feld mit einer Custom-Validation und checke,
+  	// ob es dort einen Fehler gab
+  	$(form).find(".custom-validation").each(function (){
+  		if (checkInputCustomValidation($(this).closest(".bt-input-wrapper"), skipHiddenInputsCustom))
+  			errorCount += 1;
+  	});
+	if(isDebug) { console.error("ErrorCount after Custom-Validation " + errorCount); }
+  	
+	if (!beforeValidationSuccess)
+		errorCount += 1;
+
+	if(isDebug) { console.error("ErrorCount after beforeValidationSuccess " + errorCount); }
+
+  	if (errorCount == 0 && callback && callback["afterValidationFunction"])
+  	{
+  		callback["afterValidationFunction"]();
+  	} else if (errorCount > 0 && callback && callback["afterValidationFailedFunction"])
+  	{
+  		callback["afterValidationFailedFunction"]();
+  	}
+  	
+  	if (errorCount == 0)
+  	{
+	    if (options && options["activateGlobalLoadingFrameOnSubmit"])
+		    activateGlobalLoadingFrame("");
+  		return true;
+  	}
+  	else
+  	{
+    	if(isDebug) { console.error("Validation error count: " + errorCount); }
+    	
+		  // Erstes fehlerhafte Element fokussieren
+  		$(".bt-input-invalid:first").find(".bt-input").focus();
+
+	    //  scroll to displayInputCardSelect
+	    if ($(".bt-input-invalid:first").closest('.input-card-select-card-wrapper').length > 0)
+		    $(".bt-input-invalid:first").closest('.input-card-select-card-wrapper').get(0).scrollIntoView({behavior: "smooth", block: "center"});
+
+	    // scroll to invalid input if submit via select
+  		if(useMultipleSubmitButtons)
+  		{
+	  		setTimeout(() => {
+	  			scrollToInvalidInput();
+			}, 10);
+	  	}	
+  		
+  	}
+  	
+  	return false;
+  });
+  
+  initOnChangeEventsForInputsWithValidation(form);
+  initInputMaskForInputFloat();
+}
+
+function initInputMaskForInputFloat()
+{
+	$(".flt-input .bt-input").each(function ()
+	{
+		var value = $(this).val();
+		
+		var ele = $(this).closest(".bt-input-wrapper");
+		
+		var decimalPoints = $(ele).data("dec-points") || 2;
+		var decimalSeparator = $(ele).data("dec-separator") || ",";
+		
+		var prefix = $(ele).data("prefix") || "";
+		var suffix = $(ele).data("suffix") || "";
+		var alignRight = $(this).hasClass("text-end") || false;
+		var placeholder = $(this).attr("placeholder") || "";
+		
+		if (value)
+		{
+			$(this).inputmask(
+				{
+				  alias: 'currency', 
+				  radixPoint: decimalSeparator,
+				  allowMinus: false,  
+				  digits: decimalPoints,
+				  prefix : prefix,
+				  suffix: suffix,
+				  substituteRadixPoint: false,
+				  removeMaskOnSubmit : true,
+				  autoUnmask : true,
+				  placeholder : placeholder,
+				  rightAlign : alignRight,
+				}
+			);
+		}
+		else
+		{
+			// namespace verwenden, damit nicht alle input event handler gelöscht/off werden
+			$(this).on("input.createInputMask", function () {
+				$($(this)).inputmask(
+					{
+					  alias: 'currency', 
+					  radixPoint: decimalSeparator,
+					  allowMinus: false,  
+					  digits: decimalPoints,
+					  prefix : prefix,
+					  suffix: suffix,
+					  substituteRadixPoint: false,
+					  removeMaskOnSubmit : true,
+					  autoUnmask : true,
+					  placeholder : placeholder,
+					  rightAlign : alignRight,
+					  showMaskOnFocus : true,
+					}
+				);
+				
+				// Nur für den ersten Input, danach weg mit dem Event-Listener
+				$(this).off("input.createInputMask");
+			});
+		}
+	});
+}
+
+function initOnChangeEventsForInputsWithValidation (container)
+{
+	var delayedOnChangeInputTypes = ["text-input", "num-input", "flt-input", "mail-input", "pwd-input", "date-input"];
+
+	$(container).find(".bt-input-wrapper").each(
+		function() 
+		{
+			var ele = $(this);
+			
+			// Falls Input sowieso keine Validierung hat, continue
+			if (!checkInputHasValidation(ele))
+				return;
+			
+			var input = $(ele).find(".bt-input");
+			var isSelect = false;
+
+			if ($(input).hasClass("bootstrap-select"))
+			{
+				input = $(ele).find("select.bt-input");
+				isSelect = true;
+			}
+
+			var inputName = $(input).attr("name");
+			var isDateInput = false;
+			
+			var isDelayedValidation = false;
+			
+			$.each(delayedOnChangeInputTypes, 
+				function (index, value) {
+					if ($(ele).hasClass(value))
+					{
+						if (value == "date-input")
+							isDateInput = true;
+							
+						isDelayedValidation = true;
+						
+						return false;		
+					}
+				}
+			);
+			
+			
+			
+			if(isDelayedValidation)
+			{
+				var timer;
+				var delay = 1200;
+				
+				if (isDateInput)
+					delay = 200;
+				
+				$(input).bind("input", function ()
+				{
+					window.clearTimeout(timer);
+					timer = window.setTimeout(
+																		function () 
+																		{
+																			checkInput(ele);
+																		}, 
+																		delay);
+				});
+			}
+			else
+			{
+				$(input).on(isSelect ? "change" : "input", function(){
+					checkInput(ele);			
+				});
+			}
+		}
+	);	
+}
+
+// Setzt alle Validierungen zurueck und bringt die Form auf den Ursprung zurueck.
+function resetValidation(ele)
+{
+	if (!ele)
+	{
+		$(".bt-input-wrapper").removeClass(allInvalidFeedbackClasses);
+  	$(".bt-input-wrapper .bt-input").removeClass("is-valid is-invalid");
+  	
+  	return;
+	}
+	
+	var wrapper;
+	var input;
+	
+	if ($(ele).hasClass("bt-input-wrapper"))
+	{
+		wrapper = $(ele);
+		input = $(ele).find(".bt-input");
+	}
+	else if ($(ele).hasClass("bt-input"))
+	{
+		wrapper = $(ele).closest(".bt-input-wrapper");
+		input = $(ele);
+	}
+	
+	if ($(wrapper).hasClass("file-input"))
+	{
+		$(wrapper).removeClass(allInvalidFeedbackClasses);
+  	$(wrapper).find("label.form-control").removeClass("is-valid is-invalid");
+	}
+	else
+	{
+		$(wrapper).removeClass(allInvalidFeedbackClasses);
+  	$(input).removeClass("is-valid is-invalid");
+	}
+}
+
+function checkInputCustomValidation(ele, skipHiddenInputsCustom = false)
+{
+	var errorFound = false;
+	var required = false;
+	
+	// Wenn das jetzige Feld nicht sichtbar ist, und skipHiddenInputsCustom
+	// auf true ist, soll das Feld ignoriert werden
+	if (skipHiddenInputsCustom && $(ele).is(":hidden"))
+		return;
+	
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+	
+	var input = $(ele).find(".bt-input");
+	var value = $(input).val();
+	
+	// Falls Feld disabled, dann nicht checken 
+	if($(input).is(":disabled"))
+	{
+		return false;
+	}
+	
+	if ($(input).hasClass("is-invalid"))
+	{
+		return true;
+	}
+	
+	if(required && getInputType(ele) == "combobox")
+	{
+		return checkInputCombobox(ele); //if combobox, we need different validation for 'required'
+	}
+	else if (required && value.length == 0)
+	{
+		$(input).addClass("is-invalid");
+		$(ele).addClass("bt-input-invalid invalid-required");
+		
+		errorFound = true;
+	}
+	
+	return errorFound;
+}
+
+function checkInputNumber(ele)
+{
+	var hasValidation = false;
+	
+	var errorFound = false;
+	var required = false;
+	var minValue = null;
+	var maxValue = null;
+	
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+	
+	if (ele.data("minvalue") != undefined)
+		minValue = ele.data("minvalue");
+	
+	if (ele.data("maxvalue") != undefined)
+		maxValue = ele.data("maxvalue");
+		
+	hasValidation = required || minValue || maxValue;
+	
+	
+	
+	var input = $(ele).find(".bt-input");
+	var value = $(input).val();
+	
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	var errorClass = "";
+	
+	if (minValue != null && maxValue != null) 
+		errorClass += "bt-input-invalid invalid-betweenvalue";
+	else if (minValue != null) 
+		errorClass += "bt-input-invalid invalid-minvalue";
+	else if (required && maxValue != null)
+		errorClass += "bt-input-invalid invalid-maxvalue";
+	else if (required) 
+		errorClass += "bt-input-invalid invalid-required";  	
+	else if (maxValue != null) 
+		errorClass += "bt-input-invalid invalid-maxvalue";
+
+
+	
+	// Verschlaegt der Input gegen eine dieser Bedingungen?
+	if ((minValue && maxValue) && (value < minValue || value > maxValue))
+		errorFound = true;
+	else if (minValue && value < minValue)
+		errorFound = true;
+	else if (maxValue && value > maxValue)
+		errorFound = true;
+	else if (required && !value)
+		errorFound = true;
+	
+	
+	if (errorFound)
+	{
+		$(input).addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		if (checkInputsWithoutValidation || hasValidation)
+			$(input).addClass("is-valid");
+	}
+	
+	return false;
+}
+
+function checkInputFloat(ele)
+{
+	var required = false;
+	var minValue = null;
+	var maxValue = null;
+	var decimalPoints = null;
+	var decimalSeparator = null;
+	
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+	
+	if (ele.data("minvalue") != undefined)
+		minValue = ele.data("minvalue");
+	
+	if (ele.data("maxvalue") != undefined)
+		maxValue = ele.data("maxvalue");
+		
+	if (ele.data("dec-points"))
+		decimalPoints = ele.data("dec-points");
+		
+	if (ele.data("dec-separator"))
+		decimalSeparator = ele.data("dec-separator");
+	
+	var input = $(ele).find(".bt-input");
+	var value = $(input).val();
+	
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	var errorClass = "";
+	
+	// Required
+	if (required && value.length == 0)
+		errorClass = "bt-input-invalid invalid-required";
+	
+	// Falsches Kommazeichen
+	/*
+	if (!errorClass && (decimalSeparator == "," && value.indexOf(".") !== -1) ||
+			(decimalSeparator == "." && value.indexOf(",") !== -1))
+	{
+		errorClass = "bt-input-invalid invalid-dec-separator";
+	}
+	*/
+	
+	// Richtige Anzahl an Nachkommastellen?
+	if (!errorClass && decimalPoints)
+	{
+		var valueDecimalPoints = 0;
+		
+		if (value.indexOf(decimalSeparator) !== -1)
+			valueDecimalPoints = value.split(decimalSeparator)[1].length;
+			
+		if (valueDecimalPoints > decimalPoints)
+			errorClass = "bt-input-invalid invalid-dec-points";
+	}
+	
+	//
+	if (!errorClass && (minValue != undefined || maxValue != undefined))
+	{
+		var floatMinValue = null;
+		var floatMaxValue = null;
+		var floatValue = parseFloat(value.replaceAll(",", "."))
+		
+		if (minValue)
+			floatMinValue = parseFloat(minValue);
+			
+		if (maxValue)
+			floatMaxValue = parseFloat(maxValue);
+			
+		if (floatMaxValue != undefined && floatMinValue != undefined && (floatValue > floatMaxValue || floatValue < floatMinValue))
+			errorClass = "bt-input-invalid invalid-betweenvalue";
+		else if (floatMaxValue != undefined && floatValue > floatMaxValue)
+			errorClass = "bt-input-invalid invalid-maxvalue";
+		else if (floatMinValue != undefined && floatValue < floatMinValue)
+			errorClass = "bt-input-invalid invalid-minvalue";
+	}
+	
+	
+	if (errorClass)
+	{
+		$(input).addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		$(input).addClass("is-valid");
+	}
+	
+	return false;
+}
+
+function checkInputCombobox(ele)
+{
+	var hasValidation = false;
+	
+	var errorFound = false;
+	var required = false;
+	
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+		
+	hasValidation = required;
+	
+	var input = $(ele).find(".bt-input");
+	var selectedValue = $(input).find("option:selected").attr("value");
+	
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	var errorClass = "";
+	
+	if (required)
+		errorClass ="bt-input-invalid invalid-required";
+	
+	if (required && !selectedValue)
+		errorFound = true;
+	
+	if (errorFound)
+	{
+		$(input).addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		if (checkInputsWithoutValidation || hasValidation)
+			$(input).addClass("is-valid");
+	}
+	
+	return false;
+}
+
+function checkInputDate(ele)
+{
+	var hasValidation = false;
+	
+	var errorFound = false;
+	var required = false;
+	var compareWith = null;
+	var compareWithOperator = null;
+	
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+	
+	if (ele.data("compare-with"))
+		compareWith = ele.data("compare-with");
+	
+	if (ele.data("compare-with-operator"))
+		compareWithOperator = ele.data("compare-with-operator");
+		
+	hasValidation = required || (compareWith && compareWithOperator)
+	
+	
+	
+	var input = $(ele).find(".bt-input");
+	var value = input.val();
+	
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	var errorClass = "";
+	
+	if (required && value.length < 1)
+		errorClass = "bt-input-invalid invalid-required";
+	else if (compareWith && compareWithOperator)
+		errorClass = "bt-input-invalid invalid-comparison";
+	
+	
+	if ((compareWith && compareWithOperator) 
+				&& !compareInputs(input, $(`input[name=${compareWith}]`), compareWithOperator))
+		errorFound = true
+	else if (required && value.length < 1)
+		errorFound = true;
+	
+	if (errorFound)
+	{
+		$(input).addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		if (checkInputsWithoutValidation || hasValidation)
+			$(input).addClass("is-valid");
+	}
+	
+	return false;
+}
+
+function checkInputCheckbox(ele)
+{
+	var hasValidation = false;
+	
+	var errorFound = false;
+	var required = false;
+	var minCount = -1;
+	var maxCount = -1;
+
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+	
+	if (ele.data("mincount"))
+		minCount = ele.data("mincount");
+	
+	if (ele.data("maxcount"))
+		maxCount = ele.data("maxcount");
+		
+	hasValidation = required || minCount || maxCount;
+	
+	
+	
+	var checkboxCount = $(ele).find(".bt-input").length;
+	var checkboxSelectedCount = $(ele).find(".bt-input:checked").length;
+	
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	var errorClass = "";
+	
+	if (minCount != -1 && maxCount != -1) 
+		errorClass += "bt-input-invalid invalid-betweencount";
+	else if (minCount != -1) 
+		errorClass += "bt-input-invalid invalid-mincount";
+	else if ((required && maxCount != -1) && checkboxSelectedCount > 0)
+		errorClass += "";
+	else if (required) 
+		errorClass += "bt-input-invalid invalid-required";  	
+	else if (maxCount != -1) 
+		errorClass += "bt-input-invalid invalid-maxcount";
+	
+
+	
+	// Verschlaegt der Input gegen eine dieser Bedingungen?
+	if ((minCount != -1 && maxCount != -1) && (checkboxSelectedCount < minCount || checkboxSelectedCount > maxCount))
+		errorFound = true;
+	else if (minCount != -1 && checkboxSelectedCount < minCount)
+		errorFound = true;
+	else if (maxCount != -1 && checkboxSelectedCount > maxCount)
+		errorFound = true;
+	else if (required && checkboxSelectedCount < 1)
+		errorFound = true;
+	
+	if (errorFound)
+	{
+		$(ele).find(".bt-input").addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		if (checkInputsWithoutValidation || hasValidation)
+			$(ele).find(".bt-input").addClass("is-valid");
+	}
+	
+	return false;
+}
+
+function checkInputRadio(ele)
+{
+	var hasValidation = false;
+	
+	var errorFound = false;
+	var required = false;
+
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+		
+	hasValidation = required;
+	
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	var errorClass = "";
+	
+	if (required) 
+		errorClass += "bt-input-invalid invalid-required";  	
+	
+	
+		
+	// Verschlaegt der Input gegen eine dieser Bedingungen?
+	if (required && $(ele).find(".bt-input:checked").length == 0)
+		errorFound = true;
+	
+	if (errorFound)
+	{
+		$(ele).find(".bt-input").addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		if (checkInputsWithoutValidation || hasValidation)
+			$(ele).find(".bt-input").addClass("is-valid");
+	}
+	
+	return false;
+}
+
+function checkInputText(ele)
+{
+	var hasValidation = false;
+	
+	var required = false;
+	var minlength;
+	var maxlength;
+	var confirmationOf = "";
+	
+	if (ele.data("confirmation")) 
+		confirmationOf = ele.data("confirmation");
+	else if(ele.attr("confirmation"))
+		confirmationOf = ele.attr("confirmation");
+
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+	else if (ele.attr("data-required") && !skipRequiredValidation)
+	{
+		// must be checked manually, because data value is saved as text, and required is Boolean
+		var _stateRequired = $(ele).attr('data-required') === 'true'
+		required = _stateRequired;
+	}
+	
+	if (ele.data("minlength"))
+		minlength = ele.data("minlength");
+	else if(ele.attr("minlength"))
+		minlength = ele.attr("minlength");
+	
+	if (ele.data("maxlength"))
+		maxlength = ele.data("maxlength");
+	else if(ele.attr("maxlength"))
+		maxlength = ele.attr("maxlength");
+		
+	hasValidation = required || confirmationOf || minlength || maxlength;
+	
+	var input = $(ele).find(".bt-input");
+	var inputId = $(input).attr("id");
+	
+	var value;
+	if($(ele).find(".tox-tinymce").length !== 0){
+		// erst den content mit der normalen .getContent() holen um auf leeren editor zu prüfen
+		value = tinymce.get(inputId).getContent();
+		if(value.length > 0){ // wenn nicht leer -> mit format: 'text' für genauere char minlength/maxlength validation
+			value = tinymce.get(inputId).getContent({format: 'text'});			
+		}
+	} else {
+		value = input.val();		
+	}
+	
+
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	
+	// Welche Validierungs-Fehlermeldung soll angezeigt werden?
+	var errorClass = "";
+	
+	if (confirmationOf != "" & $("input[name='" + confirmationOf + "']").val() != value)
+		errorClass += "bt-input-invalid invalid-confirmation";
+	else if (minlength && maxlength && ((required && (value.length < minlength || value.length > maxlength)) || (!required && value.length > 0 && ((value.length < minlength || value.length > maxlength)))))
+		errorClass += "bt-input-invalid invalid-betweenlength";
+	else if (minlength && ((required && value.length < minlength) || value.length > 0 && value.length < minlength))
+		errorClass = "bt-input-invalid invalid-minlength";
+	else if (maxlength && ((required && value.length == 0) || (value.length > maxlength)))
+		errorClass = "bt-input-invalid invalid-maxlength";
+	else if (required && value.length == 0)
+		errorClass = "bt-input-invalid invalid-required";  	
+	
+	
+	
+	if (errorClass)
+	{
+		$(input).addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		if (checkInputsWithoutValidation || hasValidation)
+			$(input).addClass("is-valid");
+	}
+		
+	
+	return false;
+}
+
+function checkInputPassword(ele)
+{
+	return checkInputText(ele);
+}
+
+function checkInputMail(ele)
+{
+	var hasValidation = false;
+	
+	var required = false;
+	var confirmationOf = "";
+	
+	if (ele.data("confirmation"))
+		confirmationOf = ele.data("confirmation");
+	
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+		
+	hasValidation = confirmationOf || required;
+	
+	
+	
+	var input = $(ele).find(".bt-input");
+	var value = input.val();
+	
+	
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	
+	var errorClass = "";
+	
+	if (confirmationOf != "" &&  $("input[name='" + confirmationOf + "']").val() != value)
+		errorClass += "bt-input-invalid invalid-confirmation";
+	else if (required && value.length == 0) 
+		errorClass += "bt-input-invalid invalid-required";  
+	else if (value.length > 0 && !isMailValid(value))
+		errorClass += "bt-input-invalid invalid-value";
+
+	// Keinen Fehler gefunden
+	if (errorClass)
+	{
+		$(input).addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		if (checkInputsWithoutValidation || hasValidation)
+			$(input).addClass("is-valid");
+	}
+	
+	
+	return false;
+}
+
+function checkInputFile(ele)
+{
+	var hasValidation = false;
+	
+	var required = false;
+	var maxCount = undefined;
+	var maxSize = undefined;
+	var allowedFileTypes = [];
+	var disallowedFileTypes = [];
+	
+	if (ele.data("required") && !skipRequiredValidation)
+		required = ele.data("required");
+		
+	if (ele.data("maxcount"))
+		maxCount = ele.data("maxcount");
+		
+	if (ele.data("maxsize"))
+		maxSize = ele.data("maxsize") * 1024 * 1024;
+	
+	if (ele.data("allow-filetypes"))
+		allowedFileTypes = ele.data("allow-filetypes").split(",");
+		
+	if (ele.data("disallow-filetypes"))
+		disallowedFileTypes = ele.data("disallow-filetypes").split(",");
+
+	hasValidation = required || maxCount || maxSize || allowedFileTypes.length > 0 || disallowedFileTypes.length > 0;
+
+
+	var input = $(ele).find(".bt-input");
+	
+	
+	// Zurücksetzen
+	resetValidation(ele);
+	
+	var errorClass = "";
+	
+	if (required && $(input).get(0).files.length === 0 && !$(input).hasClass("is-filled")) 
+		errorClass += "bt-input-invalid invalid-required";
+		
+	if (!errorClass && $(input).get(0).files.length > maxCount)
+		errorClass = "bt-input-invalid invalid-file-maxcount";
+	
+	if (!errorClass && $(input).get(0).files[0] && $(input).get(0).files[0].size > maxSize)
+		errorClass = "bt-input-invalid invalid-file-maxsize";
+		
+	if (!errorClass && (allowedFileTypes.length > 0 || disallowedFileTypes.length > 0) && !checkIfFileIsAllowed(ele))
+		errorClass = "bt-input-invalid invalid-file-extension";
+
+	
+	if (errorClass)
+	{
+		$(input).closest("label.form-control").addClass("is-invalid");
+		$(ele).addClass(errorClass);
+		
+		return true;
+	}
+	else
+	{
+		if (checkInputsWithoutValidation || hasValidation)
+			$(input).closest("label.form-control").addClass("is-valid");
+	}
+	
+	return false;
+}
+
+function checkIfFileIsAllowed(ele)
+{
+	var input = $(ele).find(".bt-input");
+	var files = $(input).get(0).files;	
+	
+	var allowedFileTypes = [];
+	var disallowedFileTypes = [];
+	
+	
+	if (ele.data("allow-filetypes"))
+		allowedFileTypes = ele.data("allow-filetypes").split(",");
+		
+	if (ele.data("disallow-filetypes"))
+		disallowedFileTypes = ele.data("disallow-filetypes").split(",");
+	
+	var checkAllowed = true;
+	
+	if (files.length > 0)
+	{
+		for (var i = 0; i < files.length; i++)
+		{
+			var fileNameParts = files[i].name.split(".");
+			var fileEnding = fileNameParts[fileNameParts.length - 1].toLowerCase();
+			
+			if (!allowedFileTypes.includes(fileEnding) || disallowedFileTypes.includes(fileEnding))
+				checkAllowed = false;
+		}
+	}
+	else if (	$(input).hasClass("is-filled") && 
+						$(input).closest("label.form-control").find("span.file-name") &&
+						$(input).closest("label.form-control").find("span.file-name").text())
+	{
+		var fileNames = $(input).closest("label.form-control").find("span.file-name").text().split(",");
+		
+		for (var i = 0; i < fileNames.length; i++)
+		{
+			var fileNameParts = fileNames[i].split(".");
+			var fileEnding = fileNameParts[fileNameParts.length - 1].toLowerCase();
+			
+			if (!allowedFileTypes.includes(fileEnding) || disallowedFileTypes.includes(fileEnding))
+				checkAllowed = false;
+		}
+	}
+
+	
+	return checkAllowed;
+}
+
+function scrollToInvalidInput(){
+  var element = document.getElementsByClassName("bt-input-invalid")[0];
+  var headerOffset = 150;
+  var elementPosition = element.getBoundingClientRect().top;
+  var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  window.scrollTo({
+       top: offsetPosition,
+       behavior: "smooth"
+  });
+}
+
+function isMailValid(mail)
+{
+	// da es tausend Meinungen gibt wie man eine Mail checkt, und man nicht wirklich eine wirkliche
+	// Mail validieren kann, verwenden wir einfach eine simple Überprüfung
+	var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	return re.test(mail);
+}
+
+function getErrorCountFromContainer(container, skipHiddenInputs = true)
+{
+	var errorCount = 0;
+	
+	if(isDebug) { console.error("skipHiddenInputs: " + skipHiddenInputs); }
+
+	$(container).find(".bt-input-wrapper").each(function() {
+		var errorFound = false;
+
+		// Wenn das jetzige Feld nicht sichtbar ist, und skipHiddenInputs
+		// auf true ist, soll das Feld ignoriert werden
+		if (skipHiddenInputs && $(this).is(":hidden"))
+			return;
+		
+		var wasInvalidBeforeByCustomValidation = false;
+		
+		// Falls Input disabled ist oder eine eigene Validierung hat, soll auch nichts gemacht werden
+		if (!$(this).find(".bt-input").is(":disabled") &&
+				!$(this).hasClass("readonly") && 
+				!$(this).find(".bt-input").is("[readonly]") &&
+				(!$(this).find(".bt-input").hasClass("custom-validation") 
+					|| $(this).find(".bt-input").hasClass("field-validation-even-with-custom-validation")))
+		{
+			// war das feld durch die customer-validation bereits invalid, dann hier merken
+			if($(this).find(".bt-input").hasClass("custom-validation")
+				&& $(this).find(".bt-input").hasClass("field-validation-even-with-custom-validation"))
+			{
+				wasInvalidBeforeByCustomValidation = $(this).find(".bt-input").hasClass("is-invalid");
+			}
+			
+			if ($(this).hasClass("text-input"))
+			{
+				errorFound = checkInputText($(this));
+			}
+			else if ($(this).hasClass("mail-input")) 
+			{
+				errorFound = checkInputMail($(this));
+			}
+			else if ($(this).hasClass("pwd-input"))
+			{
+				errorFound = checkInputPassword($(this));
+			}
+			else if ($(this).hasClass("cb-group"))
+			{
+				errorFound = checkInputCheckbox($(this));
+			}
+			else if ($(this).hasClass("rb-group"))
+			{
+				errorFound = checkInputRadio($(this));
+			}
+			else if ($(this).hasClass("date-input"))
+			{
+				errorFound = checkInputDate($(this));
+			}
+			else if ($(this).hasClass("cb-box"))
+			{
+				errorFound = checkInputCombobox($(this));
+			}
+			else if ($(this).hasClass("num-input"))
+			{
+				errorFound = checkInputNumber($(this));
+			}
+			else if($(this).hasClass("flt-input"))
+			{
+				errorFound = checkInputFloat($(this));
+			}
+			else if ($(this).hasClass("file-input"))
+			{
+				errorFound = checkInputFile($(this));
+			}
+		}
+		// Falls kein Fehler gefunden aber customer validation hatte einen Fehler, dann Fehler wieder ablegen, 
+		// da die Feld-Validierung zuvor mittels field-validation-even-with-custom-validation stattfinden sollte
+		if (!errorFound && wasInvalidBeforeByCustomValidation)
+		{
+			$(this).find(".bt-input").removeClass("is-valid").addClass("is-invalid");
+		}
+		
+		if (errorFound)
+		{
+			errorCount += 1;
+			if(isDebug) 
+			{ 
+				console.error("errorFound at following Element: " + $(this).find("[name]").attr("name"));
+				//console.error($(this));
+			}
+		}
+	});
+	
+	return errorCount;
+}
+
+function checkInputHasValidation(ele)
+{
+	var hasValidation = false;
+	var validationDataAttributes = ["required", "mincount", "maxcount", "minlength", "maxlength", 
+																		"minvalue", "maxvalue", "compare-with", "compare-with-operator", 
+																		"dec-points", "dec-separator"];
+
+
+	$.each(validationDataAttributes,
+				function (key, value)
+				{
+					if (!hasValidation && $(ele).data(value))
+						hasValidation = true;
+				}			
+	);
+	
+	// Mail hat immer eine Validierung
+	if ($(ele).hasClass("mail-input"))
+		hasValidation = true;
+		
+	// Float hat immer eine Validierung
+	if ($(ele).hasClass("flt-input"))
+		hasValidation = true;
+	
+	// Custom-Validation klärt alles selber
+	if ($(ele).find(".bt-input").hasClass("custom-validation"))
+		hasValidation = false;
+	
+	return hasValidation;
+}
+
+function checkInput(ele)
+{
+	var errorFound = false;
+	
+	if ($(ele).hasClass("text-input"))
+		errorFound = checkInputText($(ele));
+	
+	else if ($(ele).hasClass("mail-input"))
+		errorFound = checkInputMail($(ele));
+	
+	else if ($(ele).hasClass("pwd-input"))
+		errorFound = checkInputPassword($(ele));
+	
+	else if ($(ele).hasClass("cb-group"))
+		errorFound = checkInputCheckbox($(ele));
+		
+	else if ($(ele).hasClass("rb-group"))
+		errorFound = checkInputRadio($(ele));
+	
+	else if ($(ele).hasClass("date-input"))
+		errorFound = checkInputDate($(ele));
+	
+	else if ($(ele).hasClass("cb-box"))
+		errorFound = checkInputCombobox($(ele));
+	
+	else if ($(ele).hasClass("num-input"))
+		errorFound = checkInputNumber($(ele));
+		
+	else if($(ele).hasClass("flt-input"))
+		errorFound = checkInputFloat($(ele));
+	
+	else if ($(ele).hasClass("file-input"))
+		errorFound = checkInputFile($(ele));
+		
+	return errorFound;
+}
+
+/*
+ * Vergleicht zwei Inputs miteinaner (muessen vom selben Typ sein)
+ * 
+ */
+function compareInputs(input, compareWith, compareWithOperator)
+{
+	var inputType = getInputType(input);
+	
+	if (inputType != getInputType($(compareWith)))
+	{
+		console.error("Inputs do not have the same input type.");
+		return false;
+	}
+	
+	
+	var value = $(input).val();
+	var compareValue = $(compareWith).val();
+	
+	if (inputType === "date")
+	{
+		var valueDateFormat = GlobalConstants.SPRACHE;
+		var compareValueDateFormat = GlobalConstants.SPRACHE;
+		if ($(input).closest(".bt-input-wrapper").find(`input[name=${GlobalConstants.SOP_PARAM_DATE_LANGUAGE_TYPE}]`).length > 0)
+		{
+			var tmp1 = $(input).closest(".bt-input-wrapper").find(`input[name=${GlobalConstants.SOP_PARAM_DATE_LANGUAGE_TYPE}]`).val().split("_");
+			valueDateFormat = tmp1[tmp1.length - 1];
+		}
+		if ($(compareWith).closest(".bt-input-wrapper").find(`input[name=${GlobalConstants.SOP_PARAM_DATE_LANGUAGE_TYPE}]`).length > 0)
+		{
+			tmp2 = $(compareWith).closest(".bt-input-wrapper").find(`input[name=${GlobalConstants.SOP_PARAM_DATE_LANGUAGE_TYPE}]`).val().split("_");
+			compareValueDateFormat = tmp2[tmp2.length - 1];
+		}
+		
+		return compareDates(value, valueDateFormat, compareValue, compareValueDateFormat, compareWithOperator);
+	}
+	
+	return compareValues(inputType, value, compareValue, compareWithOperator);
+}
+
+function compareValues(type, value1, value2, operator)
+{
+	// EQUALS
+	if (operator === "=")
+		return value1 === value2;
+	
+	// OR EQUALS
+	if ((operator === ">=" || operator === "<=") && value1 === value2)
+		return true;
+	
+	// Kann hier nicht mehr landen, falls OR EQUALS und beide Werte gleich sind
+	
+	// GREATER THAN
+	if (operator === ">" || operator === ">=")
+	{
+		// TODO
+	}
+	
+	return false;
+}
+
+function compareDates(date1, date1Format, date2, date2Format, operator)
+{
+	// EQUALS
+	if (operator === "=" && date1Format === date2Format)
+		return date1 === date2;
+	
+	// OR EQUALS
+	if ((operator === ">=" || operator === "<=") && date1Format == date2Format && date1 === date2)
+		return true;
+	
+	// Kann hier nicht mehr landen, falls OR EQUALS und beide Werte gleich sind
+	var date1 = moment(date1, getDateFormatFromSprache(date1Format)).valueOf();
+	var date2 = moment(date2, getDateFormatFromSprache(date2Format)).valueOf();
+
+	if (operator === ">")
+		return date1 > date2;
+	else if (operator === ">=")
+		return date1 >= date2;
+	if (operator === ">")
+		return date1 < date2;
+	else if (operator === "<=")
+		return date1 <= date2;
+	else if (operator === "=")
+		return date1 === date2;
+	
+	
+	console.error("Validation: Wrong comparison operator.");
+		
+	return false;
+}
+
+function getSpracheDateFormatFromDateInput(input)
+{
+	
+}
+
+function getDateFormatFromSprache(sprache)
+{
+	if (sprache === "de")
+		return "DD.MM.YYYY";
+	else if (sprache === "en")
+		return "DD/MM/YYYY";
+	else if (sprache === "se")
+		return "YYYY-MM-DD";
+	else if (sprache === "us")
+		return "MM-DD-YYYY";
+	else if (sprache === "gl")
+		return "DD.MM.YYYY";
+	else
+		return "DD.MM.YYYY";
+}
+
+function getInputType(input)
+{
+	var container = $(input).closest(".bt-input-wrapper");
+	
+	if ($(container).hasClass("text-input"))
+		return "text";
+	else if ($(container).hasClass("mail-input"))
+		return "mail";
+	else if ($(container).hasClass("pwd-input"))
+		return "password";
+	else if ($(container).hasClass("cb-group"))
+		return "checkbox";
+	else if ($(container).hasClass("date-input"))
+		return "date";
+	else if ($(container).hasClass("cb-box"))
+		return "combobox";
+	else if ($(container).hasClass("num-input"))
+		return "number";
+}

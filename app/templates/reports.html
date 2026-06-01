@@ -1,51 +1,305 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    Reports
-{% endblock %}
+{% block title %}Reports{% endblock %}
 
 {% block content %}
-    <div class="hero-section">
-        <h1>Reports</h1>
+
+<style>
+    .reports-hero {
+        padding: 3rem 2rem 2rem;
+        text-align: center;
+    }
+
+    .reports-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .reports-hero p {
+        color: #666;
+        font-size: 1rem;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-end;
+        padding: 1.5rem 2rem;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .filter-bar .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        min-width: 180px;
+    }
+
+    .filter-bar label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #555;
+    }
+
+    .filter-bar select {
+        padding: 0.45rem 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        background: white;
+        cursor: pointer;
+    }
+
+    .filter-bar select:focus {
+        outline: none;
+        border-color: #4a90d9;
+        box-shadow: 0 0 0 3px rgba(74,144,217,0.15);
+    }
+
+    .filter-bar .filter-actions {
+        display: flex;
+        gap: 0.5rem;
+        align-items: flex-end;
+    }
+
+    .btn-reset {
+        padding: 0.45rem 1rem;
+        background: none;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        color: #555;
+        transition: all 0.15s;
+    }
+
+    .btn-reset:hover {
+        background: #eee;
+        border-color: #aaa;
+    }
+
+    /* Results count */
+    .results-info {
+        padding: 1rem 2rem 0.5rem;
+        font-size: 0.85rem;
+        color: #777;
+    }
+
+    /* University grid */
+    .university-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1rem;
+        padding: 1rem 2rem 3rem;
+    }
+
+    .university-card {
+        display: block;
+        text-decoration: none;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 1.25rem 1.5rem;
+        transition: all 0.2s ease;
+        color: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .university-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 4px;
+        height: 100%;
+        background: #4a90d9;
+        transform: scaleY(0);
+        transition: transform 0.2s ease;
+        transform-origin: bottom;
+    }
+
+    .university-card:hover {
+        border-color: #4a90d9;
+        box-shadow: 0 4px 16px rgba(74,144,217,0.15);
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .university-card:hover::before {
+        transform: scaleY(1);
+    }
+
+    .university-card .uni-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        line-height: 1.3;
+        color: #222;
+    }
+
+    .university-card .uni-meta {
+        font-size: 0.78rem;
+        color: #888;
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .university-card .uni-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .report-count-badge {
+        display: inline-block;
+        background: #eef4fb;
+        color: #4a90d9;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        margin-top: 0.6rem;
+    }
+
+    .no-results {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: #888;
+        font-size: 1rem;
+    }
+
+    .write-report-bar {
+        text-align: center;
+        padding: 1.5rem;
+        border-top: 1px solid #eee;
+        background: #fafafa;
+    }
+</style>
+
+<div class="reports-hero">
+    <h1>Exchange Reports</h1>
+    <p>Browse reports from students who studied abroad. Filter by field, institution, or year.</p>
+</div>
+
+<div class="filter-bar">
+    <div class="filter-group">
+        <label for="filter-field">Study Field</label>
+        <select id="filter-field">
+            <option value="">All fields</option>
+        </select>
     </div>
-
-    <div id="wrapper">
-
-        <div class="filter-panel">
-            <h2>Filters</h2>
-
-            <label>Study Field</label>
-            <select id="filter-field">
-                <option value="">All</option>
-            </select>
-
-            <label>Institution</label>
-            <select id="filter-institution">
-                <option value="">All</option>
-            </select>
-
-            <label>Academic Year</label>
-            <select id="filter-year">
-                <option value="">All</option>
-            </select>
-
-            <button id="reset-filters">Reset</button>
-        </div>
-
-        <div id="reports-container"></div>
-
+    <div class="filter-group">
+        <label for="filter-year">Academic Year</label>
+        <select id="filter-year">
+            <option value="">All years</option>
+        </select>
     </div>
+    <div class="filter-actions">
+        <button class="btn-reset" id="reset-filters">Reset filters</button>
+    </div>
+</div>
 
-    <script>
-        const REPORTS_DATA = {{ reports | tojson }};
-    </script>
+<div class="results-info">
+    <span id="results-count"></span>
+</div>
 
-    <script src="{{ url_for('static', filename='js/report_filters.js') }}"></script>
+<div class="university-grid" id="university-grid"></div>
 
-{% if g.user and g.user['status'] == 'alumni' %}
-    <a href="{{ url_for('main.write_report') }}" class="btn primary-btn">Write a Report</a>
-{% else %}
-    <p class="muted">Only alumni can write reports.</p>
-{% endif %}
+<div class="write-report-bar">
+    {% if g.user and g.user['status'] == 'Alumni' %}
+        <a href="{{ url_for('main.write_report') }}" class="btn primary-btn">Write a Report</a>
+    {% else %}
+        <p class="muted">Only alumni can write reports.</p>
+    {% endif %}
+</div>
+
+<script>
+    const REPORTS_DATA = {{ reports | tojson }};
+
+    // Build university index: { name -> { reports: [...], fields: Set, years: Set } }
+    const uniMap = {};
+    for (const r of REPORTS_DATA) {
+        const key = r.institution;
+        if (!uniMap[key]) uniMap[key] = { name: key, reports: [], fields: new Set(), years: new Set() };
+        uniMap[key].reports.push(r);
+        if (r.study_field) uniMap[key].fields.add(r.study_field);
+        if (r.academic_year) uniMap[key].years.add(r.academic_year);
+    }
+
+    // Populate filter dropdowns
+    const allFields = [...new Set(REPORTS_DATA.map(r => r.study_field).filter(Boolean))].sort();
+    const allYears  = [...new Set(REPORTS_DATA.map(r => r.academic_year).filter(Boolean))].sort().reverse();
+
+    const fieldSel = document.getElementById('filter-field');
+    const yearSel  = document.getElementById('filter-year');
+
+    allFields.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = f; fieldSel.appendChild(o); });
+    allYears.forEach(y  => { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); });
+
+    function renderGrid() {
+        const field = fieldSel.value;
+        const year  = yearSel.value;
+        const grid  = document.getElementById('university-grid');
+        const countEl = document.getElementById('results-count');
+
+        grid.innerHTML = '';
+
+        const unis = Object.values(uniMap).filter(u => {
+            if (field && !u.fields.has(field)) return false;
+            if (year  && !u.years.has(year))   return false;
+            return true;
+        }).sort((a, b) => a.name.localeCompare(b.name));
+
+        countEl.textContent = `${unis.length} universit${unis.length === 1 ? 'y' : 'ies'} found`;
+
+        if (unis.length === 0) {
+            grid.innerHTML = '<div class="no-results">No universities match the selected filters.</div>';
+            return;
+        }
+
+        for (const u of unis) {
+            // Count matching reports
+            const matchingReports = u.reports.filter(r => {
+                if (field && r.study_field !== field) return false;
+                if (year  && r.academic_year !== year)  return false;
+                return true;
+            });
+
+            const params = new URLSearchParams({ institution: u.name });
+            if (field) params.set('field', field);
+            if (year)  params.set('year', year);
+
+            const card = document.createElement('a');
+            card.className = 'university-card';
+            card.href = `{{ url_for('main.university_reports') }}?${params.toString()}`;
+            card.innerHTML = `
+                <div class="uni-name">${u.name}</div>
+                <div class="uni-meta">
+                    <span>${[...u.fields].length} field${u.fields.size !== 1 ? 's' : ''}</span>
+                </div>
+                <span class="report-count-badge">${matchingReports.length} report${matchingReports.length !== 1 ? 's' : ''}</span>
+            `;
+            grid.appendChild(card);
+        }
+    }
+
+    fieldSel.addEventListener('change', renderGrid);
+    yearSel.addEventListener('change', renderGrid);
+    document.getElementById('reset-filters').addEventListener('click', () => {
+        fieldSel.value = '';
+        yearSel.value = '';
+        renderGrid();
+    });
+
+    renderGrid();
+</script>
 
 {% endblock %}

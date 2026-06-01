@@ -1,0 +1,1141 @@
+
+:root {
+	--light-border-color: rgba(0, 0, 0, 0.175);
+	--bs-border-color-translucent: var(--light-border-color);
+	--bs-border-color: rgb(210, 210, 210);
+}
+
+.card {
+	border: 1px solid var(--light-border-color);
+}
+
+.form-control:focus, .form-select:focus {
+	border-color: var(--primary-color-adjusted);
+	box-shadow: 0 0 0 0.2rem var(--primary-color-adjusted-transparent);
+}
+
+.input-with-primary-border .form-control {
+	border: var(--bs-border-width) solid var(--text-color-on-bright-bg);
+}
+
+.btn-primary, .btn-info, .badge-primary {
+	background-color: var(--primary-color);
+	border-color: var(--text-color-on-bright-bg);
+	color: var(--text-color-on-primary);
+}
+
+.btn-outline-primary:focus, .btn-outline-primary:focus-visible {
+	box-shadow: 0 0 0 0.2rem var(--primary-color-adjusted-transparent);
+}
+
+.bg-primary-brighter {
+	background-color: var(--primary-color-adjusted);
+}
+
+.bg-primary-brighter-transparent {
+	background-color: var(--primary-color-adjusted-transparent);
+}
+
+.btn-primary:is(:disabled), .btn-info:is(:disabled), .badge-primary:is(:disabled) {
+	background-color: var(--primary-color-adjusted);
+	border-color: var(--primary-color-adjusted);
+	color: var(--text-color-on-primary);
+}
+
+.btn-primary i.moi, .btn-info i.moi {
+	color: var(--text-color-on-primary) !important;
+}
+
+.btn-secondary {
+	background-color: white !important;
+	border-color: white !important;
+	color: var(--text-color-on-bright-bg) !important;
+}
+
+.btn-secondary:hover {
+	background-color: var(--yellow-color) !important;
+	border-color: var(--yellow-color) !important;
+}
+
+.btn-info {
+	background-color: var(--primary-color);
+	/*border-color: var(--yellow-color) !important;*/
+	color: var(--text-color-on-primary);
+}
+
+.btn-outline-primary, .btn-outline-primary:focus-visible {
+	background-color: white;
+	color: var(--text-color-on-bright-bg);
+	border-color: var(--text-color-on-bright-bg);
+}
+
+.btn-outline-primary i.moi {
+	color: var(--text-color-on-bright-bg) !important;
+}
+
+.btn-outline-primary.nav_active,
+.btn-outline-primary:hover i.moi {
+	color: var(--text-color-on-primary) !important;
+}
+
+.btn-outline-primary:hover {
+	color: var(--text-color-on-primary) !important;
+}
+
+.btn-link
+{
+	color: var(--text-color-on-bright-bg);
+}
+
+.border-primary {
+	border-color: var(--primary-color) !important;
+}
+
+.btn-success, .badge-success {
+	background-color: var(--sucess-color);
+	border-color: var(--sucess-color);
+	color: white;
+}
+
+.btn-outline-success {
+	background-color: white;
+	color: var(--sucess-color);
+	border-color: var(--sucess-color);
+}
+
+.border-success {
+	border-color: var(--sucess-color) !important;
+}
+
+.border-muted {
+	border-color: #6c757d !important;
+}
+
+.progress-bar {
+	background-color: var(--text-color-on-bright-bg);
+}
+
+.bootstrap-select .dropdown-toggle:focus:not(:focus-visible) {
+	outline: none !important;
+}
+
+.dropdown-item:active, .dropdown-item.active,
+.bs-container ul.dropdown-menu > li.selected > .dropdown-item {
+	background-color: var(--primary-color);
+	color: var(--text-color-on-primary);
+}
+
+.dropdown-item:active:hover, .dropdown-item.active:hover,
+.bs-container ul.dropdown-menu > li.selected > .dropdown-item:hover {
+	background-color: var(--primary-color-hover) !important;
+	color: var(--text-color-on-primary) !important;
+}
+
+.bs-container ul.dropdown-menu > li.selected > .dropdown-item > .check-mark {
+	display: none;
+}
+
+.dropdown-menu.dropdown-hover-primary .dropdown-item:hover {
+	background-color: var(--primary-color);
+	color: var(--text-color-on-primary);
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {
+	background-color: var(--primary-color);
+	border-color: var(--text-color-on-bright-bg);
+	color: var(--text-color-on-primary);
+}
+
+.btn-outline-success:not(:disabled):not(.disabled):active, .show > .btn-outline-success.dropdown-toggle {
+	background-color: var(--sucess-color);
+	border-color: var(--sucess-color);
+	color: white;
+}
+
+.btn-outline-success:hover {
+	background-color: var(--sucess-color);
+	border-color: var(--sucess-color);
+}
+
+.show > .btn-outline-primary.dropdown-toggle {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+}
+
+.show > .btn-outline-success.dropdown-toggle {
+	background-color: var(--sucess-color);
+	border-color: var(--sucess-color);
+}
+
+.text-primary {
+	color: var(--primary-color) !important;
+}
+
+.text-on-primary, .text-color-on-primary {
+	color: var(--text-color-on-primary) !important;
+}
+
+.text-on-bright-bg {
+	color: var(--text-color-on-bright-bg) !important;
+}
+
+.text-secondary {
+	color: var(--text-color-on-primary) !important;
+}
+
+.text-success {
+	color: var(--sucess-color) !important;
+}
+
+.bg-primary {
+	background-color: var(--primary-color) !important;
+}
+
+.bg-primary-50 {
+	background-color: var(--primary-color-adjusted) !important;
+}
+
+.table-primary, .table-primary > th, .table-primary > td {
+	background-color: var(--primary-color) !important;
+}
+
+.table-primary th, .table-primary td, .table-primary thead th, .table-primary tbody + tbody {
+	border-color: var(--primary-color) !important;
+}
+
+.bg-success {
+	background-color: var(--sucess-color) !important;
+}
+
+.address-line a {
+	color: var(--text-color-on-primary) !important;
+}
+
+.title-row {
+	background-color: var(--primary-color);
+}
+
+.moi-messageRow.info {
+	background-color: var(--primary-color);
+}
+
+.page-item .page-link {
+	border-color: var(--primary-color);
+	color: var(--text-color-on-bright-bg);
+}
+
+.page-item.active .page-link {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+	color: var(--text-color-on-primary);
+}
+
+.btn-primary:hover, .btn-info:hover, .toggle-group label.toggle-on:active {
+	background-color: var(--primary-color-hover) !important;
+	border-color: var(--text-color-on-bright-bg) !important;
+	color: var(--text-color-on-primary);
+}
+
+.btn-check:active + .btn-primary:focus, .btn-check:checked + .btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .btn-info:active:focus, .show > .btn-primary.dropdown-toggle:focus,
+.btn-primary:active, .btn-info:active, .btn-primary:focus, .btn-primary:focus-visible, .btn-info:focus, .btn-info:focus-visible {
+	background-color: var(--primary-color);
+}
+
+.btn-check:active + .btn-primary:focus, .btn-check:checked + .btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .btn-info:active:focus, .show > .btn-primary.dropdown-toggle:focus, .btn-primary:active, .btn-info:active, .btn-primary:focus, .btn-info:focus, .btn-info:focus-visible,
+.btn-check:active + .btn-outline-primary:focus, .btn-check:checked + .btn-outline-primary:focus, .btn-outline-primary.active:focus, .btn-outline-primary.dropdown-toggle.show:focus, .btn-outline-primary:active:focus {
+	box-shadow: 0 0 0 0.2rem var(--primary-color-adjusted-transparent);
+}
+
+.btn-check:active + .btn-primary, .btn-check:checked + .btn-primary, .btn-primary.active, .btn-primary:active, .btn-info:active, .show > .btn-primary.dropdown-toggle, .btn-primary:focus, .btn-primary:focus-visible, .btn-info:focus, .btn-info:focus-visible,
+.btn-primary:first-child:active, .btn-outline-primary:first-child:active,
+.toggle:focus > .toggle-group > .btn-primary,
+.toggle:hover > .toggle-group > .btn-primary, .toggle:hover > .toggle-group > .btn-outline-primary {
+	background-color: var(--primary-color);
+	border-color: var(--text-color-on-bright-bg);
+	color: var(--text-color-on-primary);
+}
+
+.toggle:focus:not(:hover) > .toggle-group > .btn-outline-primary {
+	background-color: white;
+	border-color: var(--text-color-on-bright-bg);
+	color: var(--text-color-on-bright-bg);
+}
+
+.btn-outline-primary.dropdown-toggle.show {
+	background-color: var(--primary-color-hover) !important;
+	border-color: var(--text-color-on-bright-bg) !important;
+	color: var(--text-color-on-primary);
+}
+
+.fa_buttons_with_primary_color {
+	background-color: var(--primary-color-hover);
+	color: white !important;
+	border-color: unset !important;
+}
+
+.fa_buttons_with_primary_color_no_hover:hover {
+	background-color: unset !important;
+	color: unset !important;
+}
+
+.btn-info:hover {
+	background-color: var(--primary-color-hover);
+}
+
+.btn-success:hover {
+	background-color: var(--sucess-color-hover);
+	border-color: var(--sucess-color-hover);
+}
+
+.btn-outline-primary.nav_active,
+.btn-outline-primary:hover {
+	background-color: var(--primary-color);
+	border-color: var(--text-color-on-bright-bg);
+	color: var(--text-color-on-primary);
+}
+
+.bg-primary-80 {
+	background-color: var(--primary-color-80);
+}
+
+.bg-primary-70 {
+	background-color: var(--primary-color-70);
+}
+
+.bg-primary-60 {
+	background-color: var(--primary-color-60);
+}
+
+.bg-primary-50 {
+	background-color: var(--primary-color-50);
+}
+
+.bg-primary-40 {
+	background-color: var(--primary-color-40);
+}
+
+.bg-primary-30 {
+	background-color: var(--primary-color-30);
+}
+
+.bg-primary-20 {
+	background-color: var(--primary-color-20);
+}
+
+.bg-primary-10 {
+	background-color: var(--primary-color-10);
+}
+
+table.dataTable.colorize-groups tr.dtrg-group.dtrg-level-0 td, table.colorize-table tr.level-0 td {
+	background-color: var(--primary-color-80);
+}
+
+table.dataTable.colorize-groups tr.dtrg-group.dtrg-level-1 td, table.colorize-table tr.level-1 td {
+	background-color: var(--primary-color-60);
+}
+
+table.dataTable.colorize-groups tr.dtrg-group.dtrg-level-2 > td, table.colorize-table tr.level-2 > td {
+	background-color: var(--primary-color-40);
+}
+
+.form-check-input {
+	border: 1px solid var(--text-color-on-bright-bg);
+
+	&:not(.is-invalid):not(.is-valid) {
+		&:focus {
+			border-color: var(--text-color-on-bright-bg);
+			box-shadow: 0 0 0 .15rem var(--primary-color-adjusted-transparent) !important
+		}
+
+		&:checked {
+			background-color: var(--text-color-on-bright-bg);
+			border-color: var(--text-color-on-bright-bg);
+		}
+	}
+}
+
+table.dataTable.colorize-groups tr > th .form-check-input, table.dataTable.colorize-groups tr.dtrg-group.dtrg-level-1 > td .form-check-input, table.dataTable.colorize-groups tr.dtrg-group.dtrg-level-2 > td .form-check-input {
+	border: 1px solid var(--text-color-on-primary);
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+	background-color: var(--primary-color);
+	border-color: var(--text-color-on-primary);
+	color: var(--text-color-on-primary);
+}
+
+.btn-check[disabled] + .btn, .btn-check:disabled + .btn {
+	pointer-events: auto;
+	cursor: default;
+}
+
+.btn-check[disabled] + .btn:hover, .btn-check:disabled + .btn:hover {
+	background-color: white !important;
+	color: var(--primary-color) !important;
+	border-color: var(--primary-color) !important;
+}
+
+.nav-link {
+	color: var(--text-color-on-bright-bg);
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+	color: var(--text-color-on-primary);
+	background-color: var(--primary-color);
+}
+
+.daterangepicker td.active, .daterangepicker td.active:hover {
+	background-color: var(--primary-color);
+	color: var(--text-color-on-primary);
+}
+
+.date-input > .form-group > input {
+	padding-top: 1px;
+}
+
+div.wishlist-item:hover {
+	background-color: var(--primary-color-adjusted-transparent);
+	cursor: move;
+}
+
+.offer-item:hover {
+	background-color: var(--primary-color-adjusted-transparent);
+	color: var(--text-color);
+	cursor: pointer;
+}
+
+.hidden {
+	display: none;
+}
+
+.btn-group-md > .btn, .btn-md {
+	font-size: 1rem;
+}
+
+.btn-group {
+	border-left: 1px solid transparent;
+}
+
+.btn-check:checked + .btn-outline-primary {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+}
+
+.bg-navbar {
+	background-color: var(--bg-lightgray) !important;
+}
+
+.bt-input-wrapper:not(:has(.bt-floating-label-radio)):not(:has(.bt-floating-label-checkbox)) .bt-input-label {
+	font-weight: 500;
+	font-size: 1rem;
+	margin-bottom: 5px;
+}
+
+.bt-input-help.italic-under-input {
+	display: block;
+	font-size: 0.9rem;
+	color: rgba(0, 0, 0, 0.7);
+}
+
+.bt-input-wrapper {
+	display: inline-block;
+}
+
+.bt-input-plaintext {
+	display: inline-block;
+	min-height: calc(1.5em + 0.5rem + 2px);
+	padding: 0.25rem 0.5rem;
+	font-size: .875rem;
+	border-radius: 0.2rem;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	width: 100%;
+}
+
+.btn-outline-primary:hover {
+	background-color: var(--primary-color) !important;
+}
+
+.bt-online-doku-icon {
+	max-width: 1rem;
+}
+
+.bt-online-doku-content {
+	overflow: auto;
+	color: rgba(0, 0, 0, 0.9);
+	transition: max-height 0.3s ease-in;
+}
+
+.browser-modal .modal-header {
+	background-color: var(--primary-color);
+	color: var(--text-color-on-primary);
+}
+
+.browser-modal .modal-body iframe, .browser-modal .modal-body iframe body {
+	margin: 0 !important;
+}
+
+.toggle-online-doku-wrapper {
+	display: flex;
+	margin-bottom: -0.5rem;
+}
+
+.toggle {
+	min-width: unset !important;
+	min-height: unset !important;
+	width: unset !important;
+	padding: 0 !important;
+	margin: 0 !important;
+
+	input[type="checkbox"] {
+		display: none !important;
+	}
+
+	> .toggle-group {
+		width: unset !important;
+		position: relative;
+		display: inline-grid;
+		left: unset !important;
+		top: unset !important;
+		right: unset !important;
+		bottom: unset !important;
+
+		> .toggle-off,
+		> .toggle-on {
+			position: relative;
+			grid-column: 1;
+			grid-row: 1;
+
+			left: unset !important;
+			top: unset !important;
+			right: unset !important;
+			bottom: unset !important;
+
+			transition: translate 0.3s ease;
+		}
+
+		> .toggle-off {
+			translate: 100% 0;
+		}
+
+		> .toggle-on {
+			translate: 0 0;
+		}
+
+		.toggle-handle {
+			max-width: 7px;
+			min-width: 7px;
+			position: absolute;
+			left: calc(100% - 7px);
+			transition: left 0.3s ease;
+			padding: 0 !important;
+			margin: 0 !important;
+			border: none !important;
+			border-radius: 0 !important;
+			opacity: 1 !important;
+		}
+	}
+
+	&.off {
+		> .toggle-group {
+			left: unset !important;
+
+			> .toggle-off {
+				translate: 0 0;
+			}
+
+			> .toggle-on {
+				translate: -100% 0;
+			}
+
+			> .toggle-handle {
+				left: 0;
+			}
+		}
+	}
+}
+
+.toggle.btn-outline-primary .toggle-handle {
+	background-color: var(--text-color-on-bright-bg) !important;
+}
+
+.toggle.btn-outline-primary:hover .toggle-handle {
+	background-color: var(--text-color-on-primary) !important;
+}
+
+.toggle.btn-primary .toggle-handle {
+	background-color: var(--text-color-on-primary) !important;
+}
+
+.bt-switch-toggle-wrapper .toggle {
+	white-space: nowrap;
+}
+
+
+.bt-online-doku-content-wrapper {
+	width: calc(100% - 32px);
+}
+
+.form-check:not(.form-switch) .form-check-input {
+	margin-top: 0.3em;
+}
+
+/*	.bt-input-wrapper .form-check-inline
+	{
+		margin-right: 0px;
+	}*/
+
+.form-control.dropdown-toggle.disabled,
+.form-control.dropdown-toggle.readonly {
+	background-color: #e9ecef;
+}
+
+.bt-input.dropdown.bootstrap-select.readonly,
+.bt-input.dropdown.bootstrap-select.readonly > .dropdown-toggle {
+	background-color: #e9ecef;
+	pointer-events: none;
+}
+
+.bt-input-wrapper.file-input .input-group .input-group-text {
+	text-decoration: none;
+	cursor: pointer;
+	color: unset;
+}
+
+.bt-input-wrapper.file-input .file-name {
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.bt-input-wrapper.file-input .form-control {
+	display: inline-flex;
+}
+
+.menu .menu-header {
+	height: 45px;
+	background-color: var(--primary-color);
+}
+
+.dropzone {
+	margin: unset !important;
+}
+
+.action-bar.border.rounded.border-primary, .action-bar.border.rounded.border-primary > select {
+	border: 0 !important;
+}
+
+.action-bar.border.rounded.border-primary > button.dropdown-toggle {
+	border: 1px solid var(--text-color-on-bright-bg);
+	color: var(--text-color-on-bright-bg);
+	font-weight: 700;
+}
+
+.card-header-simple .fa-minus {
+
+}
+
+.card-header-simple .fa-plus {
+	display: none;
+}
+
+.card-header-simple.collapsed .fa-minus {
+	display: none;
+}
+
+.card-header-simple.collapsed .fa-plus {
+	display: inline-block;
+}
+
+.bt-collapsible-card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	min-height: 2.5rem;
+}
+
+.bt-collapsible-card-header > a {
+	align-items: center;
+	text-decoration: none;
+	color: unset;
+	flex-grow: 1;
+}
+
+.bt-collapsible-card-header > a > * {
+	line-height: unset;
+}
+
+.bt-collapsible-card-header > .bt-title-ellipsis {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 0;
+	flex-grow: 1;
+	word-break: unset;
+}
+
+.bt-collapsible-card-header > .bt-title-ellipsis > h5 {
+	text-overflow: ellipsis;
+}
+
+.bt-collapsible-card-header > a > h5 {
+	word-break: break-all;
+	overflow: hidden;
+}
+
+.bt-collapsible-card-header > a.collapsed .fa-plus {
+	display: inline-block;
+}
+
+.bt-collapsible-card-header > a .fa-plus,
+.bt-collapsible-card-header > a.collapsed .fa-minus {
+	display: none;
+}
+
+/* 2024-06-27 AgEh: eventuell schöner ohne */
+/* 	.bt-collapsible-card-components > *  */
+/* 	{ */
+/* 		color: unset; */
+/* 	} */
+
+.bt-collapsible-card-body.card-body-smaller-padding {
+	padding: 0.5rem;
+}
+
+.bt-input-label-wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	flex-wrap: wrap;
+}
+
+.bt-input-label {
+	margin-right: 1rem;
+}
+
+legend.bt-input-label {
+	width: unset;
+}
+
+.bt-input-components {
+	margin-bottom: 5px;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 3px;
+	margin-left: auto;
+}
+
+.bt-collapsible-card-components {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 3px;
+	margin-left: auto;
+}
+
+.bt-input-components .form-group-plaintext {
+	font-size: 0.75rem;
+}
+
+.bt-collapsible-card-components .form-group-plaintext {
+	font-size: 0.9rem;
+}
+
+.bt-input-popover {
+	color: unset;
+}
+
+.bt-alert-wrapper.alert-after-input {
+	margin-top: 1em;
+}
+
+.btn-outline-primary-inverted {
+	color: var(--text-color-on-primary);
+	box-shadow: inset 0 0 0 1px white;
+}
+
+.btn-outline-primary-on-primary:hover {
+	color: var(--text-color-on-primary) !important;
+    box-shadow: inset 0 0 0 1px var(--text-color-on-primary) !important;
+    border-color: var(--text-color-on-primary) !important;
+    background-color: var(--primary-color) !important;
+}
+
+.btn-unstyled {
+	padding: 0.1rem;
+}
+
+.btn-unstyled:focus:not(:focus-visible) {
+	box-shadow: unset;
+}
+
+.bt-input-wrapper.text-input-textarea .bt-input-char-count {
+	position: absolute;
+	right: 15px;
+	bottom: 5px;
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 4px;
+	line-height: 0.8;
+	font-size: 0.8rem;
+	color: white;
+	border-radius: 3px;
+	pointer-events: none;
+}
+
+.bt-input-wrapper.text-input-textarea textarea {
+	padding-bottom: 30px;
+}
+
+.bt-input-wrapper.text-input-textarea .form-group {
+	position: relative;
+}
+
+.bt-modal-footer {
+	background-color: rgba(0, 0, 0, .03);
+}
+
+.progTitleOffcanvas2023 .mobility-header-center-text {
+	flex-grow: 1000;
+	display: flex;
+	justify-content: center;
+}
+
+.progTitleOffcanvas2023 > div#help-title {
+	margin: -0.1rem 0;
+}
+
+.progTitleOffcanvas2023 > div#help-title > a > i {
+	line-height: var(--bs-body-line-height);
+}
+
+.bt-navbar-item-link.bt-navbar-item-link {
+	background-color: var(--bg-card-header);
+	padding: 0.5rem 2rem;
+	color: var(--text-color);
+	border: 1px solid rgba(0, 0, 0, .125);
+	border-top-left-radius: 0;
+	border-top-right-radius: 1rem;
+}
+
+.bt-navbar-item-link.bt-navbar-item-link.active {
+	background-color: var(--primary-color);
+	color: var(--text-color-on-primary);
+}
+
+
+.nav > li > a:hover {
+	background-color: var(--primary-color-adjusted-transparent) !important;
+}
+
+.bt-navbar-item {
+	flex: unset !important;
+}
+
+button.form-control.dropdown-toggle .filter-option .filter-option-inner .filter-option-inner-inner span i,
+.input-element-wrapper-lazy-init-reduced-dropdown-button i {
+	display: none;
+}
+
+a.dropdown-item span.text span i {
+	margin-right: 0.75rem;
+	width: 1rem;
+	text-align: center;
+}
+
+button.form-control.dropdown-toggle .filter-option .filter-option-inner .filter-option-inner-inner span i.show-icon-in-selected-option,
+.input-element-wrapper-lazy-init-reduced-dropdown-button i.show-icon-in-selected-option {
+	display: inline-block;
+	margin: 0 0.6rem 0 .45rem;
+}
+
+/* Schaltet in MS Edge das Browserinterne Password Peek aus */
+.bt-input::-ms-reveal, .bt-input::-ms-clear {
+	display: none;
+}
+
+.bt-collapsible-card-header:has(+ div.collapse:not(.show)) {
+	border-bottom: none !important;
+	border-radius: calc(.25rem - 1px);
+}
+
+.bt-collapsible-card-header:has(.bt-select-wrapper) {
+	padding-top: .5rem !important;
+	padding-bottom: .5rem !important;
+	flex-wrap: wrap;
+	gap: 1rem;
+
+	hr {
+		margin: 1rem 0 0 0;
+	}
+
+	.bt-input-wrapper.cb-box {
+		margin-top: 1rem;
+	}
+}
+
+.bt-collapsible-card-header.card-header {
+	box-sizing: content-box;
+}
+
+.mw-20 {
+	min-width: 20% !important;
+}
+
+.bar-height {
+	height: var(--sop-bar-height);
+}
+
+.container-size-sm {
+	max-width: 500px;
+}
+
+.container-size-md {
+	max-width: 800px;
+}
+
+.modal-size {
+	border: 0;
+	width: 100%;
+	height: 100%;
+	min-height: 70vh;
+}
+
+.modal-entire-screen {
+	margin: 2rem;
+	max-width: unset;
+	min-height: unset !important;
+
+	> .modal-content {
+		height: calc(100vh - 4rem);
+	}
+}
+
+/* styling for for DisplayInputCardSelect */
+.input-card-select-card-wrapper .card-body {
+	padding: 0 !important;
+}
+
+.input-card-select-card-wrapper {
+
+	&:has(.bt-input-invalid) {
+		> .card {
+			border-color: var(--bs-form-invalid-border-color);
+			outline: 1px solid var(--bs-form-invalid-border-color);
+		}
+
+		.bt-input-feedback {
+			padding-bottom: .5rem;
+			padding-left: 1rem;
+			margin-top: 0 !important;
+		}
+	}
+
+	.card-header .bt-collapsible-card-components {
+		text-align: end;
+
+		.form-group-plaintext {
+			font-size: 1rem !important;
+		}
+	}
+}
+
+.input-card-select {
+	padding: 1rem calc(1rem + 1px);
+	gap: calc(1rem + 1px);
+
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+
+	.input-card-select-option {
+		box-sizing: content-box;
+		/*padding: .6rem .8rem .8rem .8rem;*/
+		border: none;
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.175);
+		/*height: 15rem;*/
+		display: flex;
+		flex-direction: column;
+		cursor: pointer;
+		transition: box-shadow 0.1s ease-in-out;
+
+		&:hover {
+			box-shadow: 0 0 0 2px var(--primary-color);
+
+			.input-card-select-checkbox-and-title {
+				box-shadow: 0 2px 0 0 var(--primary-color);
+			}
+		}
+
+		.input-card-select-buttons {
+			display: flex;
+			flex-direction: row-reverse;
+			gap: 1rem;
+			padding: 0 .8rem .8rem .8rem;
+			flex-grow: 1;
+			align-items: flex-end;
+		}
+	}
+
+	&.input-card-select-scroll {
+		display: flex;
+		overflow-x: auto;
+
+		.input-card-select-option {
+			min-width: min(20rem, 70vw);
+		}
+	}
+
+	.input-card-select-additional-infos {
+		display: flex;
+		flex-direction: column;
+		gap: .25rem;
+		padding: 0 .8rem .8rem .8rem;
+
+		&:not(:last-child) {
+			padding-bottom: .5rem;
+		}
+
+		.input-card-select-additional-info {
+			display: flex;
+			flex-wrap: wrap;
+
+			&:not(:last-child) {
+				border-bottom: 1px solid rgba(0, 0, 0, 0.175);
+				padding-bottom: .25rem;
+			}
+
+			&.input-card-select-additional-with-max-lines {
+				.input-card-select-additional-info-value {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					-webkit-box-orient: vertical;
+					display: -webkit-box;
+				}
+			}
+		}
+
+		.input-card-select-additional-info-title {
+			/*text-decoration: underline;*/
+			font-style: italic;
+			margin-right: .5rem;
+		}
+
+		.input-card-select-additional-info-value {
+			overflow-wrap: anywhere;
+		}
+	}
+
+	.input-card-select-checkbox-and-title {
+		overflow-wrap: anywhere;
+		margin-bottom: .5rem;
+		box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.175);
+		padding: .55rem .8rem .5rem .8rem;
+		line-height: 1.6;
+		transition: box-shadow 0.1s ease-in-out;
+
+		.input-card-select-checkbox {
+			width: 1.2rem;
+			height: 1.2rem;
+			margin: 0 .3rem .2rem 0;
+			vertical-align: middle;
+			opacity: 1; /* because checkbox is actually disabled so that it can't be checked/unchecked */
+			border-radius: .25rem;
+		}
+
+		.input-card-select-checkbox-checked {
+			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+			background-color: var(--primary-color);
+		}
+
+		.input-card-select-title {
+			display: inline;
+		}
+	}
+
+	input[type="radio"] {
+		display: none;
+	}
+
+
+	.input-card-select-checkbox-checked {
+		display: none;
+		border: 2px solid var(--text-color-on-primary);
+	}
+
+	.input-card-select-checkbox-not-checked {
+		display: inline-block;
+	}
+
+	input[type="radio"]:checked + .input-card-select-option {
+		box-shadow: 0 0 0 2px var(--primary-color);
+		margin: 0;
+
+		.input-card-select-checkbox-and-title {
+			box-shadow: 0 1px 0 0 var(--primary-color);
+			background: var(--primary-color);
+			color: var(--text-color-on-primary);
+		}
+
+		.input-card-select-checkbox-not-checked {
+			display: none;
+		}
+
+		.input-card-select-checkbox-checked {
+			display: inline-block;
+		}
+	}
+}
+
+.online-help-alert {
+	margin-bottom: 0;
+}
+
+.online-help-alert-icon-and-title {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+	margin-bottom: .5rem;
+}
+
+.online-help-alert-text {
+	margin-bottom: 0;
+
+	p {
+		margin-bottom: .9rem;
+	}
+
+	p:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.modal-header.bg-danger,
+.modal-header.bg-success {
+
+	> .modal-title {
+		color: white !important;
+	}
+
+	> .btn-close {
+		filter: invert(1) grayscale(100%) brightness(200%);
+		opacity: .9;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
+
+.bt-quick-message
+{
+	position: absolute;
+	z-index: 9999;
+}
+
+.bt-switch-toggle-wrapper .toggle {
+	white-space: nowrap;
+}

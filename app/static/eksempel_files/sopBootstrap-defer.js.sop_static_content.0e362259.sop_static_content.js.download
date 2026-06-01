@@ -1,0 +1,28 @@
+
+/*
+ * Initializes all set tooltips on the page
+ *
+ */
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+	// Falls placement beim Element mittels data-attribut gesetzt, dann dies verwenden
+  var placement = tooltipTriggerEl.getAttribute('data-bs-placement');
+  
+  if (!placement)
+    placement = "auto";
+    
+  
+  // Falls trigger beim Element mittels data-attribut gesetzt, dann dies verwenden
+  var trigger = tooltipTriggerEl.getAttribute('data-bs-trigger');
+  
+  if (!trigger)
+  	trigger = "hover";
+  	
+  
+  return new bootstrap.Tooltip(tooltipTriggerEl, { container: 'body', placement: placement, trigger: trigger });
+})
+
+
+$(document).ready(function () {
+	initPasswordPeek();
+});

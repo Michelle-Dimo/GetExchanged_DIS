@@ -1,0 +1,102 @@
+@font-face {
+  font-family: 'Font Awesome Custom';
+  src: url('../webfonts/fa-custom.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fac 
+{
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	display: var(--fa-display,inline-block);
+	font-style: normal;
+	font-variant: normal;
+	line-height: 1;
+	text-rendering: auto;
+}
+
+.fac:before{
+	font-family: 'Font Awesome Custom';
+}
+.fa-sql:before {
+	content: '\E800';
+}
+.fa-filetype-rtf:before{
+	content: '\E801';
+}
+.fa-filetype-jpeg:before{
+	content: '\E802';
+}
+.fa-filetype-json:before{
+	content: '\E803';
+}
+.fa-filetype-gif:before{
+	content: '\E804';
+}
+.fa-filetype-html:before{
+	content: '\E805';
+}
+.fa-filetype-image:before{
+	content: '\E806';
+}
+.fa-filetype-jpg:before{
+	content: '\E807';
+}
+.fa-filetype-oo:before{
+	content: '\E808';
+}
+.fa-filetype-otf:before{
+	content: '\E809';
+}
+.fa-filetype-pdf:before{
+	content: '\E80a';
+}
+.fa-filetype-png:before{
+	content: '\E80b';
+}
+.fa-filetype-ppt:before{
+	content: '\E80c';
+}
+.fa-filetype-rar:before{
+	content: '\E80d';
+}
+.fa-filetype-sql:before{
+	content: '\E80e';
+}
+.fa-filetype-svg:before{
+	content: '\E80f';
+}
+.fa-filetype-txt:before{
+	content: '\E810';
+}
+.fa-filetype-word:before{
+	content: '\E811';
+}
+.fa-filetype-xls:before{
+	content: '\E812';
+}
+.fa-filetype-xlsx:before{
+	content: '\E813';
+}
+.fa-filetype-xml:before{
+	content: '\E814';
+}
+.fa-filetype-zip:before{
+	content: '\E815';
+}
+.fa-filetype-ajax:before{
+	content: '\E816';
+}
+.fa-filetype-csv:before{
+	content: '\E817';
+}
+.fa-filetype-doc:before{
+	content: '\E818';
+}
+.fa-filetype-docx:before{
+	content: '\E819';
+}
+.fa-filetype-excel:before{
+	content: '\E81a';
+}
