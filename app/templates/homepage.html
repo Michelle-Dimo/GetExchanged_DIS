@@ -78,11 +78,11 @@ function renderMarkers(data) {
     markersLayer.clearLayers();
 
     data.forEach(u => {
-        if (!u.Latitude || !u.Longitude) return;
+        if (!u.latitude || !u.longitude) return;
 
-        const count = parseInt(u["N agreements"] || 1);
+        const count = parseInt(u.n_agreements || 1);
 
-        const marker = L.circleMarker([u.Latitude, u.Longitude], {
+        const marker = L.circleMarker([u.latitude, u.longitude], {
             radius: Math.min(20, 4 + count / 5),
             color: "#2c6bed",
             fillColor: "#2c6bed",
@@ -91,13 +91,13 @@ function renderMarkers(data) {
         });
 
         marker.bindPopup(`
-                <b>${u.Institution}</b><br>
-                ${u.City}, ${u.Country}<br>
-                Agreements: ${count}<br><br>
-                <a href="#" onclick="goToAgreements('${u.Institution.replace(/'/g, "\\'")}'); return false;">
-                    View agreements
-                </a>
-`               );
+            <b>${u.institution}</b><br>
+            ${u.city}, ${u.country}<br>
+            Agreements: ${count}<br><br>
+            <a href="#" onclick="goToAgreements('${u.institution.replace(/'/g, "\\'")}'); return false;">
+                View agreements
+            </a>
+        `);
 
         markersLayer.addLayer(marker);
     });
@@ -119,14 +119,24 @@ function goToAgreements(institution) {
 }
 
 fetch("/api/map-data")
-.then(res => res.json())
-.then(data => {
+    .then(res => res.json())
+    .then(data => {
+        const raw = data.universities;
 
-    allData = data.universities;
+        // Pre-group for filters.js (which calls groupByAgreement internally)
+        // Pass raw rows with singular study_field so groupByAgreement works
+        const flat = raw.flatMap(u =>
+            u.study_fields.length
+                ? u.study_fields.map(sf => ({ ...u, id: u.institution, study_field: sf }))
+                : [{ ...u, id: u.institution, study_field: "" }]
+        );
+        setupFilters(flat, filtered => {
+            // filtered is grouped; re-map back to raw shape for renderMarkers
+            const ids = new Set(filtered.map(f => f.institution));
+            renderMarkers(raw.filter(u => ids.has(u.institution)));
+        });
 
-    renderMarkers(allData);
-
-    setupFilters(allData, renderMarkers);
-});
+        renderMarkers(raw);
+    });
 </script>
 {% endblock %}

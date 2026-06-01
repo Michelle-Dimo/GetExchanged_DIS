@@ -74,8 +74,8 @@ def init_db():
     
     # Import the data (creates the table automatically)
 
-    with engine.begin() as conn:
-        conn.execute(text(
+    with engine.begin() as sa_conn:
+        sa_conn.execute(text(
             "DROP TABLE IF EXISTS parsed_agreement_text CASCADE"
         ))
     agreement_parsed.to_sql('parsed_agreement_text', engine, index=False, if_exists='fail')
@@ -140,10 +140,12 @@ def init_db():
                             country VARCHAR (40) NOT NULL,
                             city VARCHAR (80) NOT NULL,
                             n_agreements INT NOT NULL,
-                            agreement_id INT NOT NULL)
+                            agreement_id INT NOT NULL,
+                            latitude FLOAT,
+                            longitude FLOAT)
         ''')
 
-    study_fields_path = os.path.normpath(os.path.join(base_dir, "../data/Study_fields_data.csv"))
+    study_fields_path = os.path.normpath(os.path.join(base_dir, "../data/Study_fields_with_latlon.csv"))
 
     # Insert data into the table
     with open(study_fields_path, "r") as f:
@@ -155,7 +157,9 @@ def init_db():
                             country,
                             city,
                             n_agreements,
-                            agreement_id)
+                            agreement_id,
+                            latitude,
+                            longitude)
             FROM STDIN
             WITH (FORMAT csv, HEADER true)
         """, f)

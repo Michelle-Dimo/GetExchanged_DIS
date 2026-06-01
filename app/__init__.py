@@ -2,6 +2,7 @@ import os
 from flask import Flask, redirect, url_for, jsonify, request, render_template
 import csv
 import re
+from app.init_db import get_db
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -40,12 +41,27 @@ def create_app(test_config=None):
 
     @app.route("/api/map-data")
     def map_data():
-        rows = []
-        path = os.path.join("data", "Study_fields_with_latlon.csv")
+        db = get_db().cursor()
+        db.execute("""
+            SELECT
+                institution,
+                city,
+                country,
+                continent,
+                latitude,
+                longitude,
+                COUNT(DISTINCT agreement_id) AS n_agreements,
+                STRING_AGG(DISTINCT study_field, '||') AS study_fields
+            FROM study_fields
+            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+            GROUP BY institution, city, country, continent, latitude, longitude
+        """)
+        cols = [col[0] for col in db.description]
+        rows = [dict(zip(cols, row)) for row in db.fetchall()]
 
-        with open(path, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            rows = list(reader)
+
+        for row in rows:
+            row["study_fields"] = row["study_fields"].split("||") if row["study_fields"] else []
 
         return jsonify({"universities": rows})
 
