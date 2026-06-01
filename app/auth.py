@@ -37,8 +37,8 @@ def register():
             error = 'KU ID is required.'
         elif not password:
             error = 'Password is required.'
-        #elif status not in ('applicant', 'alumni'):
-            #error = 'Invalid status.'
+        elif status not in ('Applicant', 'Alumni'):
+            error = 'Invalid status.'
 
         if not ku_id:
             error = 'KU ID is required.'
