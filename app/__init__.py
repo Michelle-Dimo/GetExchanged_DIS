@@ -6,9 +6,6 @@ import re
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
-    # ─────────────────────────────────────────
-    # CONFIG (Postgres only — no SQLite confusion)
-    # ─────────────────────────────────────────
     app.config.from_mapping(
         SECRET_KEY=os.environ.get("SECRET_KEY", "dev"),
         DB_HOST=os.environ.get("DB_HOST"),
@@ -20,18 +17,11 @@ def create_app(test_config=None):
     if test_config:
         app.config.update(test_config)
 
-    # Ensure instance folder exists
     os.makedirs(app.instance_path, exist_ok=True)
 
-    # ─────────────────────────────────────────
-    # DB INIT
-    # ─────────────────────────────────────────
     from . import init_db
     init_db.init_app(app)
 
-    # ─────────────────────────────────────────
-    # BLUEPRINTS
-    # ─────────────────────────────────────────
     from . import auth
     app.register_blueprint(auth.bp)
 
@@ -43,10 +33,6 @@ def create_app(test_config=None):
 
     from . import reports
     app.register_blueprint(reports.bp)
-
-    # ─────────────────────────────────────────
-    # ROUTES
-    # ─────────────────────────────────────────
 
     @app.route("/")
     def index():
