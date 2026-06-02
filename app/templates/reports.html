@@ -4,6 +4,75 @@
 
 {% block content %}
 
+<style>
+    /* Custom Dropdown Shell Layout Styles */
+    .custom-dropdown {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    .dropdown-trigger {
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: #fff;
+        cursor: pointer;
+        user-select: none;
+        font-size: 14px;
+    }
+    .dropdown-content {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        z-index: 1000;
+        max-height: 280px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-top: 4px;
+    }
+    .dropdown-search {
+        padding: 10px;
+        border: none;
+        border-bottom: 1px solid #eee;
+        outline: none;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+    .dropdown-options {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        max-height: 200px;
+    }
+    .dropdown-options li {
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.1s;
+    }
+
+    /* 1. Base rule for selected option (Idle State) */
+    .dropdown-options li.selected {
+        background-color: transparent;
+        color: #212529;
+        font-weight: bold;
+    }
+
+    /* 2. Hover and keyboard focus states (Placed AFTER to correctly override transparent backgrounds) */
+    .dropdown-options li:hover,
+    .dropdown-options li.highlighted {
+        background-color: #e9ecef;
+        color: #212529;
+    }
+</style>
+
 <div class="reports-hero">
     <h1>Exchange Reports</h1>
     <p>Browse reports from students who studied abroad. Filter by field, institution, or year.</p>
@@ -11,16 +80,26 @@
 
 <div class="filter-bar">
     <div class="filter-group">
-        <label for="filter-field">Study Field</label>
-        <select id="filter-field">
-            <option value="">All fields</option>
-        </select>
+        <label>Study Field</label>
+        <div class="custom-dropdown" id="filter-field-container">
+            <div class="dropdown-trigger">All fields</div>
+            <div class="dropdown-content" style="display: none;">
+                <input type="text" class="dropdown-search" placeholder="Search fields...">
+                <ul class="dropdown-options"></ul>
+            </div>
+            <input type="hidden" id="filter-field" value="">
+        </div>
     </div>
     <div class="filter-group">
-        <label for="filter-year">Academic Year</label>
-        <select id="filter-year">
-            <option value="">All years</option>
-        </select>
+        <label>Academic Year</label>
+        <div class="custom-dropdown" id="filter-year-container">
+            <div class="dropdown-trigger">All years</div>
+            <div class="dropdown-content" style="display: none;">
+                <input type="text" class="dropdown-search" placeholder="Search years...">
+                <ul class="dropdown-options"></ul>
+            </div>
+            <input type="hidden" id="filter-year" value="">
+        </div>
     </div>
     <div class="filter-actions">
         <button class="btn-reset" id="reset-filters">Reset filters</button>
@@ -44,7 +123,6 @@
 <script>
     const REPORTS_DATA = {{ reports | tojson }};
 
-    // Build university index: { name -> { reports: [...], fields: Set, years: Set } }
     const uniMap = {};
     for (const r of REPORTS_DATA) {
         const key = r.institution;
@@ -54,19 +132,134 @@
         if (r.academic_year) uniMap[key].years.add(r.academic_year);
     }
 
-    // Populate filter dropdowns
     const allFields = [...new Set(REPORTS_DATA.map(r => r.study_field).filter(Boolean))].sort();
     const allYears  = [...new Set(REPORTS_DATA.map(r => r.academic_year).filter(Boolean))].sort().reverse();
 
-    const fieldSel = document.getElementById('filter-field');
-    const yearSel  = document.getElementById('filter-year');
+    function initSearchableDropdown(id, items, fallbackLabel, useFuzzy = false) {
+        const container = document.getElementById(`${id}-container`);
+        const trigger = container.querySelector('.dropdown-trigger');
+        const content = container.querySelector('.dropdown-content');
+        const searchInput = container.querySelector('.dropdown-search');
+        const ul = container.querySelector('.dropdown-options');
+        const hiddenInput = document.getElementById(id);
 
-    allFields.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = f; fieldSel.appendChild(o); });
-    allYears.forEach(y  => { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); });
+        ul.innerHTML = '';
+        const liAll = document.createElement('li');
+        liAll.textContent = fallbackLabel;
+        liAll.dataset.value = '';
+        liAll.classList.add('selected');
+        ul.appendChild(liAll);
+
+        items.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            li.dataset.value = item;
+            ul.appendChild(li);
+        });
+
+        function selectOption(li) {
+            hiddenInput.value = li.dataset.value;
+            trigger.textContent = li.textContent || fallbackLabel;
+            ul.querySelectorAll('li').forEach(l => l.classList.remove('selected', 'highlighted'));
+            li.classList.add('selected');
+            searchInput.value = '';
+            ul.querySelectorAll('li').forEach(l => l.style.display = 'block');
+            content.style.display = 'none';
+            renderGrid();
+        }
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.dropdown-content').forEach(c => { if(c !== content) c.style.display = 'none'; });
+            const isHidden = content.style.display === 'none' || content.style.display === '';
+            content.style.display = isHidden ? 'block' : 'none';
+            
+            if (isHidden) {
+                searchInput.focus();
+                ul.querySelectorAll('li').forEach(l => l.classList.remove('highlighted'));
+                const initialActive = ul.querySelector('li.selected') || ul.querySelector('li');
+                if (initialActive) initialActive.classList.add('highlighted');
+            }
+        });
+
+        searchInput.addEventListener('input', () => {
+            const term = searchInput.value.toLowerCase().trim();
+            let firstVisibleFound = null;
+
+            ul.querySelectorAll('li').forEach(li => {
+                const text = li.textContent.toLowerCase();
+                li.classList.remove('highlighted');
+
+                if (li.dataset.value === '' || !term) {
+                    li.style.display = 'block';
+                } else {
+                    const exactMatch = text.includes(term);
+                    const fuzzyMatch = useFuzzy && reportGetSimilarity(text, term) > 0.25;
+
+                    if (exactMatch || fuzzyMatch) {
+                        li.style.display = 'block';
+                    } else {
+                        li.style.display = 'none';
+                    }
+                }
+
+                if (li.style.display !== 'none' && !firstVisibleFound) {
+                    firstVisibleFound = li;
+                }
+            });
+
+            if (firstVisibleFound) {
+                firstVisibleFound.classList.add('highlighted');
+                firstVisibleFound.scrollIntoView({ block: "nearest" });
+            }
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            const visibleLis = Array.from(ul.querySelectorAll('li')).filter(li => li.style.display !== 'none');
+            if (visibleLis.length === 0) return;
+
+            const currentHighlighted = ul.querySelector('li.highlighted');
+            let currentIndex = visibleLis.indexOf(currentHighlighted);
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (currentHighlighted) currentHighlighted.classList.remove('highlighted');
+
+                currentIndex = (currentIndex + 1) % visibleLis.length;
+                const nextLi = visibleLis[currentIndex];
+                nextLi.classList.add('highlighted');
+                nextLi.scrollIntoView({ block: 'nearest' });
+
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (currentHighlighted) currentHighlighted.classList.remove('highlighted');
+
+                currentIndex = (currentIndex - 1 + visibleLis.length) % visibleLis.length;
+                const prevLi = visibleLis[currentIndex];
+                prevLi.classList.add('highlighted');
+                prevLi.scrollIntoView({ block: 'nearest' });
+
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (currentHighlighted) {
+                    selectOption(currentHighlighted);
+                }
+            }
+        });
+
+        ul.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                selectOption(e.target);
+            }
+        });
+    }
+
+    initSearchableDropdown('filter-field', allFields, 'All fields', true);
+    initSearchableDropdown('filter-year', allYears, 'All years', false);
 
     function renderGrid() {
-        const field = fieldSel.value;
-        const year  = yearSel.value;
+        const field = document.getElementById('filter-field').value;
+        const year  = document.getElementById('filter-year').value;
         const grid  = document.getElementById('university-grid');
         const countEl = document.getElementById('results-count');
 
@@ -86,7 +279,6 @@
         }
 
         for (const u of unis) {
-            // Count matching reports
             const matchingReports = u.reports.filter(r => {
                 if (field && r.study_field !== field) return false;
                 if (year  && r.academic_year !== year)  return false;
@@ -111,13 +303,54 @@
         }
     }
 
-    fieldSel.addEventListener('change', renderGrid);
-    yearSel.addEventListener('change', renderGrid);
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-content').forEach(c => c.style.display = 'none');
+    });
+
     document.getElementById('reset-filters').addEventListener('click', () => {
-        fieldSel.value = '';
-        yearSel.value = '';
+        document.getElementById('filter-field').value = '';
+        document.getElementById('filter-year').value = '';
+        
+        document.querySelector('#filter-field-container .dropdown-trigger').textContent = 'All fields';
+        document.querySelector('#filter-year-container .dropdown-trigger').textContent = 'All years';
+
+        document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+            const ul = dropdown.querySelector('.dropdown-options');
+            ul.querySelectorAll('li').forEach(li => {
+                li.classList.remove('selected', 'highlighted');
+                if (li.dataset.value === '') li.classList.add('selected');
+                li.style.display = 'block';
+            });
+            const searchInput = dropdown.querySelector('.dropdown-search');
+            if (searchInput) searchInput.value = '';
+        });
+
         renderGrid();
     });
+
+    function reportGetSimilarity(str1, str2) {
+        str1 = str1.toLowerCase().trim();
+        str2 = str2.toLowerCase().trim();
+        if (!str1 || !str2) return 0;
+        if (str1 === str2) return 1;
+
+        const pairs1 = reportGetBigrams(str1);
+        const pairs2 = reportGetBigrams(str2);
+        let intersection = 0;
+
+        for (const pair of pairs1) {
+            if (pairs2.includes(pair)) intersection++;
+        }
+        return intersection > 0 ? (2.0 * intersection) / (pairs1.length + pairs2.length) : 0;
+    }
+
+    function reportGetBigrams(str) {
+        const bigrams = [];
+        for (let i = 0; i < str.length - 1; i++) {
+            bigrams.push(str.slice(i, i + 2));
+        }
+        return bigrams;
+    }
 
     renderGrid();
 </script>

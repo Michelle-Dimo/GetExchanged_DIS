@@ -5,6 +5,10 @@
 {% endblock %}
 
 {% block content %}
+    <style>
+        /* Insert the "Shared CSS" block from above here */
+    </style>
+
     <div class="hero-section">
         <h1>Agreements</h1>
     </div>
@@ -12,25 +16,45 @@
         <div class="filter-panel">
             <h2>Filters</h2>
 
-            <label for="filter-search-input">Quick Filter Search</label>
-            <input 
-                type="text" 
-                id="filter-search-input" 
-                placeholder="Type university, field, or city..." 
-                style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;"
-            >
-
             <label>Study Field</label>
-            <select id="filter-field"><option value="">All</option></select>
+            <div class="custom-dropdown" id="filter-field-container">
+                <input type="hidden" id="filter-field" value="">
+                <button type="button" class="dropdown-trigger">All</button>
+                <div class="dropdown-content" style="display: none;">
+                    <input type="text" class="dropdown-search" placeholder="Search fields...">
+                    <ul class="dropdown-options"></ul>
+                </div>
+            </div>
 
             <label>Country</label>
-            <select id="filter-country"><option value="">All</option></select>
+            <div class="custom-dropdown" id="filter-country-container">
+                <input type="hidden" id="filter-country" value="">
+                <button type="button" class="dropdown-trigger">All</button>
+                <div class="dropdown-content" style="display: none;">
+                    <input type="text" class="dropdown-search" placeholder="Search countries...">
+                    <ul class="dropdown-options"></ul>
+                </div>
+            </div>
 
             <label>City</label>
-            <select id="filter-city"><option value="">All</option></select>
+            <div class="custom-dropdown" id="filter-city-container">
+                <input type="hidden" id="filter-city" value="">
+                <button type="button" class="dropdown-trigger">All</button>
+                <div class="dropdown-content" style="display: none;">
+                    <input type="text" class="dropdown-search" placeholder="Search cities...">
+                    <ul class="dropdown-options"></ul>
+                </div>
+            </div>
 
             <label>Institution</label>
-            <select id="filter-institution"><option value="">All</option></select>
+            <div class="custom-dropdown" id="filter-institution-container">
+                <input type="hidden" id="filter-institution" value="">
+                <button type="button" class="dropdown-trigger">All</button>
+                <div class="dropdown-content" style="display: none;">
+                    <input type="text" class="dropdown-search" placeholder="Search institutions...">
+                    <ul class="dropdown-options"></ul>
+                </div>
+            </div>
 
             <button id="reset-filters">Reset</button>
         </div>
