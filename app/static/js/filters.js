@@ -68,12 +68,35 @@ function applyFilters(renderCallback) {
     const country = document.getElementById("filter-country").value;
     const city = document.getElementById("filter-city").value;
     const institution = document.getElementById("filter-institution").value;
+    
+    // NEW: Read values from the new quick search panel text box
+    const searchText = document.getElementById("filter-search-input").value.toLowerCase().trim();
 
     let filtered = allData;
     if (study_field) filtered = filtered.filter(u => u.study_fields.has(study_field));
     if (country) filtered = filtered.filter(u => u.countries.has(country));
     if (city) filtered = filtered.filter(u => u.cities.has(city));
     if (institution) filtered = filtered.filter(u => u.institution === institution);
+
+    // NEW: Client-side keyword and typo-tolerant fuzzy validation
+    if (searchText) {
+        filtered = filtered.filter(u => {
+            // A. Check for standard substring matches first (fast and exact)
+            if (u.institution.toLowerCase().includes(searchText)) return true;
+            for (let c of u.countries) if (c.toLowerCase().includes(searchText)) return true;
+            for (let c of u.cities) if (c.toLowerCase().includes(searchText)) return true;
+            for (let f of u.study_fields) if (f.toLowerCase().includes(searchText)) return true;
+
+            // B. If no direct match, check fuzzy similarity threshold (catches typos like "aple" -> "apple")
+            // 0.25 is our matching threshold (0.0 is completely different, 1.0 is identical)
+            if (getSimilarity(u.institution, searchText) > 0.25) return true;
+            for (let c of u.countries) if (getSimilarity(c, searchText) > 0.25) return true;
+            for (let c of u.cities) if (getSimilarity(c, searchText) > 0.25) return true;
+            for (let f of u.study_fields) if (getSimilarity(f, searchText) > 0.25) return true;
+
+            return false;
+        });
+    }
 
     updateFilterOptions(filtered);
     renderCallback(filtered);
@@ -87,8 +110,17 @@ function setupFilters(data, renderCallback) {
         el.addEventListener("change", () => applyFilters(renderCallback));
     });
 
+    // NEW: Filter the system live on every keypress inside the input box
+    document.getElementById("filter-search-input").addEventListener("input", () => {
+        applyFilters(renderCallback);
+    });
+
     document.getElementById("reset-filters").addEventListener("click", () => {
         document.querySelectorAll(".filter-panel select").forEach(el => el.value = "");
+        
+        // NEW: Clear the text box input on reset
+        document.getElementById("filter-search-input").value = "";
+        
         updateFilterOptions(allData);
         renderCallback(allData);
     });
@@ -106,3 +138,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     applyFilters(renderAgreements);
 });
+
+
+// NEW: Add text matching utility algorithms to the very bottom of the file
+// This uses a Sørensen–Dice Coefficient algorithm to perform fast, typo-tolerant checks in JavaScript
+function getSimilarity(str1, str2) {
+    str1 = str1.toLowerCase().trim();
+    str2 = str2.toLowerCase().trim();
+    if (!str1 || !str2) return 0;
+    if (str1 === str2) return 1;
+
+    const pairs1 = getBigrams(str1);
+    const pairs2 = getBigrams(str2);
+    let intersection = 0;
+
+    for (const pair of pairs1) {
+        if (pairs2.includes(pair)) {
+            intersection++;
+        }
+    }
+    return intersection > 0 ? (2.0 * intersection) / (pairs1.length + pairs2.length) : 0;
+}
+
+function getBigrams(str) {
+    const bigrams = [];
+    for (let i = 0; i < str.length - 1; i++) {
+        bigrams.push(str.slice(i, i + 2));
+    }
+    return bigrams;
+}

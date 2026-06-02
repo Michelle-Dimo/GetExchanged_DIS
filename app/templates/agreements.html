@@ -12,6 +12,14 @@
         <div class="filter-panel">
             <h2>Filters</h2>
 
+            <label for="filter-search-input">Quick Filter Search</label>
+            <input 
+                type="text" 
+                id="filter-search-input" 
+                placeholder="Type university, field, or city..." 
+                style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;"
+            >
+
             <label>Study Field</label>
             <select id="filter-field"><option value="">All</option></select>
 
@@ -28,8 +36,6 @@
         </div>
         <div id="agreements-container"></div>
     </div>
-
-    
 
     <script>
         const AGREEMENTS_DATA = {{ agreements | tojson }};
