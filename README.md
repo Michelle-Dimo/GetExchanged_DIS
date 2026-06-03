@@ -17,27 +17,30 @@ pip install -r requirements.txt
 
 Create a `.env` file in the root directory and add:
 
-....
+```shell
+POSTGRES_DB=ku_exchange
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=secret
+```
 
 Make sure PostgreSQL is running and the database exists.
 
 ## Folder setup
 The app is devided into multiple folder, as follows:
 
-- app/ --> Main Flask application  
-  - static/ --> CSS style file and favicon 
+- app/ → Main Flask application  
+  - static/ → CSS style file and favicon 
   - templates/ → all HTML templates  
-  - __pycache__/ → Python cache  
+  - pycache/ → Python cache  
 - data/ → Scraped datasets  
-- instance/ → ....  
 - scripts/ → Contains scripts for scraping, etc.
 
 ---
 
 ## Application architecture
 
-- __init__.py → Initializes Flask app and DB connection  
-- init_db.py → Database 
+- init.py → Initializes Flask app and DB connection  
+- init_db.py → Contains the Database 
 - main.py → Blueprint and routes
 - auth.py → User authentication and routes
 
@@ -59,19 +62,22 @@ The app is devided into multiple folder, as follows:
 /my_repotrs → View created reports  
 /edit-profile → Edit profile information  
 /my_agreements → View saved agreements  
+/my_applications  → View your applications  
 
 ### Details
 /api/map-data → Maps the universities worldwide  
 /search → search bar to navigate the website  
-/reports → View and create reports  
-/agreements → View agreements  
+/reports → View and create reports   
+/reports/university → Read the reports of each university 
+/agreements → View agreements   
+/agreements_text → Read the agreements for each university  
 
 ---
 
 ## Known backend issues
 
 - Database constraints could be improved
-- Authentication security may need strengthening
+- 
 
 ---
 
