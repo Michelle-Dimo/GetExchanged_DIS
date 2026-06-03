@@ -6,7 +6,7 @@
 
 <div class="reports-hero">
     <h1>Exchange Reports</h1>
-    <p>Browse reports from students who studied abroad. Filter by field, institution, or year.</p>
+    <p>Browse reports from students who studied abroad.</p>
 </div>
 
 <div class="filter-bar">
@@ -22,7 +22,13 @@
             <option value="">All years</option>
         </select>
     </div>
-    <div class="filter-actions">
+    <div class="filter-group">
+        <label for="filter-institution">Institution</label>
+        <select id="filter-institution">
+            <option value="">All institutions</option>
+        </select>
+    </div>
+
         <button class="btn-reset" id="reset-filters">Reset filters</button>
     </div>
 </div>
@@ -57,16 +63,20 @@
     // Populate filter dropdowns
     const allFields = [...new Set(REPORTS_DATA.map(r => r.study_field).filter(Boolean))].sort();
     const allYears  = [...new Set(REPORTS_DATA.map(r => r.academic_year).filter(Boolean))].sort().reverse();
+    const allInts = [...new Set(REPORTS_DATA.map(r => r.institution).filter(Boolean))].sort();
 
     const fieldSel = document.getElementById('filter-field');
     const yearSel  = document.getElementById('filter-year');
+    const instSel  = document.getElementById('filter-institution');
 
     allFields.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = f; fieldSel.appendChild(o); });
     allYears.forEach(y  => { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); });
+    allInts.forEach(i  => { const o = document.createElement('option'); o.value = i; o.textContent = i; instSel.appendChild(o); });
 
     function renderGrid() {
         const field = fieldSel.value;
         const year  = yearSel.value;
+        const ints = instSel.value;
         const grid  = document.getElementById('university-grid');
         const countEl = document.getElementById('results-count');
 
@@ -75,6 +85,7 @@
         const unis = Object.values(uniMap).filter(u => {
             if (field && !u.fields.has(field)) return false;
             if (year  && !u.years.has(year))   return false;
+            if (ints && u.name !== ints) return false;
             return true;
         }).sort((a, b) => a.name.localeCompare(b.name));
 
@@ -90,12 +101,14 @@
             const matchingReports = u.reports.filter(r => {
                 if (field && r.study_field !== field) return false;
                 if (year  && r.academic_year !== year)  return false;
+                if (ints && u.name !== ints) return false;
                 return true;
             });
 
             const params = new URLSearchParams({ institution: u.name });
             if (field) params.set('field', field);
             if (year)  params.set('year', year);
+            if (ints)  params.set('institution', ints);
 
             const card = document.createElement('a');
             card.className = 'university-card';
@@ -113,9 +126,11 @@
 
     fieldSel.addEventListener('change', renderGrid);
     yearSel.addEventListener('change', renderGrid);
+    instSel.addEventListener('change', renderGrid);
     document.getElementById('reset-filters').addEventListener('click', () => {
         fieldSel.value = '';
         yearSel.value = '';
+        instSel.value = '';
         renderGrid();
     });
 

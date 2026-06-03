@@ -577,3 +577,236 @@ padding: 1.5rem;
 border-top: 1px solid #eee;
 background: #fafafa;
 }
+
+.uni-hero {
+    padding: 2.5rem 2rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.uni-hero .back-link {
+    font-size: 0.85rem;
+    color: #4a90d9;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+}
+
+.uni-hero .back-link:hover { text-decoration: underline; }
+
+.uni-hero h1 {
+    font-size: 2rem;
+    margin-bottom: 0.4rem;
+}
+
+.uni-hero .meta {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.filter-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 0.85rem;
+ }
+
+.filter-strip label { 
+    font-weight: 600; 
+    color: #555; 
+}
+
+.filter-strip select {
+    padding: 0.35rem 0.65rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: white;
+}
+
+.filter-strip select:focus {
+    outline: none;
+    border-color: #4a90d9;
+}
+
+.reports-list {
+    padding: 1.5rem 2rem 3rem;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.results-info {
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 1rem;
+}
+
+.report-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    background: white;
+}
+
+.report-card .report-header {
+    background: #4a90d9;
+    color: white;
+    padding: 0.9rem 1.25rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+.report-card .report-header h2 {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.report-card .report-header .report-meta {
+    font-size: 0.78rem;
+    opacity: 0.85;
+    display: flex;
+    gap: 1rem;
+}
+
+.report-card .chevron {
+    transition: transform 0.25s;
+    font-size: 0.75rem;
+}
+
+.report-card.open .chevron {
+    transform: rotate(180deg);
+}
+
+.report-card .report-body {
+    display: none;
+    padding: 0;
+}
+
+.report-card.open .report-body {
+    display: block;
+}
+
+.section-block {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.section-block:last-child {
+    border-bottom: none;
+}
+
+.section-title {
+    background: #f4f7fb;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #4a90d9;
+    border-bottom: 1px solid #e8eef5;
+}
+
+.qa-list {
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.qa-item {}
+
+.qa-item .question {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.qa-item .answer {
+    font-size: 0.92rem;
+    color: #222;
+    line-height: 1.55;
+}
+
+.qa-item .answer.rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.rating-stars {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.rating-stars .star {
+    width: 14px;
+    height: 14px;
+    background: #ddd;
+    border-radius: 2px;
+}
+
+.rating-stars .star.filled {
+    background: #4a90d9;
+}
+
+.cost-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem 1rem;
+}
+
+.cost-item {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+}
+
+.cost-item .cost-label {
+    font-size: 0.72rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+}
+
+.cost-item .cost-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.cost-item .cost-value .currency {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: #888;
+    margin-left: 2px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: #eef4fb;
+    color: #4a90d9;
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: #888;
+}
