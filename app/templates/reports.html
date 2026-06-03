@@ -4,75 +4,6 @@
 
 {% block content %}
 
-<style>
-    /* Custom Dropdown Shell Layout Styles */
-    .custom-dropdown {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-    .dropdown-trigger {
-        padding: 10px 14px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background: #fff;
-        cursor: pointer;
-        user-select: none;
-        font-size: 14px;
-    }
-    .dropdown-content {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        z-index: 1000;
-        max-height: 280px;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        margin-top: 4px;
-    }
-    .dropdown-search {
-        padding: 10px;
-        border: none;
-        border-bottom: 1px solid #eee;
-        outline: none;
-        width: 100%;
-        box-sizing: border-box;
-        font-size: 14px;
-    }
-    .dropdown-options {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        overflow-y: auto;
-        max-height: 200px;
-    }
-    .dropdown-options li {
-        padding: 10px 14px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background 0.1s;
-    }
-
-    /* 1. Base rule for selected option (Idle State) */
-    .dropdown-options li.selected {
-        background-color: transparent;
-        color: #212529;
-        font-weight: bold;
-    }
-
-    /* 2. Hover and keyboard focus states (Placed AFTER to correctly override transparent backgrounds) */
-    .dropdown-options li:hover,
-    .dropdown-options li.highlighted {
-        background-color: #e9ecef;
-        color: #212529;
-    }
-</style>
-
 <div class="reports-hero">
     <h1>Exchange Reports</h1>
     <p>Browse reports from students who studied abroad.</p>
@@ -102,10 +33,15 @@
         </div>
     </div>
     <div class="filter-group">
-        <label for="filter-institution">Institution</label>
-        <select id="filter-institution">
-            <option value="">All institutions</option>
-        </select>
+        <label>Institution</label>
+        <div class="custom-dropdown" id="filter-institution-container">
+            <div class="dropdown-trigger">All institutions</div>
+            <div class="dropdown-content" style="display: none;">
+                <input type="text" class="dropdown-search" placeholder="Search institutions...">
+                <ul class="dropdown-options"></ul>
+            </div>
+            <input type="hidden" id="filter-institution" value="">
+        </div>
     </div>
 
         <button class="btn-reset" id="reset-filters">Reset filters</button>
@@ -132,7 +68,7 @@
     const uniMap = {};
     for (const r of REPORTS_DATA) {
         const key = r.institution;
-        if (!uniMap[key]) uniMap[key] = { name: key, reports: [], fields: new Set(), years: new Set() };
+        if (!uniMap[key]) uniMap[key] = { name: key, reports: [], fields: new Set(), years: new Set()};
         uniMap[key].reports.push(r);
         if (r.study_field) uniMap[key].fields.add(r.study_field);
         if (r.academic_year) uniMap[key].years.add(r.academic_year);
@@ -263,10 +199,12 @@
 
     initSearchableDropdown('filter-field', allFields, 'All fields', true);
     initSearchableDropdown('filter-year', allYears, 'All years', false);
+    initSearchableDropdown('filter-institution', allInts, 'All institutions', true);
 
     function renderGrid() {
         const field = document.getElementById('filter-field').value;
         const year  = document.getElementById('filter-year').value;
+        const ints = document.getElementById('filter-institution').value;
         const grid  = document.getElementById('university-grid');
         const countEl = document.getElementById('results-count');
 
@@ -305,7 +243,7 @@
             card.innerHTML = `
                 <div class="uni-name">${u.name}</div>
                 <div class="uni-meta">
-                    <span>${[...u.fields].length} field${u.fields.size !== 1 ? 's' : ''}</span>
+                    <span>${u.fields.size} field${u.fields.size !== 1 ? 's' : ''}</span>
                 </div>
                 <span class="report-count-badge">${matchingReports.length} report${matchingReports.length !== 1 ? 's' : ''}</span>
             `;
@@ -320,9 +258,11 @@
     document.getElementById('reset-filters').addEventListener('click', () => {
         document.getElementById('filter-field').value = '';
         document.getElementById('filter-year').value = '';
+        document.getElementById('filter-institution').value = '';
         
         document.querySelector('#filter-field-container .dropdown-trigger').textContent = 'All fields';
         document.querySelector('#filter-year-container .dropdown-trigger').textContent = 'All years';
+        document.querySelector('#filter-institution-container .dropdown-trigger').textContent = 'All institutions';
 
         document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
             const ul = dropdown.querySelector('.dropdown-options');

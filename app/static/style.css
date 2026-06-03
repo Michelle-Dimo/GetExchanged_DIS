@@ -578,88 +578,6 @@ border-top: 1px solid #eee;
 background: #fafafa;
 }
 
-<<<<<<< HEAD
-.uni-hero {
-    padding: 2.5rem 2rem 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.uni-hero .back-link {
-    font-size: 0.85rem;
-    color: #4a90d9;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-bottom: 1rem;
-}
-
-.uni-hero .back-link:hover { text-decoration: underline; }
-
-.uni-hero h1 {
-    font-size: 2rem;
-    margin-bottom: 0.4rem;
-}
-
-.uni-hero .meta {
-    font-size: 0.85rem;
-    color: #777;
-}
-
-.filter-strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e8e8e8;
-    font-size: 0.85rem;
- }
-
-.filter-strip label { 
-    font-weight: 600; 
-    color: #555; 
-}
-
-.filter-strip select {
-    padding: 0.35rem 0.65rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    background: white;
-}
-
-.filter-strip select:focus {
-    outline: none;
-    border-color: #4a90d9;
-}
-
-.reports-list {
-    padding: 1.5rem 2rem 3rem;
-    max-width: 860px;
-    margin: 0 auto;
-}
-
-.results-info {
-    font-size: 0.82rem;
-    color: #888;
-    margin-bottom: 1rem;
-}
-
-.report-card {
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-    background: white;
-}
-
-.report-card .report-header {
-    background: #4a90d9;
-    color: white;
-    padding: 0.9rem 1.25rem;
-=======
 /* Custom Searchable Dropdown Layout styles */
 .custom-dropdown {
     position: relative;
@@ -673,160 +591,10 @@ background: #fafafa;
     border: 1px solid #ccc;
     border-radius: 4px;
     text-align: left;
->>>>>>> 90d8f3eaf4bc7e4162457c7c5ae43c4752552318
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-<<<<<<< HEAD
-    user-select: none;
-}
-
-.report-card .report-header h2 {
-    font-size: 1rem;
-    margin: 0;
-    font-weight: 600;
-}
-
-.report-card .report-header .report-meta {
-    font-size: 0.78rem;
-    opacity: 0.85;
-    display: flex;
-    gap: 1rem;
-}
-
-.report-card .chevron {
-    transition: transform 0.25s;
-    font-size: 0.75rem;
-}
-
-.report-card.open .chevron {
-    transform: rotate(180deg);
-}
-
-.report-card .report-body {
-    display: none;
-    padding: 0;
-}
-
-.report-card.open .report-body {
-    display: block;
-}
-
-.section-block {
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.section-block:last-child {
-    border-bottom: none;
-}
-
-.section-title {
-    background: #f4f7fb;
-    padding: 0.6rem 1.25rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: #4a90d9;
-    border-bottom: 1px solid #e8eef5;
-}
-
-.qa-list {
-    padding: 0.75rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-}
-
-.qa-item {}
-
-.qa-item .question {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 0.2rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-}
-
-.qa-item .answer {
-    font-size: 0.92rem;
-    color: #222;
-    line-height: 1.55;
-}
-
-.qa-item .answer.rating {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.rating-stars {
-    display: inline-flex;
-    gap: 2px;
-}
-
-.rating-stars .star {
-    width: 14px;
-    height: 14px;
-    background: #ddd;
-    border-radius: 2px;
-}
-
-.rating-stars .star.filled {
-    background: #4a90d9;
-}
-
-.cost-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 0.75rem;
-    padding: 0.75rem 1.25rem 1rem;
-}
-
-.cost-item {
-    background: #f8f9fa;
-    border-radius: 6px;
-    padding: 0.6rem 0.8rem;
-}
-
-.cost-item .cost-label {
-    font-size: 0.72rem;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin-bottom: 0.2rem;
-}
-
-.cost-item .cost-value {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #222;
-}
-
-.cost-item .cost-value .currency {
-    font-size: 0.72rem;
-    font-weight: 400;
-    color: #888;
-    margin-left: 2px;
-}
-
-.tag {
-    display: inline-block;
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    background: #eef4fb;
-    color: #4a90d9;
-}
-
-.no-results {
-    text-align: center;
-    padding: 3rem;
-    color: #888;
-=======
     box-sizing: border-box;
     font-size: 14px;
 }
@@ -882,5 +650,205 @@ background: #fafafa;
     background-color: #e9ecef;
     color: #212529;
     cursor: pointer;
->>>>>>> 90d8f3eaf4bc7e4162457c7c5ae43c4752552318
+}
+
+
+/* ── University reports page ── */
+.uni-hero {
+    padding: 2.5rem 2rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.uni-hero h1 {
+    font-size: 2rem;
+    margin: 0.5rem 0 0.25rem;
+    color: #1f2937;
+}
+
+.uni-hero .meta {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.back-link {
+    font-size: 0.85rem;
+    color: #4a90d9;
+    text-decoration: none;
+}
+
+.back-link:hover { text-decoration: underline; }
+
+.filter-strip {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.filter-strip label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #555;
+}
+
+.filter-strip select {
+    padding: 0.4rem 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+}
+
+.reports-list {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 2rem 3rem;
+}
+
+/* Report cards */
+.report-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.report-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.report-header h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.1rem;
+    color: #1f2937;
+}
+
+.report-meta {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.chevron {
+    font-size: 0.75rem;
+    color: #aaa;
+    transition: transform 0.2s;
+}
+
+.report-card.open .chevron { transform: rotate(180deg); }
+
+.report-body {
+    display: none;
+    padding: 0 1.5rem 1.5rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.report-card.open .report-body { display: block; }
+
+/* Sections inside a report */
+.section-block {
+    margin-top: 1.25rem;
+}
+
+.section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #4a90d9;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #eef4fb;
+}
+
+.qa-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.qa-item { display: grid; grid-template-columns: 200px 1fr; gap: 0.5rem 1rem; }
+
+.question {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #555;
+    padding-top: 0.1rem;
+}
+
+.answer {
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+.tag {
+    display: inline-block;
+    background: #eef4fb;
+    color: #4a90d9;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+}
+
+/* Ratings */
+.answer.rating { display: flex; align-items: center; gap: 0.4rem; }
+
+.rating-stars { display: flex; gap: 2px; }
+
+.star {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: #e0e0e0;
+    display: inline-block;
+}
+
+.star.filled { background: #4a90d9; }
+
+/* Cost grid */
+.cost-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.cost-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+}
+
+.cost-label {
+    font-size: 0.72rem;
+    color: #888;
+    margin-bottom: 0.2rem;
+}
+
+.cost-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.currency {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #aaa;
+    margin-left: 2px;
 }

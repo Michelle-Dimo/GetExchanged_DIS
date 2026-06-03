@@ -37,16 +37,13 @@ let reports = ALL_REPORTS.filter(r => r.institution === INSTITUTION);
 const urlParams = new URLSearchParams(window.location.search);
 const preField = urlParams.get('field') || '';
 const preYear  = urlParams.get('year')  || '';
-const preInst  = urlParams.get('institution') || '';
 
 // Populate filters
 const fieldSel = document.getElementById('filter-field');
 const yearSel  = document.getElementById('filter-year');
-const instSel  = document.getElementById('filter-institution');
 
 const fields = [...new Set(reports.map(r => r.study_field).filter(Boolean))].sort();
 const years  = [...new Set(reports.map(r => r.academic_year).filter(Boolean))].sort().reverse();
-const institutions = [...new Set(reports.map(r => r.institution).filter(Boolean))].sort();
 
 fields.forEach(f => {
     const o = document.createElement('option');
@@ -59,12 +56,6 @@ years.forEach(y => {
     o.value = y; o.textContent = y;
     if (y === preYear) o.selected = true;
     yearSel.appendChild(o);
-});
-institutions.forEach(i => {
-    const o = document.createElement('option');
-    o.value = i; o.textContent = i;
-    if (i === preInst) o.selected = true;
-    instSel.appendChild(o);
 });
 
 // Sections definition
@@ -263,12 +254,10 @@ function toggleReport(index) {
 function render() {
     const field = fieldSel.value;
     const year  = yearSel.value;
-    const inst = instSel.value;
 
     const filtered = reports.filter(r => {
         if (field && r.study_field !== field) return false;
         if (year  && r.academic_year !== year)  return false;
-        if (inst && r.institution !== inst) return false;
         return true;
     });
 
@@ -289,7 +278,6 @@ function render() {
 
 fieldSel.addEventListener('change', render);
 yearSel.addEventListener('change', render);
-instSel.addEventListener('change', render);
 
 render();
 </script>
