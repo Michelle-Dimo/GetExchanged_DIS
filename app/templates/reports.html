@@ -43,7 +43,6 @@
             <input type="hidden" id="filter-institution" value="">
         </div>
     </div>
-
         <button class="btn-reset" id="reset-filters">Reset filters</button>
     </div>
 </div>
@@ -201,7 +200,69 @@
     initSearchableDropdown('filter-year', allYears, 'All years', false);
     initSearchableDropdown('filter-institution', allInts, 'All institutions', true);
 
+    function updateDependentFilters() {
+    const field = document.getElementById('filter-field').value;
+    const year  = document.getElementById('filter-year').value;
+    const inst  = document.getElementById('filter-institution').value;
+
+    // Valid fields = filter by year+inst only
+    const forField = REPORTS_DATA.filter(r => {
+        if (year && r.academic_year !== year)  return false;
+        if (inst && r.institution   !== inst)  return false;
+        return true;
+    });
+
+    // Valid years = filter by field+inst only
+    const forYear = REPORTS_DATA.filter(r => {
+        if (field && r.study_field  !== field) return false;
+        if (inst  && r.institution  !== inst)  return false;
+        return true;
+    });
+
+    // Valid institutions = filter by field+year only
+    const forInst = REPORTS_DATA.filter(r => {
+        if (field && r.study_field  !== field) return false;
+        if (year  && r.academic_year !== year)  return false;
+        return true;
+    });
+
+    repopulateDropdown('filter-field', forField.map(r => r.study_field), 'All fields');
+    repopulateDropdown('filter-year',  forYear.map(r => r.academic_year).sort().reverse(), 'All years');
+    repopulateDropdown('filter-institution', forInst.map(r => r.institution), 'All institutions');
+}
+
+    function repopulateDropdown(id, values, fallbackLabel) {
+        const container = document.getElementById(`${id}-container`);
+        const ul = container.querySelector('.dropdown-options');
+        const hidden = document.getElementById(id);
+        const trigger = container.querySelector('.dropdown-trigger');
+        const current = hidden.value;
+
+        ul.innerHTML = '';
+
+        const liAll = document.createElement('li');
+        liAll.textContent = fallbackLabel;
+        liAll.dataset.value = '';
+        if (!current) liAll.classList.add('selected');
+        ul.appendChild(liAll);
+
+        const sorted = [...new Set(values)].filter(Boolean);
+        sorted.forEach(val => {
+            const li = document.createElement('li');
+            li.textContent = val;
+            li.dataset.value = val;
+            if (val === current) li.classList.add('selected');
+            ul.appendChild(li);
+        });
+
+        if (current && !sorted.includes(current)) {
+            hidden.value = '';
+            trigger.textContent = fallbackLabel;
+        }
+    }
+
     function renderGrid() {
+        updateDependentFilters();
         const field = document.getElementById('filter-field').value;
         const year  = document.getElementById('filter-year').value;
         const ints = document.getElementById('filter-institution').value;
