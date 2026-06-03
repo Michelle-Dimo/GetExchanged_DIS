@@ -4,7 +4,7 @@ function renderAgreements(data) {
     const container = document.getElementById("agreements-container");
     const countEl = document.getElementById("results-count");
 
-    countEl.textContent = `${data.length} universit${data.length === 1 ? 'y' : 'ies'} found`;
+    countEl.textContent = `${data.length} Agreement${data.length === 1 ? '' : 's'} found`;
 
     if (data.length === 0) {
         container.innerHTML = '<div class="no-results">No universities match the selected filters.</div>';
