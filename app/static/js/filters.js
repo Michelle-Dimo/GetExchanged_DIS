@@ -2,14 +2,24 @@ let allData = [];
 
 function renderAgreements(data) {
     const container = document.getElementById("agreements-container");
+    const countEl = document.getElementById("results-count");
+
+    countEl.textContent = `${data.length} universit${data.length === 1 ? 'y' : 'ies'} found`;
+
+    if (data.length === 0) {
+        container.innerHTML = '<div class="no-results">No universities match the selected filters.</div>';
+        return;
+    }
+
     container.innerHTML = data.map(agreement => `
-        <div class="card-container">
-            <a href="/agreements/${agreement.id}" class="agreement-card card">
-                <h3>${agreement.institution}</h3>
-                <p>ID: ${agreement.id}</p>
-            </a>
+    <a href="/agreements/${agreement.id}" class="university-card">
+        <div class="uni-name">${agreement.institution}</div>
+        <div class="uni-meta">
+            <span>${agreement.study_fields.size} field${agreement.study_fields.size !== 1 ? 's' : ''}</span>
+            <span>ID: ${agreement.id}</span>
         </div>
-    `).join("");
+    </a>
+`).join("");
 }
 
 function groupByAgreement(data) {

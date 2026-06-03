@@ -399,8 +399,6 @@ body {
     font-size: 1rem;
 }
 
-
-/* Filter bar */
 .filter-bar {
     display: flex;
     flex-wrap: wrap;
@@ -470,16 +468,12 @@ body {
     border-color: #aaa;
 }
 
-
-/* Results count */
 .results-info {
     padding: 1rem 2rem 0.5rem;
     font-size: 0.85rem;
     color: #777;
 }
 
-
-/* University grid */
 .university-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -578,7 +572,6 @@ border-top: 1px solid #eee;
 background: #fafafa;
 }
 
-/* Custom Searchable Dropdown Layout styles */
 .custom-dropdown {
     position: relative;
     width: 100%;
@@ -652,8 +645,6 @@ background: #fafafa;
     cursor: pointer;
 }
 
-
-/* ── University reports page ── */
 .uni-hero {
     padding: 2.5rem 2rem 1.5rem;
     max-width: 900px;
@@ -712,7 +703,6 @@ background: #fafafa;
     padding: 1rem 2rem 3rem;
 }
 
-/* Report cards */
 .report-card {
     background: white;
     border: 1px solid #e0e0e0;
@@ -762,7 +752,6 @@ background: #fafafa;
 
 .report-card.open .report-body { display: block; }
 
-/* Sections inside a report */
 .section-block {
     margin-top: 1.25rem;
 }
@@ -805,7 +794,6 @@ background: #fafafa;
     border-radius: 999px;
 }
 
-/* Ratings */
 .answer.rating { display: flex; align-items: center; gap: 0.4rem; }
 
 .rating-stars { display: flex; gap: 2px; }
@@ -820,7 +808,6 @@ background: #fafafa;
 
 .star.filled { background: #4a90d9; }
 
-/* Cost grid */
 .cost-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));

@@ -60,10 +60,8 @@
 
 <div class="results-info"><span id="results-count"></span></div>
 <div class="university-grid" id="agreements-container"></div>
-<div id="agreements-container"></div>
-</div>
-    <script>
-        const AGREEMENTS_DATA = {{ agreements | tojson }};
-    </script>
-    <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+<script>
+     const AGREEMENTS_DATA = {{ agreements | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/filters.js') }}"></script>
 {% endblock %}
