@@ -65,36 +65,48 @@ def create_app(test_config=None):
 
         return jsonify({"universities": rows})
 
-    @app.route("/search", methods=["POST"])
+
+    @app.route("/search", methods=["GET"])
     def search():
-        results = []
-        query = request.form.get("search", "")
+        query = request.args.get("q", "").strip()
+        if not query:
+            return render_template("search_results.html", results={"agreements": [], "reports": []}, query="")
 
-        try:
-            pattern = re.compile(query, re.IGNORECASE)
+        db = get_db()
+        cur = db.cursor()
 
-            data_folder = "data"
-            for filename in os.listdir(data_folder):
-                if filename.endswith(".csv"):
-                    filepath = os.path.join(data_folder, filename)
+        # 1. Search Agreements: Match on institution, study field, or country with a similarity threshold > 0.2
+        cur.execute("""
+            SELECT DISTINCT a.id, a.institution,
+                   GREATEST(similarity(a.institution, %s), COALESCE(similarity(s.study_field, %s), 0), COALESCE(similarity(s.country, %s), 0)) as score
+            FROM agreements a
+            LEFT JOIN study_fields s ON a.id = s.agreement_id
+            WHERE similarity(a.institution, %s) > 0.20
+               OR similarity(s.study_field, %s) > 0.20
+               OR similarity(s.country, %s) > 0.20
+            ORDER BY score DESC
+            LIMIT 10;
+        """, (query, query, query, query, query, query))
+        agreement_rows = cur.fetchall()
 
-                    with open(filepath, newline="", encoding="utf-8") as f:
-                        reader = csv.reader(f)
+        # 2. Search Reports: Match on institution or study field
+        cur.execute("""
+            SELECT DISTINCT institution, 
+                   GREATEST(similarity(institution, %s), COALESCE(similarity(study_field, %s), 0)) as score
+            FROM reports
+            WHERE similarity(institution, %s) > 0.20
+               OR similarity(study_field, %s) > 0.20
+            ORDER BY score DESC
+            LIMIT 10;
+        """, (query, query, query, query))
+        report_rows = cur.fetchall()
 
-                        for row in reader:
-                            row_text = " | ".join(row)
-                            if pattern.search(row_text):
-                                results.append({
-                                    "file": filename,
-                                    "match": row_text
-                                })
+        results = {
+            "agreements": [{"id": r[0], "institution": r[1], "score": round(r[2], 2)} for r in agreement_rows],
+            "reports": [{"institution": r[0], "score": round(r[1], 2)} for r in report_rows]
+        }
 
-        except re.error:
-            results.append({
-                "file": "Error",
-                "match": "Invalid regex pattern"
-            })
+        return render_template("search_results.html", results=results, query=query)
 
-        return render_template("homepage.html", results=results)
 
     return app

@@ -19,17 +19,17 @@
 <body>
     <header class="topbar">
         <nav class="nav-left">
-            <div class="search-container">
-              <form method="POST" action="/search">
-                <input
-                  type="text"
-                  name="search"
-                  placeholder="Search ..."
-                  required
-                >
+          <div class="search-container">
+            <form method="GET" action="/search">
+              <input
+                type="text"
+                name="q"
+                placeholder="Search agreements, fields, universities..."
+                required
+              >
               <button type="submit">Search</button>
-              </form>
-            </div>
+            </form>
+          </div>
           </nav>
         <div class="nav-center">
             <a href="{{ url_for('main.home') }}" class="site-title" aria-label="GetExchanged Home">

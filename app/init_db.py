@@ -35,6 +35,10 @@ def init_db():
     conn = get_db()
     cur = conn.cursor()
 
+    # Enable the fuzzy matching
+    cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
+    conn.commit()
+
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
     # ---------------- AGREEMENTS ----------------
@@ -57,6 +61,8 @@ def init_db():
             COPY agreements(index, id, institution, text)
             FROM STDIN WITH (FORMAT csv, HEADER true)
         """, f)
+
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_agreements_inst_trgm ON agreements USING gin (institution gin_trgm_ops);")
 
     # ---------------- PARSED AGREEMENTS ----------------
     connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
@@ -154,6 +160,7 @@ def init_db():
     for col in cost_cols:
         df.loc[df[col] > 1e10, col] = None
 
+
     with engine.begin() as con:
         con.execute(text("DROP TABLE IF EXISTS reports CASCADE"))
 
@@ -180,6 +187,11 @@ def init_db():
             'cost_other': Float(),
         }
     )
+
+    # ADD THIS NEW BLOCK: Build fuzzy-matching indexes right after the table is populated
+    with engine.begin() as con:
+        con.execute(text("CREATE INDEX IF NOT EXISTS idx_reports_inst_trgm ON reports USING gin (institution gin_trgm_ops);"))
+        con.execute(text("CREATE INDEX IF NOT EXISTS idx_reports_field_trgm ON reports USING gin (study_field gin_trgm_ops);"))
 
     print("Reports imported successfully!")
 

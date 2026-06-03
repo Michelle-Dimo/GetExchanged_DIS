@@ -578,6 +578,7 @@ border-top: 1px solid #eee;
 background: #fafafa;
 }
 
+<<<<<<< HEAD
 .uni-hero {
     padding: 2.5rem 2rem 1.5rem;
     border-bottom: 1px solid #e0e0e0;
@@ -658,10 +659,26 @@ background: #fafafa;
     background: #4a90d9;
     color: white;
     padding: 0.9rem 1.25rem;
+=======
+/* Custom Searchable Dropdown Layout styles */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.dropdown-trigger {
+    width: 100%;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: left;
+>>>>>>> 90d8f3eaf4bc7e4162457c7c5ae43c4752552318
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
+<<<<<<< HEAD
     user-select: none;
 }
 
@@ -809,4 +826,61 @@ background: #fafafa;
     text-align: center;
     padding: 3rem;
     color: #888;
+=======
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.dropdown-trigger::after {
+    content: '▼';
+    font-size: 10px;
+    color: #666;
+}
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0 0 4px 4px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 8px;
+    box-sizing: border-box;
+}
+.dropdown-search {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.dropdown-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+.dropdown-options li {
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.dropdown-options li.selected {
+    background-color: transparent;
+    color: #212529;
+    font-weight: bold; 
+}
+
+.dropdown-options li:hover,
+.dropdown-options li.highlighted {
+    background-color: #e9ecef;
+    color: #212529;
+    cursor: pointer;
+>>>>>>> 90d8f3eaf4bc7e4162457c7c5ae43c4752552318
 }
