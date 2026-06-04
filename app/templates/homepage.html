@@ -147,16 +147,12 @@ fetch("/api/map-data")
     .then(res => res.json())
     .then(data => {
         const raw = data.universities;
-
-        // Pre-group for filters.js (which calls groupByAgreement internally)
-        // Pass raw rows with singular study_field so groupByAgreement works
         const flat = raw.flatMap(u =>
             u.study_fields.length
                 ? u.study_fields.map(sf => ({ ...u, id: u.institution, study_field: sf }))
                 : [{ ...u, id: u.institution, study_field: "" }]
         );
         setupFilters(flat, filtered => {
-            // filtered is grouped; re-map back to raw shape for renderMarkers
             const ids = new Set(filtered.map(f => f.institution));
             renderMarkers(raw.filter(u => ids.has(u.institution)));
         });

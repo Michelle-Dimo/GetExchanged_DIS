@@ -30,15 +30,12 @@
 const ALL_REPORTS = {{ reports | tojson }};
 const INSTITUTION = {{ institution | tojson }};
 
-// Pre-filter to this institution
 let reports = ALL_REPORTS.filter(r => r.institution === INSTITUTION);
 
-// Read URL params for pre-selected filters
 const urlParams = new URLSearchParams(window.location.search);
 const preField = urlParams.get('field') || '';
 const preYear  = urlParams.get('year')  || '';
 
-// Populate filters
 const fieldSel = document.getElementById('filter-field');
 const yearSel  = document.getElementById('filter-year');
 
@@ -166,7 +163,6 @@ function buildReportCard(r, index) {
             <div class="report-body">
     `;
 
-    // Costs section (special grid layout)
     const costKeys = [
         ['cost_insurance', 'Insurance'],
         ['cost_housing_pm', 'Housing/mo'],
@@ -212,8 +208,7 @@ function buildReportCard(r, index) {
         }
         costsHtml += '</div>';
     }
-
-    // Regular sections
+    
     for (const section of SECTIONS) {
         const items = section.items.filter(item => r[item.key] != null && r[item.key] !== '');
         if (items.length === 0) continue;

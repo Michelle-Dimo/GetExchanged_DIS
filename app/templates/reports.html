@@ -197,21 +197,18 @@
     const year  = document.getElementById('filter-year').value;
     const inst  = document.getElementById('filter-institution').value;
 
-    // Valid fields = filter by year+inst only
     const forField = REPORTS_DATA.filter(r => {
         if (year && r.academic_year !== year)  return false;
         if (inst && r.institution   !== inst)  return false;
         return true;
     });
 
-    // Valid years = filter by field+inst only
     const forYear = REPORTS_DATA.filter(r => {
         if (field && r.study_field  !== field) return false;
         if (inst  && r.institution  !== inst)  return false;
         return true;
     });
 
-    // Valid institutions = filter by field+year only
     const forInst = REPORTS_DATA.filter(r => {
         if (field && r.study_field  !== field) return false;
         if (year  && r.academic_year !== year)  return false;

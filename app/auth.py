@@ -1,5 +1,3 @@
-#link to tutorial: https://flask.palletsprojects.com/en/stable/tutorial/database/
-
 from flask import (
     Blueprint, flash, g, redirect,
     render_template, request, session, url_for
@@ -8,7 +6,6 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from .init_db import get_db
 
-#regex patterns to verify KU-ID and email:
 import re
 KU_ID_PATTERN = re.compile(r'^[a-zA-Z]{3}\d{3}$')
 EMAIL_PATTERN = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
@@ -32,7 +29,6 @@ def register():
 
         error = None
 
-        # Basic validation
         if not ku_id:
             error = 'KU ID is required.'
         elif not password:
@@ -52,7 +48,6 @@ def register():
         db = get_db()
         cur = db.cursor()
 
-        # Check if user exists
         if error is None:
             cur.execute(
                 'SELECT id FROM users WHERE ku_id = %s',
@@ -63,7 +58,6 @@ def register():
             if existing_user is not None:
                 error = 'User already exists.'
 
-        # Insert user
         if error is None:
 
             hashed_password = generate_password_hash(password)

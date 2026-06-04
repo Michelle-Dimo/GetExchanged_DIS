@@ -64,8 +64,7 @@ def create_app(test_config=None):
             row["study_fields"] = row["study_fields"].split("||") if row["study_fields"] else []
 
         return jsonify({"universities": rows})
-
-    # Global search route with parameter escaping and safe tuple extraction
+    
     @app.route("/search", methods=["GET", "POST"])
     def search():
         results = []
@@ -80,8 +79,6 @@ def create_app(test_config=None):
             db = get_db()
             cursor = db.cursor()
 
-            # CRITICAL FIX: Changed single '%' operators to '%%' so Python's 
-            # DB driver doesn't mistake them for syntax placeholders.
             search_sql = """
                 SELECT DISTINCT
                     institution, city, country, study_field
@@ -102,9 +99,6 @@ def create_app(test_config=None):
                 raw_rows = cursor.fetchall()
                 
                 for row in raw_rows:
-                    # SAFETY FIX: Instead of hardcoded row[0], row[1], etc., 
-                    # we dynamically join whatever columns were returned.
-                    # This completely prevents "tuple index out of range" crashes.
                     row_text = " | ".join(str(item) for item in row if item is not None)
                     
                     results.append({
@@ -112,7 +106,6 @@ def create_app(test_config=None):
                         "match": row_text
                     })
             except Exception as e:
-                # Catch-all to display structural issues cleanly if they arise
                 results.append({
                     "file": "System Error",
                     "match": f"Search failed: {str(e)}"
