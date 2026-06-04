@@ -12,11 +12,17 @@ bp = Blueprint('agreements', __name__)
 def table():
     db = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     db.execute('''
-                SELECT DISTINCT a.id, a.institution, s.study_field, s.city, s.country
-                FROM agreements AS a
-                JOIN study_fields AS s ON s.agreement_id = a.id
-                ORDER BY a.id
-                            ''')
+                    SELECT DISTINCT 
+                        a."Agreement_ID" AS id, 
+                        a."Institution" AS institution, 
+                        s.study_field, 
+                        s.city, 
+                        s.country
+                    FROM agreements AS a
+                    JOIN study_fields AS s ON s.agreement_id = a."Agreement_ID"
+                    ORDER BY id
+                                ''')
+
     agreements = db.fetchall()
 
     return render_template('agreements.html', agreements=agreements)
@@ -38,8 +44,8 @@ def agreement(id):
     db = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     db.execute('''
                 SELECT *
-                FROM parsed_agreement_text
-                WHERE parsed_agreement_text."Agreement_ID" = %s
+                FROM agreements
+                WHERE agreements."Agreement_ID" = %s
                ''', (id,))
     query_result = db.fetchone()
     agreement_data = {k: parse_value(v) for k, v in dict(query_result).items()}

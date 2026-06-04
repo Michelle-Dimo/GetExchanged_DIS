@@ -40,46 +40,25 @@ def init_db():
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    cur.execute("DROP TABLE IF EXISTS agreements CASCADE;")
-    cur.execute("""
-        CREATE TABLE agreements (
-            index INT UNIQUE,
-            id INT PRIMARY KEY,
-            institution VARCHAR(80) NOT NULL,
-            text TEXT NOT NULL
-        )
-    """)
-
-    agreements_path = os.path.normpath(
-        os.path.join(base_dir, "../data/Agreement_data.csv")
-    )
-
-    with open(agreements_path, "r") as f:
-        cur.copy_expert("""
-            COPY agreements(index, id, institution, text)
-            FROM STDIN WITH (FORMAT csv, HEADER true)
-        """, f)
-
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_agreements_inst_trgm ON agreements USING gin (institution gin_trgm_ops);")
-
+    # ---------------- AGREEMENTS ----------------
     connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
     engine = create_engine(connection_string)
 
     with engine.begin() as sa_con:
-        sa_con.execute(text("DROP TABLE IF EXISTS parsed_agreement_text CASCADE"))
+        sa_con.execute(text("DROP TABLE IF EXISTS agreements CASCADE"))
 
     agreement_parsed = pd.read_csv(
         os.path.join(base_dir, "../data/New_Parsed_Agreement_Data.csv")
     )
 
     agreement_parsed.to_sql(
-        "parsed_agreement_text",
+        "agreements",
         engine,
         index=False,
         if_exists="fail"
     )
 
-    print("Parsed agreement text imported successfully!")
+    print("Agreements imported successfully!")
 
     cur.execute("DROP TABLE IF EXISTS users CASCADE;")
 
