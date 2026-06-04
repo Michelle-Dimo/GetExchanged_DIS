@@ -40,7 +40,6 @@ def init_db():
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # ---------------- AGREEMENTS ----------------
     connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
     engine = create_engine(connection_string)
 
