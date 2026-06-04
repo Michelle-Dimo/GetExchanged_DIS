@@ -1,7 +1,7 @@
 # GetExchanged
 ## Setup instructions
 
-Run the application by using Docker:
+Run the application by downloading Docker, and run the following in the terminal:
 
 ```shell
 docker compose up --build
