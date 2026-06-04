@@ -17,7 +17,8 @@ Build and run the app
 ```shell
 docker compose up --build
 ```
-After the first time of running the app `--build` can be excluded from the command.
+> [!TIP]
+> After the first time of running the app `--build` can be excluded from the command.
 
 ### Or install dependencies and run the app manually (for MacOS or Linux users):
 
@@ -64,7 +65,8 @@ Intitialize and start the app
 ```shell
 python entrypoint.py
 ```
-
+> [!TIP]
+> After running entrypoint.py the first time, the app can be started with `flask --app run app --port:"8080"` 
 > [!NOTE]
 > When running the app the website can be seen on http://127.0.0.1:8080
 
