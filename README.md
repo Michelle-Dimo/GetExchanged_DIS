@@ -62,13 +62,14 @@ The app is devided into multiple folder, as follows:
 ---
 
 ## Known issues with the application
-- 
+- The site can be a little slow in loading the application, especially in the search function.
 
 ## Ideas that were not yet implemented
 - The alumni/applicant function should limit the users access to fx. apply to a university
 - This function should also make it possible for an alumni to write reports from their visited universities
 - This function should also make it possible for an applicant to save reports from universities they want to visist
 - The agreements page for a specific university should have a button which links to the reports of this university
+- When a person has applied to an agreement, their application shows under __my applications__ with a link to the agreement, but the page does not directly show which institution the user has applied to.
 
 ---
 
@@ -100,4 +101,5 @@ GetExchanged/
 ---
 
 ## Other notes about the project
-- The ER diagram has been updated to match our final project. But the attributes to both reports and agreements does not match entirely, because there are too many columns in the actual database. These columns have been simplified into the attribute __text__. 
+- The ER diagram has been updated to match our final project. But the attributes to both reports and agreements does not match entirely, because there are too many columns in the actual database. These columns have been simplified into the attribute __text__.
+- The study field attribute in reports would originally be defined by the specific user that made the report. But since no user can make any reports, this becomes an attribute it itself.
