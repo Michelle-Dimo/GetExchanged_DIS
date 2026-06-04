@@ -11,7 +11,6 @@
             {% for app in applications %}
                 <div class="result-card">
                     <strong>{{ app['institution'] }}</strong>
-                    <p>{{ app['text'] }}</p>
                     <p>Status: <strong>{{ app['status'] }}</strong> | Applied: {{ app['created_at'].strftime('%d %b %Y') }}</p>
                 </div>
             {% endfor %}

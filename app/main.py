@@ -99,7 +99,7 @@ def my_applications():
     db = get_db().cursor()
     db.execute(
         '''
-        SELECT a.id, a.status, a.created_at, ag.institution, ag."Agreement_ID"
+        SELECT a.id, a.status, a.created_at, ag.Institution, ag."Agreement_ID"
         FROM applications a
         JOIN agreements ag ON a.agreement_id = ag."Agreement_ID"
         WHERE a.user_id = %s
