@@ -62,7 +62,7 @@ export DB_PASSWORD=secret
 
 Intitialize and start the app
 ```shell
-python entrypoint.sh
+python entrypoint.py
 ```
 
 ## Folder setup
