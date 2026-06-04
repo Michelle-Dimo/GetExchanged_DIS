@@ -94,7 +94,6 @@ GetExchanged/
 ├── scripts/  
 ├── requirements.txt  
 ├── .env  
-├── .gitattributes  
 ├── .gitignore  
 ├── Doskerfile  
 ├── entrypoint.py  
