@@ -1,7 +1,7 @@
 # GetExchanged
 ## Setup instructions
 
-### Run the application by downloading Docker, and run the following in the terminal:
+### Run the application with Docker (recommended):
 
 Clone git repository
 ```shell
@@ -26,6 +26,7 @@ Create a virtual python environment
 ```shell
 python -m venv venv_name
 ```
+
 Switch to using the python in the virtual environment
 ```shell
 source venv_name/bin/activate
@@ -51,14 +52,17 @@ Go into the project
 cd GetExchanged_DIS
 ```
 
-Initialize the database
+Set environment variables
 ```shell
-python app/init_db.py
+export DB_HOST=localhost
+export DB_NAME=ku_exchange
+export DB_USERNAME=postgres
+export DB_PASSWORD=secret
 ```
 
-Start the app
+Intitialize and start the app
 ```shell
-flask run --app app
+python entrypoint.sh
 ```
 
 ## Folder setup
