@@ -66,7 +66,7 @@ Intitialize and start the app
 python entrypoint.py
 ```
 > [!TIP]
-> After running entrypoint.py the first time, the app can be started with `flask --app run app --port:"8080"`
+> After running entrypoint.py the first time, the app can also be started with `flask --app app run --port="8080"`
 
 > [!NOTE]
 > When running the app the website can be seen on http://127.0.0.1:8080
