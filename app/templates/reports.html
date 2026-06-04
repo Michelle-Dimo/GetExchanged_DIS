@@ -53,14 +53,6 @@
 
 <div class="university-grid" id="university-grid"></div>
 
-<div class="write-report-bar">
-    {% if g.user and g.user['status'] == 'Alumni' %}
-        <a href="{{ url_for('main.write_report') }}" class="btn primary-btn">Write a Report</a>
-    {% else %}
-        <p class="muted">Only alumni can write reports.</p>
-    {% endif %}
-</div>
-
 <script>
     const REPORTS_DATA = {{ reports | tojson }};
 
