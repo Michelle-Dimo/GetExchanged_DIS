@@ -2,6 +2,7 @@
 ## Setup instructions
 
 Run the application by downloading Docker, and run the following in the terminal:
+
 Clone git repository
 ```shell
 git clone https://github.com/Michelle-Dimo/GetExchanged_DIS.git
@@ -16,7 +17,7 @@ cd GetExchanged_DIS.git
 docker compose up --build
 ```
 
-Or install dependencies manually (for MacOS or Linux users):
+Or install dependencies and run the app manually (for MacOS or Linux users):
 
 Create a virtual python environment
 
