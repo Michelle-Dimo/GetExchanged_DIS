@@ -89,12 +89,12 @@ def init_db():
     cur.execute("DROP TABLE IF EXISTS applications CASCADE;")
     cur.execute("""
         CREATE TABLE applications (
-        id SERIAL PRIMARY KEY,
-        user_id INT NOT NULL REFERENCES users(id),
-        agreement_id INT NOT NULL REFERENCES agreements(id),
-        status VARCHAR(20) DEFAULT 'Pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(user_id, agreement_id)
+            id SERIAL PRIMARY KEY,
+            user_id INT NOT NULL REFERENCES users(id),
+            agreement_id INT NOT NULL,
+            status VARCHAR(20) DEFAULT 'Pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id, agreement_id)
         )
     """)
 
