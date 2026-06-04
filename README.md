@@ -7,8 +7,29 @@ Run the application by downloading Docker, and run the following in the terminal
 docker compose up --build
 ```
 
-Or install dependencies manually, preferably inside a virtual environment:
+Or install dependencies manually (for MacOS or Linux users):
 
+Create a virtual python environment
+
+```shell
+python -m venv venv_name
+```
+Switch to using the python in the virtual environment
+```shell
+source venv_name/bin/activate
+```
+
+Go into the virtual environment directory
+```shell
+cd venv_name
+```
+
+Clone git repository
+```shell
+git clone 
+```
+
+Install python packages
 ```shell
 pip install -r requirements.txt
 ```
