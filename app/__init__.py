@@ -59,7 +59,6 @@ def create_app(test_config=None):
         cols = [col[0] for col in db.description]
         rows = [dict(zip(cols, row)) for row in db.fetchall()]
 
-
         for row in rows:
             row["study_fields"] = row["study_fields"].split("||") if row["study_fields"] else []
 
@@ -78,8 +77,7 @@ def create_app(test_config=None):
         if query:
             like_pattern = f"%{query}%"
     
-            # 1. DEEP TEXT SEARCH FOR AGREEMENTS (WITH WEIGHTED CONFIDENCE)
-            # Matches: Institution Name, Study Fields, City/Country, and the entire core Agreement Text/Description
+            # 1. DEEP TEXT SEARCH FOR AGREEMENTS
             agreements_sql = """
                 SELECT DISTINCT 
                     a."Agreement_ID" AS id, 
@@ -100,16 +98,14 @@ def create_app(test_config=None):
                    OR a."description" ILIKE %s
                 ORDER BY score DESC, institution ASC;
             """
-            # 6 placeholders for the score calculation + 6 placeholders for the WHERE filters = 12 total
             cursor.execute(agreements_sql, [like_pattern] * 12)
             for row in cursor.fetchall():
                 agreements_results.append({"id": row[0], "institution": row[1], "score": row[2]})
     
-            # 2. DEEP TEXT SEARCH FOR REPORTS (WITH WEIGHTED CONFIDENCE)
-            # Matches: Institution, Study Field, and sentiment blocks like comments, costs, challenges, and rewards
+            # 2. DEEP TEXT SEARCH FOR REPORTS (Now selecting individual report_id)
             reports_sql = """
-                SELECT institution,
-                    MAX(
+                SELECT report_id, institution,
+                    (
                         (CASE WHEN institution ILIKE %s THEN 20 ELSE 0 END) +
                         (CASE WHEN study_field ILIKE %s THEN 15 ELSE 0 END) +
                         (CASE WHEN overall_comments ILIKE %s 
@@ -128,13 +124,11 @@ def create_app(test_config=None):
                    OR cost_comparison ILIKE %s
                    OR most_rewarding ILIKE %s
                    OR greatest_challenge ILIKE %s
-                GROUP BY institution
                 ORDER BY score DESC, institution ASC;
             """
-            # 8 placeholders for the MAX score + 8 placeholders for the WHERE clause = 16 total
             cursor.execute(reports_sql, [like_pattern] * 16)
             for row in cursor.fetchall():
-                reports_results.append({"institution": row[0], "score": row[1]})
+                reports_results.append({"id": row[0], "institution": row[1], "score": row[2]})
     
         return render_template(
             "search.html", 
@@ -154,7 +148,6 @@ def create_app(test_config=None):
         reports_results = []
         like_pattern = f"%{query}%"
     
-        # Live preview limits results to top 3 matching items
         if query:
             agreements_sql = """
                 SELECT DISTINCT a."Agreement_ID", a."Institution"
@@ -172,8 +165,9 @@ def create_app(test_config=None):
         agreements_results = [{"id": r[0], "institution": r[1]} for r in cursor.fetchall()]
     
         if query:
+            # Modified to select report_id along with the institution name
             reports_sql = """
-                SELECT DISTINCT institution FROM reports 
+                SELECT report_id, institution FROM reports 
                 WHERE institution ILIKE %s 
                    OR study_field ILIKE %s 
                    OR overall_comments ILIKE %s 
@@ -183,8 +177,8 @@ def create_app(test_config=None):
             """
             cursor.execute(reports_sql, (like_pattern, like_pattern, like_pattern, like_pattern, like_pattern))
         else:
-            cursor.execute('SELECT DISTINCT institution FROM reports ORDER BY institution ASC LIMIT 3;')
-        reports_results = [{"institution": r[0]} for r in cursor.fetchall()]
+            cursor.execute('SELECT report_id, institution FROM reports ORDER BY institution ASC LIMIT 3;')
+        reports_results = [{"id": r[0], "institution": r[1]} for r in cursor.fetchall()]
     
         return jsonify({"agreements": agreements_results, "reports": reports_results})
 

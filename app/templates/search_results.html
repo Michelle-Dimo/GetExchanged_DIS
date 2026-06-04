@@ -18,7 +18,7 @@
                     <div class="card-container">
                         <a href="/agreements/{{ agg.id }}" class="agreement-card card">
                             <h3>{{ agg.institution }}</h3>
-                            </a>
+                        </a>
                     </div>
                 {% endfor %}
             {% else %}
@@ -34,9 +34,9 @@
             {% if results.reports %}
                 {% for rep in results.reports %}
                     <div class="card-container">
-                        <a href="{{ url_for('main.university_reports') }}?institution={{ rep.institution }}" class="agreement-card card">
+                        <a href="{{ url_for('main.university_reports') }}?institution={{ rep.institution | urlencode }}" class="agreement-card card">
                             <h3>{{ rep.institution }}</h3>
-                            <p class="muted" style="margin-bottom: 6px; font-weight: 600; color: #4b5563;">Report ID: {{ rep.report_id or rep.id }}</p>
+                            <p class="muted" style="margin-bottom: 6px; font-weight: 600; color: #4b5563;">Report ID: {{ rep.id }}</p>
                             <p class="muted">Click to view student experiences</p>
                         </a>
                     </div>
