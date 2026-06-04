@@ -42,14 +42,14 @@ Clone git repository
 git clone https://github.com/Michelle-Dimo/GetExchanged_DIS.git
 ```
 
-Install python packages
-```shell
-pip install -r requirements.txt
-```
-
 Go into the project
 ```shell
 cd GetExchanged_DIS
+```
+
+Install python packages
+```shell
+pip install -r requirements.txt
 ```
 
 Set environment variables
