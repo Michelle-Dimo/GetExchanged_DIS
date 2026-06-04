@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% block title %}Search Platform{% endblock %}
+
+{% block content %}
+<div class="search-page-container" style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+    
+    <form id="search-form" action="/search" method="GET" style="margin-bottom: 40px;">
+        <input 
+            type="text" 
+            name="q"
+            id="live-search-input" 
+            placeholder="Search..." 
+            autocomplete="off"
+            value="{{ query or '' }}"
+            style="width: 100%; padding: 15px; font-size: 18px; border: 2px solid #2196f3; border-radius: 8px; box-sizing: border-box;"
+            autofocus
+        >
+    </form>
+
+    {% if query %}
+    <div id="full-results-container">
+        <h2 style="margin-bottom: 25px; color: #555;">All Matches for "{{ query }}" sorted by confidence:</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div>
+                <h3 style="border-bottom: 2px solid #2196f3; padding-bottom: 8px;">Agreements</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                    {% for agg in agreements %}
+                    <a href="/agreements/{{ agg.id }}" class="search-result-item standard-item">
+                        <span class="badge">Match Score: {{ agg.score }}</span>
+                        <strong>{{ agg.institution }}</strong>
+                    </a>
+                    {% else %}
+                    <p style="color: #777; font-style: italic;">No matching agreements found.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div>
+                <h3 style="border-bottom: 2px solid #4caf50; padding-bottom: 8px;">Student Reports</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                    {% for rep in reports %}
+                    <a href="{{ url_for('main.university_reports') }}?institution={{ rep.institution | urlencode }}" class="search-result-item standard-item">
+                        <span class="badge static-green">Match Score: {{ rep.score }}</span>
+                        <strong>{{ rep.institution }}</strong>
+                    </a>
+                    {% else %}
+                    <p style="color: #777; font-style: italic;">No student reviews found.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div id="live-preview-container" style="display: none;">
+        <h3 style="color: #777; font-size: 14px; text-transform: uppercase; margin-bottom: 15px;">Matches</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div>
+                <h4>Agreements</h4>
+                <div id="live-agreements" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;"></div>
+            </div>
+            <div>
+                <h4>Reports</h4>
+                <div id="live-reports" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .search-result-item {
+        display: block;
+        padding: 14px;
+        background: #fdfdfd;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #333;
+        position: relative;
+        transition: all 0.15s ease;
+    }
+    .search-result-item:hover, .search-result-item.keyboard-highlighted {
+        background: #f0f7ff;
+        border-color: #2196f3;
+        transform: translateX(4px);
+        outline: none;
+    }
+    .badge {
+        font-size: 11px;
+        background: #e3f2fd;
+        color: #0d47a1;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-weight: bold;
+        float: right;
+    }
+    .badge.static-green {
+        background: #e8f5e9;
+        color: #1b5e20;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.getElementById("live-search-input");
+    const fullResults = document.getElementById("full-results-container");
+    const livePreview = document.getElementById("live-preview-container");
+    const liveAgreements = document.getElementById("live-agreements");
+    const liveReports = document.getElementById("live-reports");
+
+    let currentSelectedIndex = -1;
+
+    function fetchLivePreview(query) {
+        fetch(`/api/live-search?q=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => {
+                renderLiveColumns(data);
+                currentSelectedIndex = -1; 
+            });
+    }
+
+    function renderLiveColumns(data) {
+        liveAgreements.innerHTML = data.agreements.length ? "" : '<p style="color:#aaa; font-style:italic;">None</p>';
+        data.agreements.forEach(agg => {
+            const a = document.createElement("a");
+            a.className = "search-result-item live-item";
+            a.href = `/agreements/${agg.id}`;
+            a.textContent = agg.institution;
+            liveAgreements.appendChild(a);
+        });
+
+        liveReports.innerHTML = data.reports.length ? "" : '<p style="color:#aaa; font-style:italic;">None</p>';
+        data.reports.forEach(rep => {
+            const a = document.createElement("a");
+            a.className = "search-result-item live-item";
+            a.href = `{{ url_for('main.university_reports') }}?institution=${encodeURIComponent(rep.institution)}`;
+            a.textContent = rep.institution;
+            liveReports.appendChild(a);
+        });
+    }
+
+    function getActiveItems() {
+        // Look through active items visible to selection rules
+        const selector = livePreview.style.display === "block" ? ".live-item" : ".standard-item";
+        return Array.from(document.querySelectorAll(selector));
+    }
+
+    function updateHighlight(items) {
+        items.forEach((item, idx) => {
+            if (idx === currentSelectedIndex) {
+                item.classList.add("keyboard-highlighted");
+            } else {
+                item.classList.remove("keyboard-highlighted");
+            }
+        });
+    }
+
+    // Toggle layouts dynamically when typing versus fixed display values
+    searchInput.addEventListener("input", (e) => {
+        const val = e.target.value.trim();
+        if (val.length > 0) {
+            if (fullResults) fullResults.style.display = "none";
+            livePreview.style.display = "block";
+            fetchLivePreview(val);
+        } else {
+            if (fullResults) fullResults.style.display = "block";
+            livePreview.style.display = "none";
+        }
+    });
+
+    // Handle Keyboard Nav (Arrows + Enter)
+    searchInput.addEventListener("keydown", (e) => {
+        const items = getActiveItems();
+        
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (items.length === 0) return;
+            currentSelectedIndex = (currentSelectedIndex + 1) % items.length;
+            updateHighlight(items);
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (items.length === 0) return;
+            currentSelectedIndex = (currentSelectedIndex - 1 + items.length) % items.length;
+            updateHighlight(items);
+        } else if (e.key === "Enter") {
+            // If a specific preview element is highlighted via arrow navigation, open it directly
+            if (currentSelectedIndex > -1 && items[currentSelectedIndex]) {
+                e.preventDefault();
+                items[currentSelectedIndex].click();
+            } 
+            // Otherwise, let the form submit normally to reload the page with all ranked entries
+        }
+    });
+
+    // Populate initial default suggestions on blank focus state
+    if (!searchInput.value.trim()) {
+        livePreview.style.display = "block";
+        fetchLivePreview("");
+    }
+});
+</script>
+{% endblock %}
