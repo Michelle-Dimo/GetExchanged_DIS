@@ -74,27 +74,27 @@ The app is devided into multiple folder, as follows:
 
 ## Project structure
 
-GetExchanged/
-├── app/
-│   ├── __init__.py
-│   ├── agreements.py
-│   ├── reports.py
-│   ├── auth.py
-│   ├── int_db.py
-│   ├── main.py
-│   ├── static/
-│   ├── templates/
-│   └── __pycache__/
-├── data/
-├── instance/
-├── scripts/
-├── requirements.txt
-├── .env
-├── .gitattributes
-├── .gitignore
-├── Doskerfile
-├── entrypoint.py
-├── docker-compose.yml
-└── README.md
+GetExchanged/  
+├── app/  
+│   ├── __init__.py  
+│   ├── agreements.py  
+│   ├── reports.py  
+│   ├── auth.py  
+│   ├── int_db.py  
+│   ├── main.py  
+│   ├── static/  
+│   ├── templates/  
+│   └── __pycache__/  
+├── data/  
+├── instance/  
+├── scripts/  
+├── requirements.txt  
+├── .env  
+├── .gitattributes  
+├── .gitignore  
+├── Doskerfile  
+├── entrypoint.py  
+├── docker-compose.yml  
+└── README.md  
 
 ---
