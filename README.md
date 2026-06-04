@@ -54,10 +54,12 @@ The app is devided into multiple folder, as follows:
 ### Details
 /api/map-data → Maps the universities worldwide  
 /search → search bar to navigate the website  
+/api/live-search → View the searching results  
 /reports → View and create reports   
 /reports/university → Read the reports of each university 
 /agreements → View agreements   
 /agreements_text → Read the agreements for each university  
+/apply/<int:agreement_id → applying to a university via the agreement  
 
 ---
 
