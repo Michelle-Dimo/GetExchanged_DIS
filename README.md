@@ -2,6 +2,15 @@
 ## Setup instructions
 
 Run the application by downloading Docker, and run the following in the terminal:
+Clone git repository
+```shell
+git clone https://github.com/Michelle-Dimo/GetExchanged_DIS.git
+```
+
+Go into the project
+```shell
+cd GetExchanged_DIS.git
+```
 
 ```shell
 docker compose up --build
@@ -26,7 +35,7 @@ cd venv_name
 
 Clone git repository
 ```shell
-git clone 
+git clone https://github.com/Michelle-Dimo/GetExchanged_DIS.git
 ```
 
 Install python packages
@@ -34,7 +43,20 @@ Install python packages
 pip install -r requirements.txt
 ```
 
-But the application runs best on Docker. Make sure PostgreSQL is running and the database exists.
+Go into the project
+```shell
+cd GetExchanged_DIS.git
+```
+
+Initialize the database
+```shell
+python app/init_db.py
+```
+
+Start the app
+```shell
+flask run --app app
+```
 
 ## Folder setup
 The app is devided into multiple folder, as follows:
