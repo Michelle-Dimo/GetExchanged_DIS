@@ -65,8 +65,8 @@ Intitialize and start the app
 python entrypoint.py
 ```
 
-[!NOTE]
-When running the app the website can be seen on http://127.0.0.1:8080
+> [!NOTE]
+> When running the app the website can be seen on http://127.0.0.1:8080
 
 
 ## Folder setup
