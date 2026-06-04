@@ -98,3 +98,6 @@ GetExchanged/
 └── README.md  
 
 ---
+
+## Other notes about the project
+- The ER diagram has been updated to match our final project. But the attributes to both reports and agreements does not match entirely, because there are too many columns in the actual database. These columns have been simplified into the attribute __text__. 
