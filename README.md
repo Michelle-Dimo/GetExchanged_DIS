@@ -13,7 +13,7 @@ Or install dependencies manually, preferably inside a virtual environment:
 pip install -r requirements.txt
 ```
 
-Make sure PostgreSQL is running and the database exists.
+But the application runs best on Docker. Make sure PostgreSQL is running and the database exists.
 
 ## Folder setup
 The app is devided into multiple folder, as follows:
