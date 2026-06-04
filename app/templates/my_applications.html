@@ -12,6 +12,7 @@
                 <div class="result-card">
                     <strong>{{ app['institution'] }}</strong>
                     <p>Status: <strong>{{ app['status'] }}</strong> | Applied: {{ app['created_at'].strftime('%d %b %Y') }}</p>
+                    <a href="{{ url_for('agreements.agreement', id=app['agreement_id']) }}" class="btn primary-btn">View Agreement</a>
                 </div>
             {% endfor %}
         {% else %}
