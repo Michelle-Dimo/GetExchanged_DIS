@@ -15,5 +15,6 @@ print("Database initialized")
 subprocess.run([
     "flask", "--app", "app",
     "run", "--host=0.0.0.0",
-    "--debug"
+    "--debug",
+    "--port=8080"
 ])

@@ -10,6 +10,6 @@ COPY . .
 
 RUN chmod +x entrypoint.py
 
-EXPOSE 5000
+EXPOSE 8080
 
 ENTRYPOINT ["python", "entrypoint.py"]
