@@ -10,7 +10,7 @@ git clone https://github.com/Michelle-Dimo/GetExchanged_DIS.git
 
 Go into the project
 ```shell
-cd GetExchanged_DIS.git
+cd GetExchanged_DIS
 ```
 
 ```shell
@@ -46,7 +46,7 @@ pip install -r requirements.txt
 
 Go into the project
 ```shell
-cd GetExchanged_DIS.git
+cd GetExchanged_DIS
 ```
 
 Initialize the database
