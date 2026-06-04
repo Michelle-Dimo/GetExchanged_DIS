@@ -78,21 +78,16 @@
                 const isExpanded = searchForm.classList.contains("expanded");
                 
                 if (!isExpanded) {
-                    // Prevent submission on first click, expand the search field instead
                     e.preventDefault();
                     searchForm.classList.add("expanded");
                     searchInput.focus();
                 } else {
-                    // If open but field is empty, treat click as a close request
                     if (searchInput.value.trim() === "") {
                         e.preventDefault();
                         searchForm.classList.remove("expanded");
                     }
-                    // If it contains a term, standard form POST execution continues smoothly
                 }
             });
-
-            // Collapse search box back to an icon if clicking completely outside it
             document.addEventListener("click", (e) => {
                 if (!searchForm.contains(e.target) && searchInput.value.trim() === "") {
                     searchForm.classList.remove("expanded");

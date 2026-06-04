@@ -87,7 +87,6 @@ function refillSelect(id, values, selectedValue) {
 }
 
 function updateFilterOptions() {
-    // Read current selection values from hidden inputs
     const study_field = document.getElementById("filter-field").value;
     const country = document.getElementById("filter-country").value;
     const city = document.getElementById("filter-city").value;
@@ -98,9 +97,7 @@ function updateFilterOptions() {
     const cities = new Set();
     const institutions = new Set();
 
-    // Cross-filtering evaluation loop over all database agreements
     allData.forEach(u => {
-        // 1. Available Study Fields (affected by country, city, institution)
         const matchForField = 
             (!country || u.countries.has(country)) &&
             (!city || u.cities.has(city)) &&
@@ -109,7 +106,6 @@ function updateFilterOptions() {
             u.study_fields.forEach(v => study_fields.add(v));
         }
 
-        // 2. Available Countries (affected by study_field, city, institution)
         const matchForCountry = 
             (!study_field || u.study_fields.has(study_field)) &&
             (!city || u.cities.has(city)) &&
@@ -118,7 +114,6 @@ function updateFilterOptions() {
             u.countries.forEach(v => countries.add(v));
         }
 
-        // 3. Available Cities (affected by study_field, country, institution)
         const matchForCity = 
             (!study_field || u.study_fields.has(study_field)) &&
             (!country || u.countries.has(country)) &&
@@ -127,7 +122,6 @@ function updateFilterOptions() {
             u.cities.forEach(v => cities.add(v));
         }
 
-        // 4. Available Institutions (affected by study_field, country, city)
         const matchForInstitution = 
             (!study_field || u.study_fields.has(study_field)) &&
             (!country || u.countries.has(country)) &&
@@ -137,7 +131,6 @@ function updateFilterOptions() {
         }
     });
 
-    // Populate each dropdown option list independently
     refillSelect("filter-field", study_fields, study_field);
     refillSelect("filter-country", countries, country);
     refillSelect("filter-city", cities, city);
