@@ -13,9 +13,11 @@ Go into the project
 cd GetExchanged_DIS
 ```
 
+Build and run the app
 ```shell
 docker compose up --build
 ```
+After the first time of running the app `--build` can be excluded from the command.
 
 ### Or install dependencies and run the app manually (for MacOS or Linux users):
 
