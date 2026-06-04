@@ -99,9 +99,9 @@ def my_applications():
     db = get_db().cursor()
     db.execute(
         '''
-        SELECT a.id, a.status, a.created_at, ag.institution, ag.text, ag."Agreement.ID"
+        SELECT a.id, a.status, a.created_at, ag.institution, ag."Agreement_ID"
         FROM applications a
-        JOIN agreements ag ON a.agreement_id = ag."Agreement.ID"
+        JOIN agreements ag ON a.agreement_id = ag."Agreement_ID"
         WHERE a.user_id = %s
         ORDER BY a.created_at DESC
         ''',
