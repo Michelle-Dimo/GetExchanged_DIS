@@ -25,8 +25,6 @@ def table():
 
     return render_template('reports.html', reports=reports)
 
-
-# Single report page
 @bp.route('/reports/<int:id>')
 def report(id):
     db = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)

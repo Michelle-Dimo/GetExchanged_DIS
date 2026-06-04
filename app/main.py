@@ -116,7 +116,6 @@ def apply(agreement_id):
     db = get_db()
     cur = db.cursor()
 
-    # Check if already applied
     cur.execute(
         'SELECT id FROM applications WHERE user_id = %s AND agreement_id = %s',
         (g.user['id'], agreement_id)
@@ -154,8 +153,3 @@ def university_reports():
     reports = cur.fetchall()
     cur.close()
     return render_template('university_reports.html', reports=reports, institution=institution)
-
-#@bp.route('/reports/write')
-#@alumni_required
-#def write_report():
-#    return render_template('write_report.html')

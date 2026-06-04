@@ -35,13 +35,11 @@ def init_db():
     conn = get_db()
     cur = conn.cursor()
 
-    # Enable the fuzzy matching
     cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
     conn.commit()
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # ---------------- AGREEMENTS ----------------
     cur.execute("DROP TABLE IF EXISTS agreements CASCADE;")
     cur.execute("""
         CREATE TABLE agreements (
@@ -64,7 +62,6 @@ def init_db():
 
     cur.execute("CREATE INDEX IF NOT EXISTS idx_agreements_inst_trgm ON agreements USING gin (institution gin_trgm_ops);")
 
-    # ---------------- PARSED AGREEMENTS ----------------
     connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
     engine = create_engine(connection_string)
 
@@ -84,7 +81,6 @@ def init_db():
 
     print("Parsed agreement text imported successfully!")
 
-    # ---------------- USERS ----------------
     cur.execute("DROP TABLE IF EXISTS users CASCADE;")
 
     cur.execute("""
@@ -111,7 +107,6 @@ def init_db():
         )
     """)
 
-    # ---------------- REPORTS ----------------
     reports_path = os.path.normpath(
         os.path.join(base_dir, "../data/Reports_clean.csv")
     )
@@ -142,11 +137,9 @@ def init_db():
         'cost_other'
     ]
 
-    # Convert safely
     for col in cost_cols:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    # Debug check
     for col in cost_cols:
         max_val = df[col].max()
         print(f"{col} max value: {max_val}")
@@ -156,7 +149,6 @@ def init_db():
             print(f"Overflow candidates in {col}:")
             print(bad[[col]].head())
 
-    # Safety clamp
     for col in cost_cols:
         df.loc[df[col] > 1e10, col] = None
 
@@ -188,14 +180,12 @@ def init_db():
         }
     )
 
-    # ADD THIS NEW BLOCK: Build fuzzy-matching indexes right after the table is populated
     with engine.begin() as con:
         con.execute(text("CREATE INDEX IF NOT EXISTS idx_reports_inst_trgm ON reports USING gin (institution gin_trgm_ops);"))
         con.execute(text("CREATE INDEX IF NOT EXISTS idx_reports_field_trgm ON reports USING gin (study_field gin_trgm_ops);"))
 
     print("Reports imported successfully!")
 
-    # ---------------- STUDY FIELDS ----------------
     cur.execute("DROP TABLE IF EXISTS study_fields;")
 
     cur.execute("""
