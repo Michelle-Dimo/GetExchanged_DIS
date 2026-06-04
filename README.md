@@ -104,4 +104,4 @@ GetExchanged/
 
 ## Other notes about the project
 - The ER diagram has been updated to match our final project. But the attributes to both reports and agreements does not match entirely, because there are too many columns in the actual database. These columns have been simplified into the attribute __text__.
-- The study field attribute in reports would originally be defined by the specific user that made the report. But since no user can make any reports, this becomes an attribute in itself.
+- The study field attribute in reports would originally be defined by the specific user that made the report. But since no user can make any reports, this becomes an entity in itself. However, we had a hard time adding the study_fields entity to the ER diagram as an associative entity, but that only holds if there is not a many-to-many relationship between agreements and study_fields, and a many-to-many relationship between university and study-fields (Two many-to-many relationships makes it impossible to include an associative entity, at least with our current database structure)
