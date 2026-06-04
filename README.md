@@ -13,16 +13,6 @@ Or install dependencies manually, preferably inside a virtual environment:
 pip install -r requirements.txt
 ```
 
-## Environment configuration
-
-Create a `.env` file in the root directory and add:
-
-```shell
-POSTGRES_DB=ku_exchange
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=secret
-```
-
 Make sure PostgreSQL is running and the database exists.
 
 ## Folder setup
@@ -59,9 +49,7 @@ The app is devided into multiple folder, as follows:
 /logout → Logout user  
 
 ### Profile page
-/my_repotrs → View created reports  
-/edit-profile → Edit profile information  
-/my_agreements → View saved agreements  
+/edit-profile → Edit profile information    
 /my_applications  → View your applications  
 
 ### Details

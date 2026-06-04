@@ -36,7 +36,7 @@ def create_app(test_config=None):
     app.register_blueprint(reports.bp)
 
     @app.route("/")
-    def index():
+    def home():
         return redirect(url_for("main.home"))
 
     @app.route("/api/map-data")

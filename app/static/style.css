@@ -839,3 +839,91 @@ background: #fafafa;
     color: #aaa;
     margin-left: 2px;
 }
+
+/* Base html and body styles */
+        /* Expanding Search Bar - Left Anchored, Right Expanding */
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Keeps it strictly on the left */
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px; /* Matches custom dropdown corners */
+            overflow: hidden;
+            box-sizing: border-box;
+            /* Smoothly transitions the width, background, and border colors */
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        border-color 0.3s ease, 
+                        background-color 0.3s ease;
+            width: 38px; /* Matches the button width when collapsed */
+            height: 38px;
+        }
+
+        /* Expanded State styling */
+        .search-form.expanded {
+            background: #fff;
+            border-color: #ccc;
+            width: 240px; /* Total expanded width moving to the right */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .search-toggle-btn {
+            background: transparent;
+            border: none;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #495057;
+            flex-shrink: 0; /* Prevents button from squeezing when closed */
+            padding: 0;
+            border-radius: 4px;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .search-toggle-btn:hover {
+            background-color: #e9ecef;
+            color: #212529;
+        }
+
+        /* Remove hover background inside the input panel once expanded for a cleaner card look */
+        .search-form.expanded .search-toggle-btn:hover {
+            background-color: transparent;
+        }
+
+        .search-input {
+            width: 0;
+            opacity: 0;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: #212529;
+            background: transparent;
+            box-sizing: border-box;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+            padding: 0;
+        }
+
+        .search-form.expanded .search-input {
+            width: 192px; /* Remaining space for text */
+            opacity: 1;
+            padding: 0 12px 0 2px;
+        }
+
+        /* Clean styling for the stylish SVG icon */
+        .search-icon {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
