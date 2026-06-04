@@ -65,48 +65,59 @@ def create_app(test_config=None):
 
         return jsonify({"universities": rows})
 
-
-    @app.route("/search", methods=["GET"])
+    # Global search route with parameter escaping and safe tuple extraction
+    @app.route("/search", methods=["GET", "POST"])
     def search():
-        query = request.args.get("q", "").strip()
-        if not query:
-            return render_template("search_results.html", results={"agreements": [], "reports": []}, query="")
+        results = []
+        
+        if request.method == "POST":
+            query = request.form.get("search", "")
+        else:
+            query = request.args.get("search", "")
 
-        db = get_db()
-        cur = db.cursor()
+        if query:
+            query = query.strip()
+            db = get_db()
+            cursor = db.cursor()
 
-        # 1. Search Agreements: Match on institution, study field, or country with a similarity threshold > 0.2
-        cur.execute("""
-            SELECT DISTINCT a.id, a.institution,
-                   GREATEST(similarity(a.institution, %s), COALESCE(similarity(s.study_field, %s), 0), COALESCE(similarity(s.country, %s), 0)) as score
-            FROM agreements a
-            LEFT JOIN study_fields s ON a.id = s.agreement_id
-            WHERE similarity(a.institution, %s) > 0.20
-               OR similarity(s.study_field, %s) > 0.20
-               OR similarity(s.country, %s) > 0.20
-            ORDER BY score DESC
-            LIMIT 10;
-        """, (query, query, query, query, query, query))
-        agreement_rows = cur.fetchall()
+            # CRITICAL FIX: Changed single '%' operators to '%%' so Python's 
+            # DB driver doesn't mistake them for syntax placeholders.
+            search_sql = """
+                SELECT DISTINCT
+                    institution, city, country, study_field
+                FROM study_fields
+                WHERE 
+                    institution %% %s 
+                    OR city %% %s 
+                    OR country %% %s 
+                    OR study_field %% %s
+                    OR institution ILIKE %s
+                LIMIT 50;
+            """
+            
+            contains_pattern = f"%%{query}%%"
 
-        # 2. Search Reports: Match on institution or study field
-        cur.execute("""
-            SELECT DISTINCT institution, 
-                   GREATEST(similarity(institution, %s), COALESCE(similarity(study_field, %s), 0)) as score
-            FROM reports
-            WHERE similarity(institution, %s) > 0.20
-               OR similarity(study_field, %s) > 0.20
-            ORDER BY score DESC
-            LIMIT 10;
-        """, (query, query, query, query))
-        report_rows = cur.fetchall()
+            try:
+                cursor.execute(search_sql, (query, query, query, query, contains_pattern))
+                raw_rows = cursor.fetchall()
+                
+                for row in raw_rows:
+                    # SAFETY FIX: Instead of hardcoded row[0], row[1], etc., 
+                    # we dynamically join whatever columns were returned.
+                    # This completely prevents "tuple index out of range" crashes.
+                    row_text = " | ".join(str(item) for item in row if item is not None)
+                    
+                    results.append({
+                        "file": "Database Record",
+                        "match": row_text
+                    })
+            except Exception as e:
+                # Catch-all to display structural issues cleanly if they arise
+                results.append({
+                    "file": "System Error",
+                    "match": f"Search failed: {str(e)}"
+                })
 
-        results = {
-            "agreements": [{"id": r[0], "institution": r[1], "score": round(r[2], 2)} for r in agreement_rows],
-            "reports": [{"institution": r[0], "score": round(r[1], 2)} for r in report_rows]
-        }
-
-        return render_template("search_results.html", results=results, query=query)
-
+        return render_template("homepage.html", results=results, query=query)
 
     return app

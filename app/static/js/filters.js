@@ -15,7 +15,6 @@ function renderAgreements(data) {
     <a href="/agreements/${agreement.id}" class="university-card">
         <div class="uni-name">${agreement.institution}</div>
         <div class="uni-meta">
-            <span>${agreement.study_fields.size} field${agreement.study_fields.size !== 1 ? 's' : ''}</span>
             <span>ID: ${agreement.id}</span>
         </div>
     </a>
