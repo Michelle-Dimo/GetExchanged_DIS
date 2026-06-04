@@ -123,16 +123,17 @@ def apply(agreement_id):
     existing = cur.fetchone()
 
     if existing:
-        flash('You have already applied to this agreement.')
+        message = 'You have already applied to this agreement.'
     else:
         cur.execute(
             'INSERT INTO applications (user_id, agreement_id) VALUES (%s, %s)',
             (g.user['id'], agreement_id)
         )
         db.commit()
-        flash('Application submitted successfully.')
+        message = 'Application successful!'
 
-    return redirect(url_for('main.my_applications'))
+    cur.close()
+    return render_template('apply_confirmation.html', message=message)
 
 @bp.route('/reports')
 def reports():

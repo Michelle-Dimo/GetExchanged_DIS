@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Application{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <p>{{ message }}</p>
+        <a href="{{ url_for('main.my_applications') }}" class="btn primary-btn">My Applications</a>
+        <a href="{{ url_for('agreements.table') }}" class="btn primary-btn">Back to Agreements</a>
+    </div>
+</div>
+{% endblock %}
