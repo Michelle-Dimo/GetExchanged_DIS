@@ -38,8 +38,7 @@ The app is devided into multiple folder, as follows:
 
 ## Routes
 ### Core
-/ → index page  
-/home → Home page  
+/ → home page  
 /about → About page  
 /profile → Enter profile page
 
@@ -62,16 +61,14 @@ The app is devided into multiple folder, as follows:
 
 ---
 
-## Known backend issues
-
-- Database constraints could be improved
+## Known issues with the application
 - 
 
----
-
-## Known frontend issues
-
-- Navigation flow can feel inconsistent
+## Ideas that were not yet implemented
+- The alumni/applicant function should limit the users access to fx. apply to a university
+- This function should also make it possible for an alumni to write reports from their visited universities
+- This function should also make it possible for an applicant to save reports from universities they want to visist
+- The agreements page for a specific university should have a button which links to the reports of this university
 
 ---
 
@@ -81,6 +78,7 @@ GetExchanged/
 ├── app/
 │   ├── __init__.py
 │   ├── agreements.py
+│   ├── reports.py
 │   ├── auth.py
 │   ├── int_db.py
 │   ├── main.py
