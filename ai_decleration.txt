@@ -1,1 +1,4 @@
-insert banger ai declaration
+In the development of this project (GetExchanged), both Claude and copilot extension for VSCode was used in guidning with the coding and debugging. We always started by creating or own implementations and solutions, and the copilot extension was mostly used as it suggested improvements and detected possible errors.
+When we experienced any errors, we would always attempt to debug and resolve them ourselves, and only used GAI (Claude) when we were unable to solve a problem on our own.
+Throughout the project, we have always been critical about the responses from GAI, by determining whether they were relevant and useful, and adjustet according to our specific needs and ideas. We have never used it as a tool for simply copying and pasting
+Overall, generative AI tools have mainly been used as a sparring tool and for support, and we are fully responsible for the final design and implementation of this Flask app.
