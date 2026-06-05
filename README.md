@@ -164,4 +164,4 @@ GetExchanged/
 - The study field attribute in reports would originally be defined by the specific user that made the report. But since no user can make any reports, this becomes an entity in itself. However, we had a hard time adding the study_fields entity to the ER diagram as an associative entity, but that only holds if there is not a many-to-many relationship between agreements and study_fields, and a many-to-many relationship between university and study-fields (Two many-to-many relationships makes it impossible to include an associative entity, at least with our current database structure)
 
 ## ER diagram
-> ![ER diagram](./other/ER diagram DIS.png)
+![ER diagram](./other/ER diagram DIS.png)
